@@ -100,7 +100,7 @@ func main() {
 	g := flowgraph.MakeEdge(true,false,nil)
 
 	go tbi(g, a, b)
-	go flowgraph.AddFunc(a, b, x)
+	go flowgraph.AddNode(a, b, x)
 	go tbo(x, g)
 
 	time.Sleep(1000000000)
