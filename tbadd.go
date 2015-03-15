@@ -10,7 +10,7 @@ import (
 
 func tbi(a, b flowgraph.Edge) {
 
-	nodeid := flowgraph.MakeNode()
+	node := flowgraph.MakeNode()
 
 	var _a flowgraph.Datum = 0
 	var _b flowgraph.Datum = 0
@@ -23,7 +23,7 @@ func tbi(a, b flowgraph.Edge) {
 		if (_i>10) { break }
 
 		if _a_rdy && _b_rdy{
-			fmt.Printf("tbi(%d):  writing a.Data and b.Data: %d,%d\n", nodeid, _a.(int), _b.(int))
+			fmt.Printf("tbi(%d):  writing a.Data and b.Data: %d,%d\n", node.Id, _a.(int), _b.(int))
 			_a_rdy = false
 			_b_rdy = false
 			a.Data <- _a
@@ -33,13 +33,13 @@ func tbi(a, b flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		fmt.Printf("tbi(%d):  select\n", nodeid)
+		fmt.Printf("tbi(%d):  select\n", node.Id)
 		select {
 		case _a_rdy = <-a.Ack:
-			fmt.Printf("tbi(%d):  a.Ack read\n", nodeid)
+			fmt.Printf("tbi(%d):  a.Ack read\n", node.Id)
 
 		case _b_rdy = <-b.Ack:
-			fmt.Printf("tbi(%d):  b.Ack read\n", nodeid)
+			fmt.Printf("tbi(%d):  b.Ack read\n", node.Id)
 		}
 
 	}
@@ -51,7 +51,7 @@ func tbi(a, b flowgraph.Edge) {
 	for {
 		if (_i>9) { break }
 		if _a_rdy && _b_rdy{
-			fmt.Printf("tbi(%d):  writing a.Data and b.Data: %f,%f\n", nodeid, _a.(float32), _b.(float32))
+			fmt.Printf("tbi(%d):  writing a.Data and b.Data: %f,%f\n", node.Id, _a.(float32), _b.(float32))
 			_a_rdy = false
 			_b_rdy = false
 			a.Data <- _a
@@ -61,13 +61,13 @@ func tbi(a, b flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		fmt.Printf("tbi(%d):  select\n", nodeid)
+		fmt.Printf("tbi(%d):  select\n", node.Id)
 		select {
 		case _a_rdy = <-a.Ack:
-			fmt.Printf("tbi(%d):  a.Ack read\n", nodeid)
+			fmt.Printf("tbi(%d):  a.Ack read\n", node.Id)
 
 		case _b_rdy = <-b.Ack:
-			fmt.Printf("tbi(%d):  b.Ack read\n", nodeid)
+			fmt.Printf("tbi(%d):  b.Ack read\n", node.Id)
 		}
 
 	}
@@ -90,13 +90,13 @@ func tbi(a, b flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		fmt.Printf("tbi(%d):  select\n", nodeid)
+		fmt.Printf("tbi(%d):  select\n", node.Id)
 		select {
 		case _a_rdy = <-a.Ack:
-			fmt.Printf("tbi(%d):  a.Ack read\n", nodeid)
+			fmt.Printf("tbi(%d):  a.Ack read\n", node.Id)
 
 		case _b_rdy = <-b.Ack:
-			fmt.Printf("tbi(%d):  b.Ack read\n", nodeid)
+			fmt.Printf("tbi(%d):  b.Ack read\n", node.Id)
 		}
 
 	}
@@ -119,13 +119,13 @@ func tbi(a, b flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		fmt.Printf("tbi(%d):  select\n", nodeid)
+		fmt.Printf("tbi(%d):  select\n", node.Id)
 		select {
 		case _a_rdy = <-a.Ack:
-			fmt.Printf("tbi(%d):  a.Ack read\n", nodeid)
+			fmt.Printf("tbi(%d):  a.Ack read\n", node.Id)
 
 		case _b_rdy = <-b.Ack:
-			fmt.Printf("tbi(%d):  b.Ack read\n", nodeid)
+			fmt.Printf("tbi(%d):  b.Ack read\n", node.Id)
 		}
 
 	}
@@ -134,7 +134,7 @@ func tbi(a, b flowgraph.Edge) {
 
 func tbo(x flowgraph.Edge) {
 
-	nodeid := flowgraph.MakeNode()
+	node := flowgraph.MakeNode()
 
 	var _x flowgraph.Datum
 	_x_rdy := x.Data_init
@@ -142,16 +142,16 @@ func tbo(x flowgraph.Edge) {
 	for {
 		// fmt.Println("		tbo:  _x_rdy", _x_rdy)
 		if _x_rdy {
-			fmt.Printf("		tbo(%d):  writing x.Ack\n", nodeid)
+			fmt.Printf("		tbo(%d):  writing x.Ack\n", node.Id)
 			x.Ack <- true
 			_x_rdy = false
 		}
 
-		fmt.Printf("		tbo(%d):  select\n", nodeid)
+		fmt.Printf("		tbo(%d):  select\n", node.Id)
 		select {
 		case _x = <-x.Data:
 			{
-				fmt.Printf("		tbo(%d):  x read %v --  %v\n", nodeid, reflect.TypeOf(_x), _x)
+				fmt.Printf("		tbo(%d):  x read %v --  %v\n", node.Id, reflect.TypeOf(_x), _x)
 				_x_rdy = true
 			}
 		}
