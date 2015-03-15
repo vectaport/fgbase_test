@@ -167,7 +167,7 @@ func main() {
 	x := flowgraph.MakeEdge(false,true,nil)
 
 	go tbi(a, b)
-	go flowgraph.AddFunc(a, b, x)
+	go flowgraph.SubFunc(a, b, x)
 	go tbo(x)
 
 	time.Sleep(1000000000)

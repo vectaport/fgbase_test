@@ -8,7 +8,7 @@ import (
 	"reflect"
 )
 
-func promote_test(a, b, x flowgraph.Conn) {
+func promote_test(a, b, x flowgraph.Edge) {
 	
 	for {
 		_a := <- a.Data
@@ -26,9 +26,9 @@ func promote_test(a, b, x flowgraph.Conn) {
 }
 func main() {
 
-	a := flowgraph.MakeConn(false,true,nil)
-	b := flowgraph.MakeConn(false,true,nil)
-	x := flowgraph.MakeConn(false,true,nil)
+	a := flowgraph.MakeEdge(false,true,nil)
+	b := flowgraph.MakeEdge(false,true,nil)
+	x := flowgraph.MakeEdge(false,true,nil)
 
 	go promote_test(a, b, x)
 

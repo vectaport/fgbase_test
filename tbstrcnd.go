@@ -7,9 +7,9 @@ import (
 	"time"
 )
 
-func tbi(a flowgraph.Conn) {
+func tbi(a flowgraph.Edge) {
 
-	pipeid:=flowgraph.MakePipe()
+	nodeid:=flowgraph.MakeNode()
 
 	var _a flowgraph.Datum = 0
 	_a_rdy := a.Ack_init
@@ -18,16 +18,16 @@ func tbi(a flowgraph.Conn) {
 
 
 		if _a_rdy {
-			fmt.Printf("tbi(%d):  writing a.Data: %d\n", pipeid, _a.(int))
+			fmt.Printf("tbi(%d):  writing a.Data: %d\n", nodeid, _a.(int))
 			_a_rdy = false
 			a.Data <- _a
 			_a = (_a.(int) + 1)%2
 		}
 
-		fmt.Printf("tbi(%d):  select", pipeid)
+		fmt.Printf("tbi(%d):  select", nodeid)
 		select {
 		case _a_rdy = <-a.Ack:
-			fmt.Println("tbi(%d):  a_req read", pipeid)
+			fmt.Println("tbi(%d):  a_req read", nodeid)
 			
 			
 		}
@@ -35,9 +35,9 @@ func tbi(a flowgraph.Conn) {
 	
 }
 
-func tbo(x flowgraph.Conn) {
+func tbo(x flowgraph.Edge) {
 	
-	pipeid:=flowgraph.MakePipe()
+	nodeid:=flowgraph.MakeNode()
 	
 	var _x flowgraph.Datum
 	_x_rdy := x.Data_init
@@ -45,7 +45,7 @@ func tbo(x flowgraph.Conn) {
 	for {
 		// fmt.Println("		tbo:  _x_rdy", _x_rdy)
 		if _x_rdy {
-			fmt.Printf("		tbo(%d):  writing x.Ack\n", pipeid)
+			fmt.Printf("		tbo(%d):  writing x.Ack\n", nodeid)
 			x.Ack <- true
 			_x_rdy = false
 		}
@@ -54,7 +54,7 @@ func tbo(x flowgraph.Conn) {
 		select {
 		case _x = <-x.Data:
 			{
-				fmt.Printf("		tbo(%d):  x read %v --  %v\n", pipeid, reflect.TypeOf(_x), _x)
+				fmt.Printf("		tbo(%d):  x read %v --  %v\n", nodeid, reflect.TypeOf(_x), _x)
 				_x_rdy = true
 			}
 		}
@@ -65,9 +65,9 @@ func tbo(x flowgraph.Conn) {
 
 func main() {
 
-	a := flowgraph.MakeConn(false,true,nil)
-	x := flowgraph.MakeConn(false,true,nil)
-	y := flowgraph.MakeConn(false,true,nil)
+	a := flowgraph.MakeEdge(false,true,nil)
+	x := flowgraph.MakeEdge(false,true,nil)
+	y := flowgraph.MakeEdge(false,true,nil)
 
 	go tbi(a)
 	go flowgraph.StrCndFunc(a, x, y)
