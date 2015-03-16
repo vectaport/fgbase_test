@@ -9,7 +9,7 @@ import (
 
 func tbi(a flowgraph.Edge) {
 
-	node:=flowgraph.MakeNode()
+	node:=flowgraph.MakeNode("tbi")
 
 	var _a flowgraph.Datum = 0
 	_a_rdy := a.Ack_init
@@ -37,7 +37,7 @@ func tbi(a flowgraph.Edge) {
 
 func tbo(x flowgraph.Edge) {
 	
-	node:=flowgraph.MakeNode()
+	node:=flowgraph.MakeNode("tbo")
 	
 	var _x flowgraph.Datum
 	_x_rdy := x.Data_init

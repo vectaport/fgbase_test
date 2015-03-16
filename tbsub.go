@@ -10,7 +10,7 @@ import (
 
 func tbi(a, b flowgraph.Edge) {
 
-	node := flowgraph.MakeNode()
+	node := flowgraph.MakeNode("tbi")
 
 	var _a flowgraph.Datum = 0
 	var _b flowgraph.Datum = 0
@@ -134,7 +134,7 @@ func tbi(a, b flowgraph.Edge) {
 
 func tbo(x flowgraph.Edge) {
 
-	node := flowgraph.MakeNode()
+	node := flowgraph.MakeNode("tbo")
 
 	var _x flowgraph.Datum
 	_x_rdy := x.Data_init
