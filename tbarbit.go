@@ -17,6 +17,7 @@ func tbi(a flowgraph.Edge) {
 
 
 		if _a_rdy {
+			node.ExecCnt()
 			node.Printf("writing a.Data: %d\n", _a.(int))
 			_a_rdy = false
 			a.Data <- _a
@@ -43,6 +44,7 @@ func tbo(x flowgraph.Edge) {
 
 	for {
 		if _x_rdy {
+			node.ExecCnt()
 			node.Printf("writing x.Ack\n")
 			x.Ack <- true
 			_x_rdy = false

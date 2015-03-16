@@ -21,6 +21,7 @@ func tbi(a, b flowgraph.Edge) {
 		if (_i>10) { break }
 
 		if _a_rdy && _b_rdy{
+			node.ExecCnt()
 			node.Printf("writing a.Data and b.Data: %d,%d\n", _a.(int), _b.(int))
 			_a_rdy = false
 			_b_rdy = false
@@ -49,6 +50,7 @@ func tbi(a, b flowgraph.Edge) {
 	for {
 		if (_i>9) { break }
 		if _a_rdy && _b_rdy{
+			node.ExecCnt()
 			node.Printf("writing a.Data and b.Data: %f,%f\n", _a.(float32), _b.(float32))
 			_a_rdy = false
 			_b_rdy = false
@@ -78,6 +80,7 @@ func tbi(a, b flowgraph.Edge) {
 		if (_i > 0) { break }
 
 		if _a_rdy && _b_rdy{
+			node.ExecCnt()
 			node.Printf("writing a.Data and b.Data: %v,%v\n", _a, _b)
 			_a_rdy = false
 			_b_rdy = false
@@ -107,6 +110,7 @@ func tbi(a, b flowgraph.Edge) {
 		if (_i > 0) { break }
 
 		if _a_rdy && _b_rdy{
+			node.ExecCnt()
 			node.Printf("writing a.Data and b.Data: %v,%v\n", _a, _b)
 			_a_rdy = false
 			_b_rdy = false
@@ -139,6 +143,7 @@ func tbo(x flowgraph.Edge) {
 
 	for {
 		if _x_rdy {
+			node.ExecCnt()
 			node.Printf("writing x.Ack\n")
 			x.Ack <- true
 			_x_rdy = false

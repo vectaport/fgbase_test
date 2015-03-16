@@ -22,6 +22,7 @@ func tbi(g, a, b flowgraph.Edge) {
 		node.Printf("_g_rdy %v, _a_rdy,_b_rdy %v,%v\n",  _g_rdy, _a_rdy, _b_rdy);
 		
 		if _a_rdy && _b_rdy && _g_rdy {
+			node.ExecCnt()
 			_a_rdy = false
 			_b_rdy = false
 			_g_rdy = false
@@ -66,6 +67,7 @@ func tbo(x, g flowgraph.Edge) {
 	for {
 		node.Printf("_x_rdy %v, _g_rdy %v\n", _x_rdy, _g_rdy);
 		if _x_rdy && _g_rdy {
+			node.ExecCnt()
 			node.Printf("writing g.Data and x.Ack\n")
 			g.Data <- true
 			node.Printf("done writing g.Data\n")
