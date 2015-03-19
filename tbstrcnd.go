@@ -6,28 +6,26 @@ import (
 	"time"
 )
 
-func tbi(a flowgraph.Edge) {
+func tbi(x flowgraph.Edge) {
 
-	node:=flowgraph.MakeNode("tbi")
-
-	var _a flowgraph.Datum = 0
-	_a_rdy := a.Ack_init
+	node:=flowgraph.MakeNode2("tbi", nil, []*flowgraph.Edge{&x})
+	
+	x.Val = 0
 
 	for {
 
-
-		if _a_rdy {
-			node.ExecCnt()
-			node.Printf("writing a.Data: %d\n", _a.(int))
-			_a_rdy = false
-			a.Data <- _a
-			_a = (_a.(int) + 1)%2
+		if node.Rdy() {
+			node.PrintVals()
+			node.Printf("writing x.Data: %d\n", x.Val.(int))
+			x.Data <- x.Val
+			x.Val = (x.Val.(int) + 1)%2
+			x.Rdy = false
 		}
 
 		node.Printf("select\n")
 		select {
-		case _a_rdy = <-a.Ack:
-			node.Printf("a_req read\n")
+		case x.Rdy = <-x.Ack:
+			node.Printf("x.Ack read\n")
 			
 			
 		}
@@ -35,27 +33,23 @@ func tbi(a flowgraph.Edge) {
 	
 }
 
-func tbo(x flowgraph.Edge) {
+func tbo(a flowgraph.Edge) {
+	node:=flowgraph.MakeNode2("tbo", []*flowgraph.Edge{&a}, nil)
 	
-	node:=flowgraph.MakeNode("tbo")
-	
-	var _x flowgraph.Datum
-	_x_rdy := x.Data_init
-
 	for {
-		if _x_rdy {
-			node.ExecCnt()
-			node.Printf("writing x.Ack\n")
-			x.Ack <- true
-			_x_rdy = false
+		if node.Rdy() {
+			node.Printf("writing a.Ack\n")
+			node.PrintVals()
+			a.Ack <- true
+			a.Rdy = false
 		}
 
 		node.Printf("select\n")
 		select {
-		case _x = <-x.Data:
+		case a.Val = <-a.Data:
 			{
-				node.Printf("x read %v --  %v\n", reflect.TypeOf(_x), _x)
-				_x_rdy = true
+				node.Printf("a read %v --  %v\n", reflect.TypeOf(a.Val), a.Val)
+				a.Rdy = true
 			}
 		}
 
@@ -65,9 +59,9 @@ func tbo(x flowgraph.Edge) {
 
 func main() {
 
-	a := flowgraph.MakeEdge(false,true,nil)
-	x := flowgraph.MakeEdge(false,true,nil)
-	y := flowgraph.MakeEdge(false,true,nil)
+	a := flowgraph.MakeEdge2("a",false,true,nil)
+	x := flowgraph.MakeEdge2("x",false,true,nil)
+	y := flowgraph.MakeEdge2("y",false,true,nil)
 
 	go tbi(a)
 	go flowgraph.StrCndNode(a, x, y)
