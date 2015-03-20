@@ -1,4 +1,4 @@
-all:: tbpromote tbadd tbadd_ring tbsub tbstrcnd tbarbit 
+all:: tbpromote tbadd tbadd_ring tbsub tbstrcnd tbstrval tbarbit 
 
 tbpromote:
 	go run tbpromote.go
@@ -14,6 +14,9 @@ tbsub:
 
 tbstrcnd:
 	go run tbstrcnd.go
+
+tbstrval:
+	go run tbstrval.go
 
 tbarbit:
 	go run tbarbit.go
