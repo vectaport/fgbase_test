@@ -11,8 +11,6 @@ func tbi(x flowgraph.Edge) {
 
 	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil)
 
-	x.Val = 0
-
 	for {
 
 
@@ -68,7 +66,9 @@ func main() {
 	flowgraph.Indent = false
 
 	a := flowgraph.MakeEdge("a", false,true,nil)
+	a.Val = 0
 	b := flowgraph.MakeEdge("b", false,true,nil)
+	b.Val = 1000
 	x := flowgraph.MakeEdge("x", false,true,nil)
 
 	go tbi(a)
