@@ -89,10 +89,10 @@ func main() {
 	flowgraph.Debug = false
 	flowgraph.Indent = false
 
-	a := flowgraph.MakeEdge2("a",false,true,int(0))
-	b := flowgraph.MakeEdge2("b",false,true,int(0))
-	x := flowgraph.MakeEdge2("x",false,true,nil)
-	g := flowgraph.MakeEdge2("g",true,false,nil)
+	a := flowgraph.MakeEdge("a",false,true,int(0))
+	b := flowgraph.MakeEdge("b",false,true,int(0))
+	x := flowgraph.MakeEdge("x",false,true,nil)
+	g := flowgraph.MakeEdge("g",true,false,nil)
 
 	go tbi(g, a, b)
 	go flowgraph.AddNode(a, b, x)
