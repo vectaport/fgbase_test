@@ -72,7 +72,7 @@ func main() {
 
 	go tbi(a)
 	go tbi(b)
-	go flowgraph.ArbitNode(a, b, x)
+	go flowgraph.FuncArbit(a, b, x)
 	go tbo(x)
 
 	time.Sleep(1000000000)

@@ -70,8 +70,8 @@ func main() {
 	a.Val = 0
 	go tbi(a)
 	b.Val = 1000
-	go flowgraph.ConstNode(b)
-	go flowgraph.AddNode(a, b, x)
+	go flowgraph.FuncConst(b)
+	go flowgraph.FuncAdd(a, b, x)
 	go tbo(x)
 
 	time.Sleep(1000000000)

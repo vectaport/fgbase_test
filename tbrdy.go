@@ -71,7 +71,7 @@ func main() {
 	go tbi(a)
 	b.Val = 0
 	go tbi(b)
-	go flowgraph.RdyNode(a, b, x)
+	go flowgraph.FuncRdy(a, b, x)
 	go tbo(x)
 
 	time.Sleep(1000000000)

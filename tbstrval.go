@@ -73,7 +73,7 @@ func main() {
 	go tbi(a)
 	b.Val = 1000
 	go tbi(b)
-	go flowgraph.StrValNode(a, b, x, y)
+	go flowgraph.FuncStrVal(a, b, x, y)
 	go tbo(x)
 	go tbo(y)
 

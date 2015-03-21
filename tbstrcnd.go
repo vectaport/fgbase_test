@@ -64,7 +64,7 @@ func main() {
 	y := flowgraph.NewEdge("y",nil)
 
 	go tbi(a)
-	go flowgraph.StrCndNode(a, x, y)
+	go flowgraph.FuncStrCnd(a, x, y)
 	go tbo(x)
 	go tbo(y)
 
