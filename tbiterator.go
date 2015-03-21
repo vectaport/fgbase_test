@@ -76,11 +76,11 @@ func main() {
 	strcnd1 := flowgraph.NewEdge("strcnd1",nil)
 
 	go tbi(start)
-	go flowgraph.RdyNode(start, strcnd0, rdy0)
-        go flowgraph.ArbitNode(rdy0, strcnd1, arbit0)
-	go flowgraph.SubNode(arbit0, const1, sub0)
-	go flowgraph.StrCndNode(sub0, strcnd0, strcnd1)
-	go flowgraph.ConstNode(const1)
+	go flowgraph.FuncRdy(start, strcnd0, rdy0)
+        go flowgraph.FuncArbit(rdy0, strcnd1, arbit0)
+	go flowgraph.FuncSub(arbit0, const1, sub0)
+	go flowgraph.FuncStrCnd(sub0, strcnd0, strcnd1)
+	go flowgraph.FuncConst(const1)
 
 	time.Sleep(1000000000)
 
