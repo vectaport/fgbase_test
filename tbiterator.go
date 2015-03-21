@@ -2,13 +2,14 @@ package main
 
 import (
 	"github.com/vectaport/flowgraph"
-	"reflect"
 	"time"
 )
 
 func tbi(x flowgraph.Edge) {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil)
+
+	x.Val = 10
 
 	var i int = 0
 	for {
@@ -33,6 +34,7 @@ func tbi(x flowgraph.Edge) {
 	}
 }
 
+/*
 func tbo(a flowgraph.Edge) {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil)
@@ -57,22 +59,28 @@ func tbo(a flowgraph.Edge) {
 	}
 
 }
+*/
 
 func main() {
 
 	flowgraph.Debug = false
 	flowgraph.Indent = false
 
-	a := flowgraph.MakeEdge("a",nil)
-	b := flowgraph.MakeEdge("b",nil)
-	x := flowgraph.MakeEdge("x",nil)
+	start := flowgraph.MakeEdge("start",nil)
+	rdy0 := flowgraph.MakeEdge("rdy0",nil)
+	arbit0 := flowgraph.MakeEdge("arbit0",nil)
+	const1 := flowgraph.MakeEdge("const1",nil)
+	const1.Val = 1
+	sub0 := flowgraph.MakeEdge("sub0",nil)
+	strcnd0 := flowgraph.MakeEdge("strcnd0",int(0))
+	strcnd1 := flowgraph.MakeEdge("strcnd1",nil)
 
-	a.Val = 1000
-	go tbi(a)
-	b.Val = 0
-	go tbi(b)
-	go flowgraph.RdyNode(a, b, x)
-	go tbo(x)
+	go tbi(start)
+	go flowgraph.RdyNode(start, strcnd0, rdy0)
+        go flowgraph.ArbitNode(rdy0, strcnd1, arbit0)
+	go flowgraph.SubNode(arbit0, const1, sub0)
+	go flowgraph.StrCndNode(sub0, strcnd0, strcnd1)
+	go flowgraph.ConstNode(const1)
 
 	time.Sleep(1000000000)
 

@@ -59,9 +59,9 @@ func tbo(a flowgraph.Edge) {
 
 func main() {
 
-	a := flowgraph.MakeEdge("a",false,true,nil)
-	x := flowgraph.MakeEdge("x",false,true,nil)
-	y := flowgraph.MakeEdge("y",false,true,nil)
+	a := flowgraph.MakeEdge("a",nil)
+	x := flowgraph.MakeEdge("x",nil)
+	y := flowgraph.MakeEdge("y",nil)
 
 	go tbi(a)
 	go flowgraph.StrCndNode(a, x, y)

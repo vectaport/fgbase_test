@@ -64,10 +64,10 @@ func main() {
 	flowgraph.Debug = false
 	flowgraph.Indent = false
 
-	a := flowgraph.MakeEdge("a",false,true,nil)
-	b := flowgraph.MakeEdge("b",false,true,nil)
-	x := flowgraph.MakeEdge("x",false,true,nil)
-	y := flowgraph.MakeEdge("y",false,true,nil)
+	a := flowgraph.MakeEdge("a",nil)
+	b := flowgraph.MakeEdge("b",nil)
+	x := flowgraph.MakeEdge("x",nil)
+	y := flowgraph.MakeEdge("y",nil)
 
 	a.Val = 0
 	go tbi(a)
