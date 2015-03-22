@@ -43,7 +43,7 @@ func tbi(a, x, y flowgraph.Edge) {
 			
 		case a.Val = <-a.Data: {
 			node.Printf("a.Data read\n")
-			flowgraph.SinkVal(a.Val)
+			flowgraph.Sink(a.Val)
 			a.Rdy = true
 		}
 		}
