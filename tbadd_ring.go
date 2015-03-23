@@ -14,10 +14,10 @@ func tbi(a, x, y flowgraph.Edge) {
 	y.Val = 0
 	
 	for {
-		node.PrintStatus(false)
+		node.TraceValRdy(false)
 		
 		if node.Rdy() {
-			node.PrintVals()
+			node.TraceVal()
 			a.Ack <- true
 			node.Tracef("a.Ack written\n");
 			x.Data <- x.Val
@@ -56,10 +56,10 @@ func tbo(a, x flowgraph.Edge) {
 	node := flowgraph.NewNode("tbo", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil)
 
 	for {
-		node.PrintStatus(false)
+		node.TraceValRdy(false)
 		if node.Rdy() {
 			x.Val = true
-			node.PrintVals()
+			node.TraceVal()
 			node.Tracef("writing x.Data and a.Ack\n")
 			x.Data <- x.Val
 			node.Tracef("done writing x.Data\n")

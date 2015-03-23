@@ -8,3 +8,5 @@ Makefile~
 *.temp
 
 *.tmp
+
+*.go#

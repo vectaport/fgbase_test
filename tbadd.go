@@ -138,7 +138,7 @@ func tbo(a flowgraph.Edge) {
 	for {
 		if node.Rdy() {
 			node.Tracef("writing a.Ack\n")
-			node.PrintVals()
+			node.TraceVal()
 			a.Ack <- true
 			a.Rdy = false
 		}

@@ -15,7 +15,7 @@ func tbi(x flowgraph.Edge) {
 
 
 		if node.Rdy() {
-			node.PrintVals()
+			node.TraceVal()
 			node.Tracef("writing x.Data: %d\n", x.Val.(int))
 			x.Rdy = false
 			x.Data <- x.Val
@@ -40,7 +40,7 @@ func tbo(a flowgraph.Edge) {
 	for {
 		if a.Rdy {
 			node.ExecCnt()
-			node.PrintVals()
+			node.TraceVal()
 			node.Tracef("writing a.Ack\n")
 			a.Ack <- true
 			a.Rdy = false
