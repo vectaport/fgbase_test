@@ -19,11 +19,11 @@ func tbi(a, x, y flowgraph.Edge) {
 		if node.Rdy() {
 			node.PrintVals()
 			a.Ack <- true
-			node.Printf("a.Ack written\n");
+			node.Tracef("a.Ack written\n");
 			x.Data <- x.Val
-			node.Printf("x.Data written\n");
+			node.Tracef("x.Data written\n");
 			y.Data <- y.Val
-			node.Printf("y.Data written\n");
+			node.Tracef("y.Data written\n");
 			x.Val = x.Val.(int) + 1
 			y.Val = y.Val.(int) + 1
 			x.Rdy = false
@@ -31,18 +31,18 @@ func tbi(a, x, y flowgraph.Edge) {
 			a.Rdy = false
 		}
 		
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case x.Rdy = <-x.Ack: {
-			node.Printf("x.Ack read\n")
+			node.Tracef("x.Ack read\n")
 		}
 			
 		case y.Rdy = <-y.Ack: {
-			node.Printf("y.Ack read\n")
+			node.Tracef("y.Ack read\n")
 		}
 			
 		case a.Val = <-a.Data: {
-			node.Printf("a.Data read\n")
+			node.Tracef("a.Data read\n")
 			flowgraph.Sink(a.Val)
 			a.Rdy = true
 		}
@@ -60,24 +60,24 @@ func tbo(a, x flowgraph.Edge) {
 		if node.Rdy() {
 			x.Val = true
 			node.PrintVals()
-			node.Printf("writing x.Data and a.Ack\n")
+			node.Tracef("writing x.Data and a.Ack\n")
 			x.Data <- x.Val
-			node.Printf("done writing x.Data\n")
+			node.Tracef("done writing x.Data\n")
 			a.Ack <- true
-			node.Printf("done writing a.Ack\n")
+			node.Tracef("done writing a.Ack\n")
 			a.Rdy = false
 			x.Rdy = false
 		}
 
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case a.Val = <-a.Data:
 			{
-				node.Printf("a read %v --  %v\n", reflect.TypeOf(a.Val), a.Val)
+				node.Tracef("a read %v --  %v\n", reflect.TypeOf(a.Val), a.Val)
 				a.Rdy = true
 			}
 		case x.Rdy = <-x.Ack:
-			node.Printf("x.Ack read\n")
+			node.Tracef("x.Ack read\n")
 		}
 
 	}

@@ -6,3 +6,5 @@ listener.go
 Makefile~
 
 *.temp
+
+*.tmp

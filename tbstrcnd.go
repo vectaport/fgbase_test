@@ -16,16 +16,16 @@ func tbi(x flowgraph.Edge) {
 
 		if node.Rdy() {
 			node.PrintVals()
-			node.Printf("writing x.Data: %d\n", x.Val.(int))
+			node.Tracef("writing x.Data: %d\n", x.Val.(int))
 			x.Data <- x.Val
 			x.Val = (x.Val.(int) + 1)%2
 			x.Rdy = false
 		}
 
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case x.Rdy = <-x.Ack:
-			node.Printf("x.Ack read\n")
+			node.Tracef("x.Ack read\n")
 			
 			
 		}
@@ -38,17 +38,17 @@ func tbo(a flowgraph.Edge) {
 	
 	for {
 		if node.Rdy() {
-			node.Printf("writing a.Ack\n")
+			node.Tracef("writing a.Ack\n")
 			node.PrintVals()
 			a.Ack <- true
 			a.Rdy = false
 		}
 
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case a.Val = <-a.Data:
 			{
-				node.Printf("a read %v --  %v\n", reflect.TypeOf(a.Val), a.Val)
+				node.Tracef("a read %v --  %v\n", reflect.TypeOf(a.Val), a.Val)
 				a.Rdy = true
 			}
 		}

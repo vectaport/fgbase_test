@@ -19,7 +19,7 @@ func tbi(x, y flowgraph.Edge) {
 		if (_i>10) { break }
 
 		if node.Rdy(){
-			node.Printf("writing x.Data and y.Data: %d,%d\n", x.Val.(int), y.Val.(int))
+			node.Tracef("writing x.Data and y.Data: %d,%d\n", x.Val.(int), y.Val.(int))
 			x.Rdy = false
 			y.Rdy = false
 			x.Data <- x.Val
@@ -29,13 +29,13 @@ func tbi(x, y flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case x.Rdy = <-x.Ack:
-			node.Printf("x.Ack read\n")
+			node.Tracef("x.Ack read\n")
 
 		case y.Rdy = <-y.Ack:
-			node.Printf("y.Ack read\n")
+			node.Tracef("y.Ack read\n")
 		}
 
 	}
@@ -48,7 +48,7 @@ func tbi(x, y flowgraph.Edge) {
 		if (_i>9) { break }
 		if x.Rdy && y.Rdy{
 			node.ExecCnt()
-			node.Printf("writing x.Data and y.Data: %f,%f\n", x.Val.(float32), y.Val.(float32))
+			node.Tracef("writing x.Data and y.Data: %f,%f\n", x.Val.(float32), y.Val.(float32))
 			x.Rdy = false
 			y.Rdy = false
 			x.Data <- x.Val
@@ -58,13 +58,13 @@ func tbi(x, y flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case x.Rdy = <-x.Ack:
-			node.Printf("x.Ack read\n")
+			node.Tracef("x.Ack read\n")
 
 		case y.Rdy = <-y.Ack:
-			node.Printf("y.Ack read\n")
+			node.Tracef("y.Ack read\n")
 		}
 
 	}
@@ -78,7 +78,7 @@ func tbi(x, y flowgraph.Edge) {
 
 		if x.Rdy && y.Rdy{
 			node.ExecCnt()
-			node.Printf("writing x.Data and y.Data: %v,%v\n", x.Val, y.Val)
+			node.Tracef("writing x.Data and y.Data: %v,%v\n", x.Val, y.Val)
 			x.Rdy = false
 			y.Rdy = false
 			x.Data <- x.Val
@@ -88,13 +88,13 @@ func tbi(x, y flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case x.Rdy = <-x.Ack:
-			node.Printf("x.Ack read\n")
+			node.Tracef("x.Ack read\n")
 
 		case y.Rdy = <-y.Ack:
-			node.Printf("y.Ack read\n")
+			node.Tracef("y.Ack read\n")
 		}
 
 	}
@@ -108,7 +108,7 @@ func tbi(x, y flowgraph.Edge) {
 
 		if x.Rdy && y.Rdy{
 			node.ExecCnt()
-			node.Printf("writing x.Data and y.Data: %v,%v\n", x.Val, y.Val)
+			node.Tracef("writing x.Data and y.Data: %v,%v\n", x.Val, y.Val)
 			x.Rdy = false
 			y.Rdy = false
 			x.Data <- x.Val
@@ -118,13 +118,13 @@ func tbi(x, y flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case x.Rdy = <-x.Ack:
-			node.Printf("x.Ack read\n")
+			node.Tracef("x.Ack read\n")
 
 		case y.Rdy = <-y.Ack:
-			node.Printf("y.Ack read\n")
+			node.Tracef("y.Ack read\n")
 		}
 
 	}
@@ -137,17 +137,17 @@ func tbo(a flowgraph.Edge) {
 
 	for {
 		if node.Rdy() {
-			node.Printf("writing a.Ack\n")
+			node.Tracef("writing a.Ack\n")
 			node.PrintVals()
 			a.Ack <- true
 			a.Rdy = false
 		}
 
-		node.Printf("select\n")
+		node.Tracef("select\n")
 		select {
 		case a.Val = <-a.Data:
 			{
-				node.Printf("a read %v --  %v\n", reflect.TypeOf(a.Val), a.Val)
+				node.Tracef("a read %v --  %v\n", reflect.TypeOf(a.Val), a.Val)
 				a.Rdy = true
 			}
 		}
