@@ -19,7 +19,7 @@ func tbi(x, y flowgraph.Edge) {
 		if (_i>10) { break }
 
 		if node.Rdy() {
-			node.TraceVal()
+			node.TraceVals()
 			node.Tracef("writing x.Data and y.Data: %d,%d\n", x.Val.(int), y.Val.(int))
 			x.Rdy = false
 			y.Rdy = false
@@ -48,7 +48,7 @@ func tbi(x, y flowgraph.Edge) {
 	for {
 		if (_i>9) { break }
 		if node.Rdy(){
-			node.TraceVal()
+			node.TraceVals()
 			node.Tracef("writing x.Data and y.Data: %f,%f\n", x.Val.(float32), y.Val.(float32))
 			x.Rdy = false
 			y.Rdy = false
@@ -78,7 +78,7 @@ func tbi(x, y flowgraph.Edge) {
 		if (_i > 0) { break }
 
 		if node.Rdy(){
-			node.TraceVal()
+			node.TraceVals()
 			node.Tracef("writing x.Data and y.Data: %v,%v\n", x.Val, y.Val)
 			x.Rdy = false
 			y.Rdy = false
@@ -108,7 +108,7 @@ func tbi(x, y flowgraph.Edge) {
 		if (_i > 0) { break }
 
 		if node.Rdy(){
-			node.TraceVal()
+			node.TraceVals()
 			node.Tracef("writing x.Data and y.Data: %v,%v\n", x.Val, y.Val)
 			x.Rdy = false
 			y.Rdy = false
@@ -138,7 +138,7 @@ func tbo(a flowgraph.Edge) {
 
 	for {
 		if node.Rdy() {
-			node.TraceVal()
+			node.TraceVals()
 			node.Tracef("writing a.Ack\n")
 			a.Ack <- true
 			a.Rdy = false
