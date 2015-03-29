@@ -84,8 +84,6 @@ func tbi(x, y flowgraph.Edge) {
 			y.Rdy = false
 			x.Data <- x.Val
 			y.Data <- y.Val
-			// x.Val = x.Val.(float32) + 1.
-			// y.Val = y.Val.(float32) + 1.
 			_i = _i + 1
 		}
 
@@ -100,8 +98,8 @@ func tbi(x, y flowgraph.Edge) {
 
 	}
 
-	x.Val = int8(0)
-	y.Val = uint64(0)
+	x.Val = int8(-1)
+	y.Val = uint64(math.MaxUint64)
 	_i = 0
 
 	for  {
@@ -114,8 +112,34 @@ func tbi(x, y flowgraph.Edge) {
 			y.Rdy = false
 			x.Data <- x.Val
 			y.Data <- y.Val
-			// x.Val = x.Val.(float32) + 1.
-			// y.Val = y.Val.(float32) + 1.
+			_i = _i + 1
+		}
+
+		node.Tracef("select\n")
+		select {
+		case x.Rdy = <-x.Ack:
+			node.Tracef("x.Ack read\n")
+
+		case y.Rdy = <-y.Ack:
+			node.Tracef("y.Ack read\n")
+		}
+
+	}
+
+	x.Val = int8(-1)
+	y.Val = uint32(math.MaxUint32)
+	_i = 0
+
+	for  {
+		if (_i > 0) { break }
+
+		if node.Rdy(){
+			node.TraceVals()
+			node.Tracef("writing x.Data and y.Data: %v,%v\n", x.Val, y.Val)
+			x.Rdy = false
+			y.Rdy = false
+			x.Data <- x.Val
+			y.Data <- y.Val
 			_i = _i + 1
 		}
 
