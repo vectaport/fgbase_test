@@ -29,14 +29,7 @@ func tbi(x, y flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		node.Tracef("select\n")
-		select {
-		case x.Rdy = <-x.Ack:
-			node.Tracef("x.Ack read\n")
-
-		case y.Rdy = <-y.Ack:
-			node.Tracef("y.Ack read\n")
-		}
+		node.Select()
 
 	}
 
@@ -58,17 +51,10 @@ func tbi(x, y flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		node.Tracef("select\n")
-		select {
-		case x.Rdy = <-x.Ack:
-			node.Tracef("x.Ack read\n")
-
-		case y.Rdy = <-y.Ack:
-			node.Tracef("y.Ack read\n")
-		}
-
+		node.Select()
+		
 	}
-
+	
 	x.Val = uint64(math.MaxUint64)
 	y.Val = -1
 	_i = 0
@@ -86,14 +72,7 @@ func tbi(x, y flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		node.Tracef("select\n")
-		select {
-		case x.Rdy = <-x.Ack:
-			node.Tracef("x.Ack read\n")
-
-		case y.Rdy = <-y.Ack:
-			node.Tracef("y.Ack read\n")
-		}
+		node.Select()
 
 	}
 
@@ -114,14 +93,7 @@ func tbi(x, y flowgraph.Edge) {
 			_i = _i + 1
 		}
 
-		node.Tracef("select\n")
-		select {
-		case x.Rdy = <-x.Ack:
-			node.Tracef("x.Ack read\n")
-
-		case y.Rdy = <-y.Ack:
-			node.Tracef("y.Ack read\n")
-		}
+		node.Select()
 
 	}
 
