@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/vectaport/flowgraph"
-	"reflect"
 	"time"
 )
 
@@ -31,23 +30,7 @@ func tbi(a, x, y flowgraph.Edge) {
 			a.Rdy = false
 		}
 		
-		node.Tracef("select\n")
-		select {
-		case x.Rdy = <-x.Ack: {
-			node.Tracef("x.Ack read\n")
-		}
-			
-		case y.Rdy = <-y.Ack: {
-			node.Tracef("y.Ack read\n")
-		}
-			
-		case a.Val = <-a.Data: {
-			node.Tracef("a.Data read\n")
-			flowgraph.Sink(a.Val)
-			a.Rdy = true
-		}
-		}
-		
+		node.Select()
 	}
 }
 
@@ -69,16 +52,7 @@ func tbo(a, x flowgraph.Edge) {
 			x.Rdy = false
 		}
 
-		node.Tracef("select\n")
-		select {
-		case a.Val = <-a.Data:
-			{
-				node.Tracef("a read %v --  %v\n", reflect.TypeOf(a.Val), a.Val)
-				a.Rdy = true
-			}
-		case x.Rdy = <-x.Ack:
-			node.Tracef("x.Ack read\n")
-		}
+		node.Select()
 
 	}
 
