@@ -51,7 +51,7 @@ func main() {
 	flowgraph.Indent = false
 
 	a := flowgraph.MakeEdge("ae",nil)
-	b := flowgraph.MakeConstEdge("be",1000)
+	b := flowgraph.MakeEdgeConst("be",1000)
 	x := flowgraph.MakeEdge("xe",nil)
 
 	a.Val = 0
