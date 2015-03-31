@@ -26,9 +26,9 @@ func promote_test(a, b, x flowgraph.Edge) {
 }
 func main() {
 
-	a := flowgraph.NewEdge("a",nil)
-	b := flowgraph.NewEdge("b",nil)
-	x := flowgraph.NewEdge("x",nil)
+	a := flowgraph.MakeEdge("a",nil)
+	b := flowgraph.MakeEdge("b",nil)
+	x := flowgraph.MakeEdge("x",nil)
 
 	go promote_test(a, b, x)
 

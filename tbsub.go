@@ -8,7 +8,7 @@ import (
 
 func tbi(x, y flowgraph.Edge) {
 
-	node := flowgraph.NewNode("tbi", nil, []*flowgraph.Edge{&x, &y}, nil)
+	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x, &y}, nil)
 
 	x.Val = 0
 	y.Val = 0
@@ -122,7 +122,7 @@ func tbi(x, y flowgraph.Edge) {
 
 func tbo(a flowgraph.Edge) {
 
-	node := flowgraph.NewNode("tbo", []*flowgraph.Edge{&a}, nil, nil)
+	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil)
 
 	for {
 		if node.Rdy() {
@@ -140,9 +140,9 @@ func tbo(a flowgraph.Edge) {
 
 func main() {
 
-	a := flowgraph.NewEdge("a",nil)
-	b := flowgraph.NewEdge("b",nil)
-	x := flowgraph.NewEdge("x",nil)
+	a := flowgraph.MakeEdge("a",nil)
+	b := flowgraph.MakeEdge("b",nil)
+	x := flowgraph.MakeEdge("x",nil)
 
 	go tbi(a, b)
 	go flowgraph.FuncSub(a, b, x)
