@@ -45,7 +45,7 @@ func main() {
 	go flowgraph.FuncRdy(e0, e5, e1)
         go flowgraph.FuncArbit(e1, e6, e2)
 	go flowgraph.FuncSub(e2, e3, e4)
-	go flowgraph.FuncStrCnd(e4, e5, e6)
+	go flowgraph.FuncSteerc(e4, e5, e6)
 	go flowgraph.FuncConst(e3,1)
 
 	time.Sleep(1000000000)

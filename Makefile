@@ -1,4 +1,4 @@
-all:: tbpromote tbadd tbadd_ring tbsub tbstrcnd tbstrval tbarbit tbrdy tbconst tbconst_local tbiterator 
+all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator 
 
 tbpromote:
 	go run tbpromote.go
@@ -12,11 +12,11 @@ tbadd_ring:
 tbsub:
 	go run tbsub.go
 
-tbstrcnd:
-	go run tbstrcnd.go
+tbsteerc:
+	go run tbsteerc.go
 
-tbstrval:
-	go run tbstrval.go
+tbsteerv:
+	go run tbsteerv.go
 
 tbarbit:
 	go run tbarbit.go
