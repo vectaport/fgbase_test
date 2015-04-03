@@ -13,14 +13,14 @@ func tbi_func(n *flowgraph.Node) {
 
 func tbi(x flowgraph.Edge) {
 
-	node:=flowgraph.MakeNode2("tbi", nil, []*flowgraph.Edge{&x}, nil, tbi_func)
+	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbi_func)
 	x.Aux = 0
 	node.Run()
 	
 }
 
 func tbo(a flowgraph.Edge) {
-	node:=flowgraph.MakeNode2("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
+	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
 	node.Run()
 }
 

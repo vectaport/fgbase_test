@@ -15,7 +15,7 @@ func tbi_func(n *flowgraph.Node) {
 }
 
 func tbi(a, x, y flowgraph.Edge) {
-	node := flowgraph.MakeNode2("tbi", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x, &y}, nil, tbi_func)
+	node := flowgraph.MakeNode("tbi", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x, &y}, nil, tbi_func)
 	x.Aux = 1
 	y.Aux = 1
 	node.Run()
@@ -28,7 +28,7 @@ func tbo_func(n *flowgraph.Node) {
 
 func tbo(a, x flowgraph.Edge) {
 
-	node := flowgraph.MakeNode2("tbo", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil, tbo_func)
+	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil, tbo_func)
 	node.Run()
 
 }
