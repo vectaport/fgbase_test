@@ -35,6 +35,7 @@ func main() {
 	e2 := flowgraph.MakeEdge("e2",nil)
 	e3 := flowgraph.MakeEdge("e3",nil)
 
+	// initialize different state in the two source testbenches (tbi)
 	e0.Aux = 0
 	e1.Aux = 1000
 

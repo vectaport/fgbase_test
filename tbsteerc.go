@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func tbi_func(n *flowgraph.Node) {
+func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
 	x.Val = x.Aux
 	x.Aux = (x.Aux.(int) + 1)%2
@@ -13,7 +13,7 @@ func tbi_func(n *flowgraph.Node) {
 
 func tbi(x flowgraph.Edge) {
 
-	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbi_func)
+	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiFire)
 	x.Aux = 0
 	node.Run()
 	

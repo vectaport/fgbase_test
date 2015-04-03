@@ -13,9 +13,9 @@ func tbi(x, y flowgraph.Edge) {
 	x.Aux = 0
 	y.Aux = 0
 
-	var _i int = 0
+	var i int = 0
 	for {
-		if (_i>10) { break }
+		if (i>10) { break }
 
 		if node.RdyAll(){
 			x.Val = x.Aux
@@ -23,7 +23,7 @@ func tbi(x, y flowgraph.Edge) {
 			x.Aux = x.Aux.(int) + 1
 			y.Aux = y.Aux.(int) + 1
 			node.SendAll()
-			_i = _i + 1
+			i = i + 1
 		}
 
 		node.RecvOne()
@@ -32,17 +32,17 @@ func tbi(x, y flowgraph.Edge) {
 
 	x.Aux = float32(0)
 	y.Aux = float32(0)
-	_i = 0
+	i = 0
 
 	for {
-		if (_i>9) { break }
+		if (i>9) { break }
 		if node.RdyAll(){
 			x.Val = x.Aux
 			y.Val = y.Aux
 			x.Aux = x.Aux.(float32) + 1
 			y.Aux = y.Aux.(float32) + 1
 			node.SendAll()
-			_i = _i + 1
+			i = i + 1
 		}
 
 		node.RecvOne()
@@ -51,16 +51,16 @@ func tbi(x, y flowgraph.Edge) {
 
 	x.Aux = uint64(math.MaxUint64)
 	y.Aux = -1
-	_i = 0
+	i = 0
 
 	for {
-		if (_i > 0) { break }
+		if (i > 0) { break }
 
 		if node.RdyAll(){
 			x.Val = x.Aux
 			y.Val = x.Aux
 			node.SendAll()
-			_i = _i + 1
+			i = i + 1
 		}
 
 		node.RecvOne()
@@ -69,16 +69,16 @@ func tbi(x, y flowgraph.Edge) {
 
 	x.Aux = int8(0)
 	y.Aux = uint64(0)
-	_i = 0
+	i = 0
 
 	for  {
-		if (_i > 0) { break }
+		if (i > 0) { break }
 
 		if node.RdyAll() {
 			x.Val = x.Aux
 			y.Val = x.Aux
 			node.SendAll()
-			_i = _i + 1
+			i = i + 1
 		}
 
 		node.RecvOne()
@@ -87,16 +87,16 @@ func tbi(x, y flowgraph.Edge) {
 
 	x.Aux = int8(0)
 	y.Aux = int16(0)
-	_i = 0
+	i = 0
 
 	for  {
-		if (_i > 0) { break }
+		if (i > 0) { break }
 
 		if node.RdyAll() {
 			x.Val = x.Aux
 			y.Val = x.Aux
 			node.SendAll()
-			_i = _i + 1
+			i = i + 1
 		}
 
 		node.RecvOne()

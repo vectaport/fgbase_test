@@ -8,18 +8,18 @@ import (
 	"reflect"
 )
 
-func promote_test(a, b, x flowgraph.Edge) {
+func promoteTest(a, b, x flowgraph.Edge) {
 	
 	for {
-		_a := <- a.Data
-		_b := <- b.Data
-		fmt.Printf("%v,%v --> ", reflect.TypeOf(_a), reflect.TypeOf(_b))
+		aTmp := <- a.Data
+		bTmp := <- b.Data
+		fmt.Printf("%v,%v --> ", reflect.TypeOf(aTmp), reflect.TypeOf(bTmp))
 		
-		_abig,_bbig,same := flowgraph.Promote(_a, _b)
+		aBig,bBig,same := flowgraph.Promote(aTmp, bTmp)
 		
-		fmt.Printf("%v,%v,%v\n", reflect.TypeOf(_abig), reflect.TypeOf(_bbig), same);
+		fmt.Printf("%v,%v,%v\n", reflect.TypeOf(aBig), reflect.TypeOf(bBig), same);
 		
-		x.Data <- _abig
+		x.Data <- aBig
 	}
 	
 	
@@ -30,7 +30,7 @@ func main() {
 	b := flowgraph.MakeEdge("b",nil)
 	x := flowgraph.MakeEdge("x",nil)
 
-	go promote_test(a, b, x)
+	go promoteTest(a, b, x)
 
   	var answer interface {}
 	a.Data <- 512
