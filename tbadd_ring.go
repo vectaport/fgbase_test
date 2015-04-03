@@ -21,14 +21,14 @@ func tbi(a, x, y flowgraph.Edge) {
 	node.Run()
 }
 
-func tbo_func(n *flowgraph.Node) {
+func tboFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
 	x.Val = true
 }
 
 func tbo(a, x flowgraph.Edge) {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil, tbo_func)
+	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil, tboFire)
 	node.Run()
 
 }
