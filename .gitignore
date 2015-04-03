@@ -10,3 +10,5 @@ Makefile~
 *.tmp
 
 *.go#
+
+iterator_deadlock

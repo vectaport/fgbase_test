@@ -8,20 +8,20 @@ import (
 func tbi(x flowgraph.Edge) {
 
 
-	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil)
+	node:=flowgraph.MakeNode2("tbi", nil, []*flowgraph.Edge{&x}, nil, nil)
+	
+	x.Aux = 1
 
 	for {
+		
 
-
-		if node.Rdy() {
-			node.TraceVals()
-			node.Tracef("writing x.Data: %d\n", x.Val.(int))
-			x.Rdy = false
-			x.Data <- x.Val
-			x.Val = (x.Val.(int) + 1)
+		if node.RdyAll() {
+			x.Val = x.Aux
+			node.SendAll()
+			x.Aux = (x.Aux.(int) + 1)
 		}
 
-		node.Select()
+		node.RecvOne()
 
 	}
 	
@@ -29,17 +29,14 @@ func tbi(x flowgraph.Edge) {
 
 func tbo(a flowgraph.Edge) {
 	
-	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil)
+	node:=flowgraph.MakeNode2("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
 	
 	for {
-		if node.Rdy() {
-			node.TraceVals()
-			node.Tracef("writing a.Ack\n")
-			a.Ack <- true
-			a.Rdy = false
+		if node.RdyAll() {
+			node.SendAll()
 		}
 
-		node.Select()
+		node.RecvOne()
 
 	}
 
@@ -50,16 +47,14 @@ func main() {
 	flowgraph.Debug = false
 	flowgraph.Indent = false
 
-	a := flowgraph.MakeEdge("a",nil)
-	a.Val = 0
-	b := flowgraph.MakeEdge("b",nil)
-	b.Val = 1000
-	x := flowgraph.MakeEdge("x",nil)
+	e0 := flowgraph.MakeEdge("e0",0)
+	e1 := flowgraph.MakeEdge("e1",1000)
+	e2 := flowgraph.MakeEdge("e2",nil)
 
-	go tbi(a)
-	go tbi(b)
-	go flowgraph.FuncArbit(a, b, x)
-	go tbo(x)
+	go tbi(e0)
+	go tbi(e1)
+	go flowgraph.FuncArbit(e0, e1, e2)
+	go tbo(e2)
 
 	time.Sleep(1000000000)
 

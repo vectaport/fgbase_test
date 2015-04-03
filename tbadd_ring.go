@@ -5,56 +5,31 @@ import (
 	"time"
 )
 
+func tbi_func(n *flowgraph.Node) {
+	x := n.Dsts[0]
+	y := n.Dsts[1]
+	x.Val = x.Aux
+	y.Val = y.Aux
+	x.Aux = x.Aux.(int) + 1
+	y.Aux = y.Aux.(int) + 1
+}
+
 func tbi(a, x, y flowgraph.Edge) {
+	node := flowgraph.MakeNode2("tbi", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x, &y}, nil, tbi_func)
+	x.Aux = 1
+	y.Aux = 1
+	node.Run()
+}
 
-	node := flowgraph.MakeNode("tbi", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x, &y}, nil)
-
-	x.Val = 0
-	y.Val = 0
-	
-	for {
-		node.TraceValRdy(false)
-		
-		if node.Rdy() {
-			node.TraceVals()
-			a.Ack <- true
-			node.Tracef("a.Ack written\n");
-			x.Data <- x.Val
-			node.Tracef("x.Data written\n");
-			y.Data <- y.Val
-			node.Tracef("y.Data written\n");
-			x.Val = x.Val.(int) + 1
-			y.Val = y.Val.(int) + 1
-			x.Rdy = false
-			y.Rdy = false
-			a.Rdy = false
-		}
-		
-		node.Select()
-	}
+func tbo_func(n *flowgraph.Node) {
+	x := n.Dsts[0]
+	x.Val = true
 }
 
 func tbo(a, x flowgraph.Edge) {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil)
-
-	for {
-		node.TraceValRdy(false)
-		if node.Rdy() {
-			x.Val = true
-			node.TraceVals()
-			node.Tracef("writing x.Data and a.Ack\n")
-			x.Data <- x.Val
-			node.Tracef("done writing x.Data\n")
-			a.Ack <- true
-			node.Tracef("done writing a.Ack\n")
-			a.Rdy = false
-			x.Rdy = false
-		}
-
-		node.Select()
-
-	}
+	node := flowgraph.MakeNode2("tbo", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil, tbo_func)
+	node.Run()
 
 }
 
@@ -63,14 +38,14 @@ func main() {
 	flowgraph.Debug = false
 	flowgraph.Indent = false
 
-	a := flowgraph.MakeEdge("a",nil)
-	b := flowgraph.MakeEdge("b",nil)
-	x := flowgraph.MakeEdge("x",nil)
-	g := flowgraph.MakeEdge("g",true)
+	e0 := flowgraph.MakeEdge("e0",nil)
+	e1 := flowgraph.MakeEdge("e1",nil)
+	e2 := flowgraph.MakeEdge("e2",nil)
+	e3 := flowgraph.MakeEdge("e3",true)
 
-	go tbi(g, a, b)
-	go flowgraph.FuncAdd(a, b, x)
-	go tbo(x, g)
+	go tbi(e3, e0, e1)
+	go flowgraph.FuncAdd(e0, e1, e2)
+	go tbo(e2, e3)
 
 	time.Sleep(1000000000)
 

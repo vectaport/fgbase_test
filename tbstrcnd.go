@@ -5,55 +5,38 @@ import (
 	"time"
 )
 
+func tbi_func(n *flowgraph.Node) {
+	x := n.Dsts[0]
+	x.Val = x.Aux
+	x.Aux = (x.Aux.(int) + 1)%2
+}
+
 func tbi(x flowgraph.Edge) {
 
-	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil)
-	
-	x.Val = 0
-
-	for {
-
-		if node.Rdy() {
-			node.TraceVals()
-			node.Tracef("writing x.Data: %d\n", x.Val.(int))
-			x.Data <- x.Val
-			x.Val = (x.Val.(int) + 1)%2
-			x.Rdy = false
-		}
-
-		node.Select()
-
-	}
+	node:=flowgraph.MakeNode2("tbi", nil, []*flowgraph.Edge{&x}, nil, tbi_func)
+	x.Aux = 0
+	node.Run()
 	
 }
 
 func tbo(a flowgraph.Edge) {
-	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil)
-	
-	for {
-		if node.Rdy() {
-			node.Tracef("writing a.Ack\n")
-			node.TraceVals()
-			a.Ack <- true
-			a.Rdy = false
-		}
-
-		node.Select()
-
-	}
-
+	node:=flowgraph.MakeNode2("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
+	node.Run()
 }
 
 func main() {
 
-	a := flowgraph.MakeEdge("a",nil)
-	x := flowgraph.MakeEdge("x",nil)
-	y := flowgraph.MakeEdge("y",nil)
+	flowgraph.Indent = false
+	flowgraph.Debug = false
 
-	go tbi(a)
-	go flowgraph.FuncStrCnd(a, x, y)
-	go tbo(x)
-	go tbo(y)
+	e0 := flowgraph.MakeEdge("e0",nil)
+	e1 := flowgraph.MakeEdge("e1",nil)
+	e2 := flowgraph.MakeEdge("e2",nil)
+
+	go tbi(e0)
+	go flowgraph.FuncStrCnd(e0, e1, e2)
+	go tbo(e1)
+	go tbo(e2)
 
 	time.Sleep(1000000000)
 
