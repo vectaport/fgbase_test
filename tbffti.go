@@ -67,6 +67,7 @@ func main() {
 	go tbo(e5, e6)
 
 	time.Sleep(1000000000)
+	flowgraph.StdoutLog.Printf("\n")
 
 }
 
