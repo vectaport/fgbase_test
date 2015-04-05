@@ -49,6 +49,7 @@ func main() {
 	go flowgraph.FuncConst(e3,1)
 
 	time.Sleep(1000000000)
+	flowgraph.StdoutLog.Printf("\n")
 
 }
 

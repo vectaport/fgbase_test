@@ -12,3 +12,5 @@ Makefile~
 *.go#
 
 iterator_deadlock
+
+*.v~
