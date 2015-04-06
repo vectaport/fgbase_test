@@ -22,7 +22,7 @@ func tbo(a flowgraph.Edge) {
 
 func main() {
 
-	flowgraph.Debug = false
+	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.Indent = false
 
 	e0 := flowgraph.MakeEdge("e0",nil)

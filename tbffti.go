@@ -43,7 +43,7 @@ func tbo(a, b flowgraph.Edge) {
 
 func main() {
 
-	flowgraph.Debug = true
+	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.Indent = false
 
 	e0 := flowgraph.MakeEdge("e0",nil)
@@ -61,7 +61,8 @@ func main() {
 	go flowgraph.FuncFft(e1, e3)
 	go flowgraph.FuncPass(e2, e4)
 
-	go flowgraph.FuncFft(e3, e5)
+//	go flowgraph.FuncFft(e3, e5)
+	go flowgraph.FuncPass(e3, e5)
 	go flowgraph.FuncPass(e4, e6)
 
 	go tbo(e5, e6)

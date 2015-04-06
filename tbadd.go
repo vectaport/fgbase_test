@@ -123,7 +123,7 @@ func tbo(a flowgraph.Edge) {
 func main() {
 
 	flowgraph.Indent = false
-	flowgraph.Debug = false
+	flowgraph.TraceLevel = flowgraph.V
 
 	e0 := flowgraph.MakeEdge("e0",nil)
 	e1 := flowgraph.MakeEdge("e1",nil)
