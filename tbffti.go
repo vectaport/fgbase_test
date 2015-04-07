@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const infitesimal=1e-15
+const infitesimal=.1e-12
 
 func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
@@ -15,7 +15,7 @@ func tbiFire(n *flowgraph.Node) {
 	var vec = make([]complex128, sz, sz)
 	rand.Seed(0x1515)
 	
-	delta := 2*math.Pi/float64(sz)
+	delta := 3*2*math.Pi/float64(sz)
 	domain := float64(0)
 
 	for i := range vec {
@@ -35,7 +35,6 @@ func tboFire(n *flowgraph.Node) {
 	b := n.Srcs[1]
 	av := a.Val.([]complex128)
 	bv := b.Val.([]complex128)
-	n.Tracef("FFT a[0] %v, b[0] %v\n", av[0], bv[0])
 	if (len(av)==len(bv)) {
 		for i := range av {
 			if (real(av[i])-real(bv[i])) < -infitesimal || (real(av[i])-real(bv[i]))>infitesimal || 
@@ -45,7 +44,7 @@ func tboFire(n *flowgraph.Node) {
 				return
 			}
 		}
-		n.Tracef("SAME\n")
+		n.Tracef("SAME all differences smaller than %v\n", infitesimal)
 		return
 	} 
 	n.Tracef("!SAME:  different sizes\n")
@@ -58,7 +57,7 @@ func tbo(a, b flowgraph.Edge) {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.V
+	flowgraph.TraceLevel = flowgraph.VVV
 	flowgraph.Indent = false
 
 	e0 := flowgraph.MakeEdge("e0",nil)
