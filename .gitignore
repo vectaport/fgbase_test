@@ -14,3 +14,7 @@ Makefile~
 iterator_deadlock
 
 *.v~
+
+points.png
+
+plottest.go

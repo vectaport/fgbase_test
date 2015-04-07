@@ -15,7 +15,7 @@ func promoteTest(a, b, x flowgraph.Edge) {
 		bTmp := <- b.Data
 		fmt.Printf("%v,%v --> ", reflect.TypeOf(aTmp), reflect.TypeOf(bTmp))
 		
-		aBig,bBig,same := flowgraph.Promote(aTmp, bTmp)
+		aBig,bBig,same := flowgraph.Promote(nil, aTmp, bTmp)
 		
 		fmt.Printf("%v,%v,%v\n", reflect.TypeOf(aBig), reflect.TypeOf(bBig), same);
 		

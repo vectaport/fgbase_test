@@ -27,9 +27,10 @@ func main() {
 
 	e0 := flowgraph.MakeEdge("e0",nil)
 	e1 := flowgraph.MakeEdge("e1",nil)
+	cfalse := flowgraph.MakeEdgeConst("cfalse", false)
 
 	go tbi(e0)
-	go flowgraph.FuncFft(e0, e1)
+	go flowgraph.FuncFft(e0, cfalse, e1)
 	go tbo(e1)
 
 	time.Sleep(1000000000)

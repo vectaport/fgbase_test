@@ -2,16 +2,25 @@ package main
 
 import (
 	"github.com/vectaport/flowgraph"
+	"math"
 	"math/rand"
 	"time"
 )
 
+const infitesimal=1e-15
+
 func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
-	var vec = make([]complex128, 128, 128)
+	const sz = 128
+	var vec = make([]complex128, sz, sz)
 	rand.Seed(0x1515)
+	
+	delta := 2*math.Pi/float64(sz)
+	domain := float64(0)
+
 	for i := range vec {
-		vec[i] = complex(rand.Float64(), rand.Float64())
+		vec[i] = complex(math.Sin(domain), 0.0)
+		domain += delta
 	}
 	x.Val = vec
 }
@@ -26,14 +35,20 @@ func tboFire(n *flowgraph.Node) {
 	b := n.Srcs[1]
 	av := a.Val.([]complex128)
 	bv := b.Val.([]complex128)
+	n.Tracef("FFT a[0] %v, b[0] %v\n", av[0], bv[0])
 	if (len(av)==len(bv)) {
 		for i := range av {
-			if av[i] != bv[i] { break }
+			if (real(av[i])-real(bv[i])) < -infitesimal || (real(av[i])-real(bv[i]))>infitesimal || 
+				(imag(av[i])-imag(bv[i])) < -infitesimal || (imag(av[i])-imag(bv[i]))>infitesimal {
+				n.Tracef("!SAME:  for %d delta is %v\n", i, av[i]-bv[i])
+				n.Tracef("!SAME:  a = %v,  b = %v\n", av[i], bv[i])
+				return
+			}
 		}
 		n.Tracef("SAME\n")
 		return
 	} 
-	n.Tracef("!SAME\n")
+	n.Tracef("!SAME:  different sizes\n")
 }
 
 func tbo(a, b flowgraph.Edge) {
@@ -54,15 +69,17 @@ func main() {
 	e5 := flowgraph.MakeEdge("e5",nil)
 	e6 := flowgraph.MakeEdge("e6",nil)
 
+	cfalse := flowgraph.MakeEdgeConst("cfalse", false)
+	ctrue := flowgraph.MakeEdgeConst("ctrue", true)
+
 	go tbi(e0)
 
 	go flowgraph.FuncFork(e0, e1, e2)
 
-	go flowgraph.FuncFft(e1, e3)
+	go flowgraph.FuncFft(e1, cfalse, e3)
 	go flowgraph.FuncPass(e2, e4)
 
-//	go flowgraph.FuncFft(e3, e5)
-	go flowgraph.FuncPass(e3, e5)
+	go flowgraph.FuncFft(e3, ctrue, e5)
 	go flowgraph.FuncPass(e4, e6)
 
 	go tbo(e5, e6)

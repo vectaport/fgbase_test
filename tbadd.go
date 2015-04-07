@@ -12,11 +12,9 @@ func tbi(x, y flowgraph.Edge) {
 
 	x.Aux = 0
 	y.Aux = 0
-
 	var i int = 0
 	for {
 		if (i>10) { break }
-
 		if node.RdyAll(){
 			x.Val = x.Aux
 			y.Val = y.Aux
@@ -25,15 +23,12 @@ func tbi(x, y flowgraph.Edge) {
 			node.SendAll()
 			i = i + 1
 		}
-
 		node.RecvOne()
-
 	}
 
 	x.Aux = float32(0)
 	y.Aux = float32(0)
 	i = 0
-
 	for {
 		if (i>9) { break }
 		if node.RdyAll(){
@@ -44,64 +39,86 @@ func tbi(x, y flowgraph.Edge) {
 			node.SendAll()
 			i = i + 1
 		}
-
 		node.RecvOne()
-
 	}
 
 	x.Aux = uint64(math.MaxUint64)
 	y.Aux = -1
 	i = 0
-
 	for {
 		if (i > 0) { break }
-
 		if node.RdyAll(){
 			x.Val = x.Aux
-			y.Val = x.Aux
+			y.Val = y.Aux
 			node.SendAll()
 			i = i + 1
 		}
-
 		node.RecvOne()
-
 	}
 
 	x.Aux = int8(0)
 	y.Aux = uint64(0)
 	i = 0
-
 	for  {
 		if (i > 0) { break }
-
 		if node.RdyAll() {
 			x.Val = x.Aux
-			y.Val = x.Aux
+			y.Val = y.Aux
 			node.SendAll()
 			i = i + 1
 		}
-
 		node.RecvOne()
-
 	}
 
 	x.Aux = int8(0)
 	y.Aux = int16(0)
 	i = 0
-
 	for  {
 		if (i > 0) { break }
-
 		if node.RdyAll() {
 			x.Val = x.Aux
-			y.Val = x.Aux
+			y.Val = y.Aux
 			node.SendAll()
 			i = i + 1
 		}
-
 		node.RecvOne()
-
 	}
+
+
+	x.Aux = "Can you add an int to a string?"
+	y.Aux = int8(77)
+	i = 0
+	for  {
+		if (i > 0) { break }
+		if node.RdyAll() {
+			x.Val = x.Aux
+			y.Val = y.Aux
+			node.SendAll()
+			i = i + 1
+		}
+		node.RecvOne()
+	}
+
+	x.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
+	y.Aux = int8(77)
+	i = 0
+	for  {
+		if (i > 0) { break }
+		if node.RdyAll() {
+			x.Val = x.Aux
+			y.Val = y.Aux
+			node.SendAll()
+			i = i + 1
+		}
+		node.RecvOne()
+	}
+	
+
+	// read all the acks to clean up
+	for  {
+		node.RecvOne()
+	}
+	
 
 }
 
@@ -122,8 +139,8 @@ func tbo(a flowgraph.Edge) {
 
 func main() {
 
-	flowgraph.Indent = false
 	flowgraph.TraceLevel = flowgraph.V
+	flowgraph.Indent = false
 
 	e0 := flowgraph.MakeEdge("e0",nil)
 	e1 := flowgraph.MakeEdge("e1",nil)
@@ -133,7 +150,7 @@ func main() {
 	go flowgraph.FuncAdd(e0, e1, e2)
 	go tbo(e2)
 
-	time.Sleep(1000000000)
+	time.Sleep(2000000000)
 	flowgraph.StdoutLog.Printf("\n")
 
 }
