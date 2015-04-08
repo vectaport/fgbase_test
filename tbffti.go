@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const infitesimal=.1e-12
+const infitesimal=1.e-15
 
 func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
@@ -57,7 +57,7 @@ func tbo(a, b flowgraph.Edge) {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.VVV
+	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.Indent = false
 
 	e0 := flowgraph.MakeEdge("e0",nil)
