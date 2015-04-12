@@ -88,7 +88,7 @@ func main() {
         answer = <- x.Data
 	fmt.Printf("answer is %v of type %v\n\n", answer, reflect.TypeOf(answer))
 
-	time.Sleep(1000000000)
+	time.Sleep(time.Second)
 
 }
 

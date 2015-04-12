@@ -38,7 +38,7 @@ func main() {
 	go tbo(e1)
 	go tbo(e2)
 
-	time.Sleep(1000000000)
+	time.Sleep(time.Second)
 	flowgraph.StdoutLog.Printf("\n")
 
 }

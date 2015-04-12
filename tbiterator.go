@@ -48,7 +48,7 @@ func main() {
 	go flowgraph.FuncSteerc(e4, e5, e6)
 	go flowgraph.FuncConst(e3,1)
 
-	time.Sleep(1000000000)
+	time.Sleep(time.Second)
 	flowgraph.StdoutLog.Printf("\n")
 
 }

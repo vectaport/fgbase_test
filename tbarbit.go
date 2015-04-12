@@ -56,7 +56,7 @@ func main() {
 	go flowgraph.FuncArbit(e0, e1, e2)
 	go tbo(e2)
 
-	time.Sleep(1000000000)
+	time.Sleep(time.Second)
 	flowgraph.StdoutLog.Printf("\n")
 
 }
