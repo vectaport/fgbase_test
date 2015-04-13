@@ -45,7 +45,7 @@ func main() {
 	go tbi(e0)
 	go flowgraph.FuncDst(e0, conn)
 
-	time.Sleep(10*time.Second)
+	time.Sleep(2*time.Second)
 	flowgraph.StdoutLog.Printf("\n")
 
 }

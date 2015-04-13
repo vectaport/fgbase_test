@@ -33,7 +33,7 @@ func main() {
 	go flowgraph.FuncSrc(e0, conn)
 	go tbo(e0)
 
-	time.Sleep(10*time.Second)
+	time.Sleep(2*time.Second)
 	flowgraph.StdoutLog.Printf("\n")
 
 }
