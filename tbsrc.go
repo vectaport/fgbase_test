@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"github.com/vectaport/flowgraph"
 	"net"
 	"time"
@@ -28,14 +27,13 @@ func main() {
 		flowgraph.StderrLog.Printf("%v\n", err)
 		return
 	}
-	reader:= bufio.NewReader(conn)
 
 	e0 := flowgraph.MakeEdge("e0",nil)
 
-	go flowgraph.FuncSrc(e0, reader)
+	go flowgraph.FuncSrc(e0, conn)
 	go tbo(e0)
 
-	time.Sleep(time.Hour)
+	time.Sleep(10*time.Second)
 	flowgraph.StdoutLog.Printf("\n")
 
 }
