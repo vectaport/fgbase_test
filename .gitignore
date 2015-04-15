@@ -22,3 +22,5 @@ plottest.go
 *.ipd~
 
 *.ps
+
+iterator2_diag.pdf

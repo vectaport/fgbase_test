@@ -25,7 +25,7 @@ ipledit(14,13
         text(12,"e2" :gs 4 :transform 1,0,0,1,522,451),
         text(12,"e3" :gs 4 :transform 1,0,0,1,476,452),
         conn(318,359,318,416 :arrowscale 1.5 :tail :startnode 7 :endnode 0 :endsubnode 1 :gs 2),
-        invo( :width 64 :height 64 :nsrc 2 :ndst 1 :funcname "arbit" :gs 1 :transform 1,0,0,1,477,427),
+        invo( :width 64 :height 64 :nsrc 2 :ndst 1 :funcname "either" :gs 1 :transform 1,0,0,1,477,427),
         conn(410,427,410,434 :arrowscale 1.5 :startnode 0 :endnode 9 :startsubnode 0 :gs 2),
         fork( :reqlabel 0 :ellipse 408,567,3,3 :text 14,"" :texttrans 1,0,0,1,408,549 :text2 14,"" :texttrans2 1,0,0,1,408,557 :gs 3 :transform 1,0,0,1,2,-130),
         conn(413,437,431,437 :arrowscale 1.5 :tail :startnode 9 :endnode 8 :endsubnode 0 :gs 2),
