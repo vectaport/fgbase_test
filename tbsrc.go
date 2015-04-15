@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/vectaport/flowgraph"
 	"net"
 	"time"
@@ -13,6 +14,10 @@ func tbo(a flowgraph.Edge) {
 }
 
 func main() {
+
+	nodeid := flag.Int("nodeid", 0, "base for node ids")
+	flag.Parse()
+	flowgraph.NodeID = int64(*nodeid)
 
 	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.TraceIndent = false

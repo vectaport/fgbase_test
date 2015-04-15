@@ -141,12 +141,6 @@ func tbo(a flowgraph.Edge) {
 
 func main() {
 
-	var xx flowgraph.Datum
-	const yy = 3
-	xx = yy
-	fmt.Printf("tpe of xx is %v\n", reflect.TypeOf(xx))
-	return
-
 	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.TraceIndent = false
 

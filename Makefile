@@ -40,5 +40,5 @@ tbffti:
 	go run tbffti.go
 
 tbsrcdst:
-	go run tbsrc.go &
-	go run tbdst.go
+	go run tbsrc.go -nodeid=1000 &
+	go run tbdst.go -nodeid=2000

@@ -9,7 +9,7 @@ import (
 func tbi(x flowgraph.Edge) {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
-		func(n *flowgraph.Node) { n.Dsts[0].Val = rand.Intn(15)+1 })
+		func(n *flowgraph.Node) { n.Dsts[0].Val = rand.Intn(7)+1 })
 	node.Run()
 }
 
@@ -28,7 +28,7 @@ func main() {
 
 	go tbi(e0)
 	go flowgraph.FuncRdy(e0, e5, e1)
-	go flowgraph.FuncArbit(e1, e6, e2)
+	go flowgraph.FuncEither(e1, e6, e2)
 	go flowgraph.FuncSub(e2, e3, e4)
 	go flowgraph.FuncSteerc(e4, e5, e6)
 
