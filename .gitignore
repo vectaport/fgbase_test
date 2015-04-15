@@ -18,3 +18,7 @@ iterator_deadlock
 points.png
 
 plottest.go
+
+*.ipd~
+
+*.ps
