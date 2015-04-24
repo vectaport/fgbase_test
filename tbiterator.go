@@ -15,7 +15,7 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.VVV
+	flowgraph.TraceLevel = flowgraph.V
 
 	e,n := flowgraph.MakeGraph(7,5)
 

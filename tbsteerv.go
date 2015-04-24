@@ -15,38 +15,33 @@ func tbiFire(n *flowgraph.Node) {
 	}
 }
 
-func tbi(x flowgraph.Edge) {
+func tbi(x flowgraph.Edge) flowgraph.Node {
 	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiFire)
-	node.Run()
+	return node
 }
 
-func tbo(a flowgraph.Edge) {
+func tbo(a flowgraph.Edge) flowgraph.Node {
 	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
-	node.Run()
+	return node
 }
 
 func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
 
-	e0 := flowgraph.MakeEdge("e0",nil)
-	e1 := flowgraph.MakeEdge("e1",nil)
-	e2 := flowgraph.MakeEdge("e2",nil)
-	e3 := flowgraph.MakeEdge("e3",nil)
+	e,n := flowgraph.MakeGraph(4,5)
 
 	// initialize different state in the two source testbenches (tbi)
-	e0.Aux = 0
-	e1.Aux = 1000
+	e[0].Aux = 0
+	e[1].Aux = 1000
 
-	go tbi(e0)
-	go tbi(e1)
-	go flowgraph.FuncSteerv(e0, e1, e2, e3)
-	go tbo(e2)
-	go tbo(e3)
+	n[0] = tbi(e[0])
+	n[1] = tbi(e[1])
+	n[2] = flowgraph.FuncSteerv(e[0], e[1], e[2], e[3])
+	n[3] = tbo(e[2])
+	n[4] = tbo(e[3])
 
-	time.Sleep(time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	flowgraph.RunAll(n, time.Second)
 
 }
 

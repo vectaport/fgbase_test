@@ -35,7 +35,7 @@ func tbo(a, x flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.VVV
+	flowgraph.TraceLevel = flowgraph.V
 
 	e,n := flowgraph.MakeGraph(4,3)
 
