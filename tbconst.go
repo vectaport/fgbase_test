@@ -36,7 +36,7 @@ func main() {
 	n[2] = flowgraph.FuncAdd(e[0], e[1], e[2])
 	n[3] = tbo(e[2])
 
-	flowgraph.RunAll(n[:], time.Second)
+	flowgraph.RunAll(n, time.Second)
 
 }
 

@@ -6,54 +6,50 @@ import (
 	"time"
 )
 
-func tbm(x flowgraph.Edge) {
+func tbm(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
 		func(n *flowgraph.Node) { n.Dsts[0].Val = rand.Intn(15)+1 })
-	node.Run()
+	return node
 }
 
-func tbn(x flowgraph.Edge) {
+func tbn(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
 		func(n *flowgraph.Node) { n.Dsts[0].Val = rand.Intn(15)+1 })
-	node.Run()
+	return node
+}
+
+func tbo(a flowgraph.Edge) flowgraph.Node {
+
+	node := flowgraph.MakeNode("tbo", nil, []*flowgraph.Edge{&a}, nil, nil)
+	return node
 }
 
 func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
 
-	e0 := flowgraph.MakeEdge("e0", nil)
-	e1 := flowgraph.MakeEdge("e1", nil)
-	e2 := flowgraph.MakeEdge("e2", nil)
-	e3 := flowgraph.MakeEdge("e3", nil)
-	e4 := flowgraph.MakeEdge("e4", nil)
-	e5 := flowgraph.MakeEdge("e5", nil)
-	e6 := flowgraph.MakeEdge("e6", nil)
-	e7 := flowgraph.MakeEdge("e7", 0)
-	e8 := flowgraph.MakeEdge("e8", nil)
-	e9 := flowgraph.MakeEdge("e9", nil)
-	e10 := flowgraph.MakeEdge("e10", nil)
+	e,n := flowgraph.MakeGraph(11, 10)
 
-	go tbm(e0)
-	go tbn(e1)
+	e[7].Val = 0
 
-	go flowgraph.FuncRdy(e0, e7, e2)
-	go flowgraph.FuncRdy(e1, e7, e3)
+	n[0] = tbm(e[0])
+	n[1] = tbn(e[1])
 
-	go flowgraph.FuncEither(e2, e10, e4)
-	go flowgraph.FuncEither(e3, e8, e5)
+	n[2] = flowgraph.FuncRdy(e[0], e[7], e[2])
+	n[3] = flowgraph.FuncRdy(e[1], e[7], e[3])
 
-	go flowgraph.FuncMod(e4, e5, e6)
+	n[4] = flowgraph.FuncEither(e[2], e[10], e[4])
+	n[5] = flowgraph.FuncEither(e[3], e[8], e[5])
 
-	go flowgraph.FuncSteerc(e6, e7, e8)
-	go flowgraph.FuncSteerv(e6, e5, e9, e10)
+	n[6] = flowgraph.FuncMod(e[4], e[5], e[6])
 
-	go tbo(e9)
+	n[7] = flowgraph.FuncSteerc(e[6], e[7], e[8])
+	n[8] = flowgraph.FuncSteerv(e[6], e[5], e[9], e[10])
 
-	time.Sleep(time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	n[9] = tbo(e[9])
+
+	flowgraph.RunAll(n, time.Second)
 
 }

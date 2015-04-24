@@ -7,26 +7,17 @@ import (
 	"time"
 )
 
-func tbi(x flowgraph.Edge) {
+func tbi(x flowgraph.Edge) flowgraph.Node {
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, nil)
-
-	x.Aux = 0
-
-	var i int = 0
-	for {
-		if (i>1000000) { break }
-
-		if node.RdyAll(){
+	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
+		func (n *flowgraph.Node) {
 			x.Val = x.Aux
 			x.Aux = x.Aux.(int) + 1
-			node.SendAll()
-			i = i + 1
-		}
+		})
 
-		node.RecvOne()
+	x.Aux = 0
+	return node
 
-	}
 }
 
 func main() {
@@ -36,7 +27,6 @@ func main() {
 	flowgraph.NodeID = int64(*nodeid)
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
 
 	time.Sleep(1*time.Second)
 	conn, err := net.Dial("tcp", "localhost:37777")
@@ -45,13 +35,12 @@ func main() {
 		return
 	}
 
-	e0 := flowgraph.MakeEdge("e0",nil)
+	e,n := flowgraph.MakeGraph(1,2)
 
-	go tbi(e0)
-	go flowgraph.FuncDst(e0, conn)
+	n[0] = tbi(e[0])
+	n[1] = flowgraph.FuncDst(e[0], conn)
 
-	time.Sleep(2*time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	flowgraph.RunAll(n, 2*time.Second)
 
 }
 

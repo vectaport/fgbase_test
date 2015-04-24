@@ -60,31 +60,23 @@ func main() {
 	flowgraph.TraceLevel = flowgraph.V
 	
 	e,n := flowgraph.MakeGraph(9,7)
-	e0 := flowgraph.MakeEdge("e0",nil)
-	e1 := flowgraph.MakeEdge("e1",nil)
-	e2 := flowgraph.MakeEdge("e2",nil)
-	e3 := flowgraph.MakeEdge("e3",nil)
-	e4 := flowgraph.MakeEdge("e4",nil)
-	e5 := flowgraph.MakeEdge("e5",nil)
-	e6 := flowgraph.MakeEdge("e6",nil)
 
-	cfalse := flowgraph.MakeEdgeConst("cfalse", false)
-	ctrue := flowgraph.MakeEdgeConst("ctrue", true)
+	e[7].Const(false)
+	e[8].Const(true)
 
-	go tbi(e0)
+	n[0] = tbi(e[0])
 
-	go flowgraph.FuncFork(e0, e1, e2)
+	n[1] = flowgraph.FuncFork(e[0], e[1], e[2])
 
-	go flowgraph.FuncFft(e1, cfalse, e3)
-	go flowgraph.FuncPass(e2, e4)
+	n[2] = flowgraph.FuncFft(e[1], e[7], e[3])
+	n[3] = flowgraph.FuncPass(e[2], e[4])
 
-	go flowgraph.FuncFft(e3, ctrue, e5)
-	go flowgraph.FuncPass(e4, e6)
+	n[4] = flowgraph.FuncFft(e[3], e[8], e[5])
+	n[5] = flowgraph.FuncPass(e[4], e[6])
 
-	go tbo(e5, e6)
+	n[6] = tbo(e[5], e[6])
 
-	time.Sleep(time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	flowgraph.RunAll(n, time.Second)
 
 }
 

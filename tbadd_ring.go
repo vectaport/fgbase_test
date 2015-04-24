@@ -38,13 +38,14 @@ func main() {
 	flowgraph.TraceLevel = flowgraph.VVV
 
 	e,n := flowgraph.MakeGraph(4,3)
+
 	e[3].Val = true // initialize data wavefront
 
 	n[0] = tbi(e[3], e[0], e[1])
 	n[1] = flowgraph.FuncAdd(e[0], e[1], e[2])
 	n[2] = tbo(e[2], e[3])
 
-	flowgraph.RunAll(n[:], time.Second)
+	flowgraph.RunAll(n, time.Second)
 
 }
 
