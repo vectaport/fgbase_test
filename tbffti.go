@@ -25,9 +25,9 @@ func tbiFire(n *flowgraph.Node) {
 	x.Val = vec
 }
 
-func tbi(x flowgraph.Edge) {
+func tbi(x flowgraph.Edge) flowgraph.Node {
 	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiFire)
-	node.Run()
+	return node
 }
 
 func tboFire(n *flowgraph.Node) {
@@ -50,16 +50,16 @@ func tboFire(n *flowgraph.Node) {
 	n.Tracef("!SAME:  different sizes\n")
 }
 
-func tbo(a, b flowgraph.Edge) {
+func tbo(a, b flowgraph.Edge) flowgraph.Node {
 	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a, &b}, nil, nil, tboFire)
-	node.Run()
+	return node
 }
 
 func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
-
+	
+	e,n := flowgraph.MakeGraph(9,7)
 	e0 := flowgraph.MakeEdge("e0",nil)
 	e1 := flowgraph.MakeEdge("e1",nil)
 	e2 := flowgraph.MakeEdge("e2",nil)
