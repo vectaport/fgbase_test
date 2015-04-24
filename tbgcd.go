@@ -22,7 +22,7 @@ func tbn(x flowgraph.Edge) flowgraph.Node {
 
 func tbo(a flowgraph.Edge) flowgraph.Node {
 
-	node := flowgraph.MakeNode("tbo", nil, []*flowgraph.Edge{&a}, nil, nil)
+	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
 	return node
 }
 
