@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"math"
 	"math/rand"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
 const infitesimal=1.e-15

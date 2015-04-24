@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"math"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
 func tbi(x, y flowgraph.Edge) flowgraph.Node {

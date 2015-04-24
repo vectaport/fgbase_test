@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"math/rand"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
 func tbm(x flowgraph.Edge) flowgraph.Node {

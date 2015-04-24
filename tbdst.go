@@ -2,9 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/vectaport/flowgraph"
 	"net"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
 func tbi(x flowgraph.Edge) flowgraph.Node {

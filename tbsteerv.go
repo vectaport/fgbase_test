@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
 func tbiFire(n *flowgraph.Node) {

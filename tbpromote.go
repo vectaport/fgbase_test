@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"fmt"
 	"math"
 	"time"
 	"reflect"
+
+	"github.com/vectaport/flowgraph"
 )
 
 func promoteTest(a, b, x flowgraph.Edge) {
