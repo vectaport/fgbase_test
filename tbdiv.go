@@ -93,7 +93,7 @@ func tbiRun (node *flowgraph.Node) {
 	}
 
 
-	x.Aux = "Can you add an int to a string?"
+	x.Aux = "Can you divide an int to a string?"
 	y.Aux = int8(77)
 	i = 0
 	for  {
@@ -144,7 +144,7 @@ func main() {
 	e,n := flowgraph.MakeGraph(3,3)
 
 	n[0] = tbi(e[0], e[1])
-	n[1] = flowgraph.FuncAdd(e[0], e[1], e[2])
+	n[1] = flowgraph.FuncDiv(e[0], e[1], e[2])
 	n[2] = tbo(e[2])
 
 	flowgraph.RunAll(n, time.Second)

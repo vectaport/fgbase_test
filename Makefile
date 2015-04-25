@@ -1,4 +1,4 @@
-all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd
+all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv
 
 tbpromote:
 	go run tbpromote.go
@@ -48,3 +48,9 @@ tbfanout:
 
 tbgcd:
 	go run tbgcd.go
+
+tbmul:
+	go run tbmul.go
+
+tbdiv:
+	go run tbdiv.go
