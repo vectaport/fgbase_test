@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
 func tbiFire(n *flowgraph.Node) {
@@ -10,31 +11,29 @@ func tbiFire(n *flowgraph.Node) {
 	x.Val = make([]complex128, 32, 32)
 }
 
-func tbi(x flowgraph.Edge) {
+func tbi(x flowgraph.Edge) flowgraph.Node {
 	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiFire)
-	node.Run()
+	return node
 }
 
-func tbo(a flowgraph.Edge) {
+func tbo(a flowgraph.Edge) flowgraph.Node {
 	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
-	node.Run()
+	return node
 }
 
 func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
 
-	e0 := flowgraph.MakeEdge("e0",nil)
-	e1 := flowgraph.MakeEdge("e1",nil)
-	cfalse := flowgraph.MakeEdgeConst("cfalse", false)
+	e,n := flowgraph.MakeGraph(3,3)
 
-	go tbi(e0)
-	go flowgraph.FuncFft(e0, cfalse, e1)
-	go tbo(e1)
+	e[1].Const(false)
 
-	time.Sleep(time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	n[0] = tbi(e[0])
+	n[1] = flowgraph.FuncFft(e[0], e[1], e[2])
+	n[2] = tbo(e[2])
+
+	flowgraph.RunAll(n, time.Second)
 
 }
 

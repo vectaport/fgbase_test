@@ -2,15 +2,16 @@ package main
 
 import (
 	"flag"
-	"github.com/vectaport/flowgraph"
 	"net"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
-func tbo(a flowgraph.Edge) {
+func tbo(a flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
-	node.Run()
+	return node
 }
 
 func main() {
@@ -20,7 +21,6 @@ func main() {
 	flowgraph.NodeID = int64(*nodeid)
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
 
 	ln, err := net.Listen("tcp", "localhost:37777")
 	if err != nil {
@@ -33,13 +33,12 @@ func main() {
 		return
 	}
 
-	e0 := flowgraph.MakeEdge("e0",nil)
+	e,n := flowgraph.MakeGraph(1,2)
 
-	go flowgraph.FuncSrc(e0, conn)
-	go tbo(e0)
+	n[0] = flowgraph.FuncSrc(e[0], conn)
+	n[1] = tbo(e[0])
 
-	time.Sleep(2*time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	flowgraph.RunAll(n, 2*time.Second)
 
 }
 

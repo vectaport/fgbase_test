@@ -1,54 +1,42 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
-func tbi(x flowgraph.Edge) {
+func tbi(x flowgraph.Edge) flowgraph.Node {
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, nil)
-
-	var i int = 0
-	for {
-		if (i>1000000) { break }
-
-		if node.RdyAll(){
+	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
+		func (n *flowgraph.Node) { 
 			x.Val = x.Aux
 			x.Aux = x.Aux.(int) + 1
-			node.SendAll()
-			i = i + 1
-		}
-
-		node.RecvOne()
-
-	}
+		})
+	return node
 }
 
-func tbo(a flowgraph.Edge) {
+func tbo(a flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
-	node.Run()
+	return node
 }
 
 func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
 
-	e0 := flowgraph.MakeEdge("e0",nil)
-	e0.Aux = 1
-	e1 := flowgraph.MakeEdge("e1",nil)
-	e1.Aux = 1000
-	e2 := flowgraph.MakeEdge("e2",nil)
+	e,n := flowgraph.MakeGraph(3,4)
+ 
+	e[0].Aux = 0
+	e[1].Aux = 1000
 
-	go tbi(e0)
-	go tbi(e1)
-	go flowgraph.FuncRdy(e0, e1, e2)
-	go tbo(e2)
+	n[0] = tbi(e[0])
+	n[1] = tbi(e[1])
+	n[2] = flowgraph.FuncRdy(e[0], e[1], e[2])
+	n[3] = tbo(e[2])
 
-	time.Sleep(time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	flowgraph.RunAll(n, time.Second)
 
 }
 

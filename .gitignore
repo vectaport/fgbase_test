@@ -24,3 +24,5 @@ plottest.go
 *.ps
 
 iterator2_diag.pdf
+
+.#tbffti.go

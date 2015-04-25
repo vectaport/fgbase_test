@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
 func tbiFire(n *flowgraph.Node) {
@@ -11,35 +12,31 @@ func tbiFire(n *flowgraph.Node) {
 	x.Aux = (x.Aux.(int) + 1)%2
 }
 
-func tbi(x flowgraph.Edge) {
+func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiFire)
 	x.Aux = 0
-	node.Run()
+	return node
 	
 }
 
-func tbo(a flowgraph.Edge) {
+func tbo(a flowgraph.Edge) flowgraph.Node {
 	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
-	node.Run()
+	return node
 }
 
 func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
 
-	e0 := flowgraph.MakeEdge("e0",nil)
-	e1 := flowgraph.MakeEdge("e1",nil)
-	e2 := flowgraph.MakeEdge("e2",nil)
+	e,n := flowgraph.MakeGraph(3,4)
 
-	go tbi(e0)
-	go flowgraph.FuncSteerc(e0, e1, e2)
-	go tbo(e1)
-	go tbo(e2)
+	n[0] = tbi(e[0])
+	n[1] = flowgraph.FuncSteerc(e[0], e[1], e[2])
+	n[2] = tbo(e[1])
+	n[3] = tbo(e[2])
 
-	time.Sleep(time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	flowgraph.RunAll(n, time.Second)
 
 }
 

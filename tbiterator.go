@@ -1,38 +1,34 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
 	"math/rand"
 	"time"
+
+	"github.com/vectaport/flowgraph"
 )
 
-func tbi(x flowgraph.Edge) {
+func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
 		func(n *flowgraph.Node) { n.Dsts[0].Val = rand.Intn(7)+1 })
-	node.Run()
+	return node
 }
 
 func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceIndent = false
 
-	e0 := flowgraph.MakeEdge("e0", nil)
-	e1 := flowgraph.MakeEdge("e1", nil)
-	e2 := flowgraph.MakeEdge("e2", nil)
-	e3 := flowgraph.MakeEdgeConst("e3", 1)
-	e4 := flowgraph.MakeEdge("e4", nil)
-	e5 := flowgraph.MakeEdge("e5", int(0))
-	e6 := flowgraph.MakeEdge("e6", nil)
+	e,n := flowgraph.MakeGraph(7,5)
 
-	go tbi(e0)
-	go flowgraph.FuncRdy(e0, e5, e1)
-	go flowgraph.FuncEither(e1, e6, e2)
-	go flowgraph.FuncSub(e2, e3, e4)
-	go flowgraph.FuncSteerc(e4, e5, e6)
+	e[3].Const(1)
+	e[5].Val = 0
 
-	time.Sleep(time.Second)
-	flowgraph.StdoutLog.Printf("\n")
+	n[0] = tbi(e[0])
+	n[1] = flowgraph.FuncRdy(e[0], e[5], e[1])
+	n[2] = flowgraph.FuncEither(e[1], e[6], e[2])
+	n[3] = flowgraph.FuncSub(e[2], e[3], e[4])
+	n[4] = flowgraph.FuncSteerc(e[4], e[5], e[6])
+
+	flowgraph.RunAll(n, time.Second)
 
 }
