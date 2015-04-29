@@ -27,7 +27,8 @@ func (a bushel) Sorted() bool {
 
 func tbiRand() flowgraph.Interface {
 	var s bushel
-	for i:=0; i<8; i++ {
+	l := rand.Intn(1024*1024)
+	for i:=0; i<l; i++ {
 		s = append(s, rand.Intn(8))
 	}
 	return s
@@ -48,7 +49,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.VV
+	flowgraph.TraceLevel = flowgraph.V
 
 	e,n := flowgraph.MakeGraph(2, 10)
 
