@@ -2,7 +2,6 @@ package main
 
 import (
 	"math/rand"
-	"sort"
 	"time"
 
 	"github.com/vectaport/flowgraph"
@@ -15,11 +14,21 @@ func (a bushel) Len() int           { return len(a) }
 func (a bushel) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a bushel) Less(i, j int) bool { return a[i] < a[j] }
 
+func (a bushel) Sorted() bool {
+	l := len(a)
+	for i:= 0; i<l-1; i++ {
+		if a[i] > a[i+1] {
+			// flowgraph.StdoutLog.Printf("a[%d] > a[%d]:  %d > %d\n", i, i+1, a[i], a[i+1])
+			return false
+		}
+	}
+	return true
+}
 
-func tbiRand() sort.Interface {
+func tbiRand() flowgraph.Interface {
 	var s bushel
-	for i:=0; i<1024; i++ {
-		s = append(s, rand.Intn(1024))
+	for i:=0; i<8*1024; i++ {
+		s = append(s, rand.Intn(8*1024))
 	}
 	return s
 }
