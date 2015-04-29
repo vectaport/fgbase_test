@@ -10,7 +10,7 @@ import (
 
 const infitesimal=1.e-15
 
-func tbiFire(n *flowgraph.Node) {
+func tbiWork(n *flowgraph.Node) {
 	x := n.Dsts[0]
 	const sz = 128
 	var vec = make([]complex128, sz, sz)
@@ -27,11 +27,11 @@ func tbiFire(n *flowgraph.Node) {
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
-	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiFire)
+	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiWork)
 	return node
 }
 
-func tboFire(n *flowgraph.Node) {
+func tboWork(n *flowgraph.Node) {
 	a := n.Srcs[0]
 	b := n.Srcs[1]
 	av := a.Val.([]complex128)
@@ -52,7 +52,7 @@ func tboFire(n *flowgraph.Node) {
 }
 
 func tbo(a, b flowgraph.Edge) flowgraph.Node {
-	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a, &b}, nil, nil, tboFire)
+	node:=flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a, &b}, nil, nil, tboWork)
 	return node
 }
 
