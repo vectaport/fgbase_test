@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand"
+	"sort"
 	"time"
 
 	"github.com/vectaport/flowgraph"
@@ -27,7 +28,7 @@ func (a bushel) Sorted() bool {
 
 func (a bushel) SubSlice(n, m int) flowgraph.Datum {return a[n:m]}
 
-func tbiRand() flowgraph.Interface {
+func tbiRand() sort.Interface {
 	var s bushel
 	n := 1024*1024
 	l := rand.Intn(n)
@@ -46,7 +47,16 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 
 func tbo(a flowgraph.Edge) flowgraph.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
+	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
+		func(n *flowgraph.Node) {
+			switch v := a.Val.(type) {
+			case flowgraph.Interface2: {
+				n.Tracef("Fragment sorted? %v\n", v.Sorted())
+			}
+			default: {
+				n.Tracef("not of type flowgraph.Interface2\n")
+			}
+			}})
 	return node
 }
 
@@ -54,7 +64,7 @@ func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
 
-	const poolSz = 16
+	const poolSz = 128
 	e,n := flowgraph.MakeGraph(2, poolSz+2)
 
 	n[0] = tbi(e[0])
@@ -63,6 +73,6 @@ func main() {
 	copy(p, flowgraph.FuncQsort(e[0], e[1], poolSz))
 	n[poolSz+1] = tbo(e[1])
 
-	flowgraph.RunAll(n, 4*time.Second)
+	flowgraph.RunAll(n, 1*time.Second)
 
 }
