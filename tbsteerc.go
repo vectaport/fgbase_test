@@ -6,7 +6,7 @@ import (
 	"github.com/vectaport/flowgraph"
 )
 
-func tbiFire(n *flowgraph.Node) {
+func tbiWork(n *flowgraph.Node) {
 	x := n.Dsts[0]
 	x.Val = x.Aux
 	x.Aux = (x.Aux.(int) + 1)%2
@@ -14,7 +14,7 @@ func tbiFire(n *flowgraph.Node) {
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
 
-	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiFire)
+	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiWork)
 	x.Aux = 0
 	return node
 	
