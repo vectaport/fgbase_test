@@ -25,11 +25,14 @@ func (a bushel) Sorted() bool {
 	return true
 }
 
+func (a bushel) SubSlice(n, m int) flowgraph.Datum {return a[n:m]}
+
 func tbiRand() flowgraph.Interface {
 	var s bushel
-	l := rand.Intn(1024*1024)
+	n := 1024*1024
+	l := rand.Intn(n)
 	for i:=0; i<l; i++ {
-		s = append(s, rand.Intn(8))
+		s = append(s, rand.Intn(n))
 	}
 	return s
 }
@@ -51,14 +54,15 @@ func main() {
 
 	flowgraph.TraceLevel = flowgraph.V
 
-	e,n := flowgraph.MakeGraph(2, 10)
+	const poolSz = 16
+	e,n := flowgraph.MakeGraph(2, poolSz+2)
 
 	n[0] = tbi(e[0])
 
-	p := n[1:9]
-	copy(p, flowgraph.FuncQsort(e[0], e[1], 8))
-	n[9] = tbo(e[1])
+	p := n[1:poolSz+1]
+	copy(p, flowgraph.FuncQsort(e[0], e[1], poolSz))
+	n[poolSz+1] = tbo(e[1])
 
-	flowgraph.RunAll(n, time.Second)
+	flowgraph.RunAll(n, 4*time.Second)
 
 }
