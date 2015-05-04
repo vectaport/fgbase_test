@@ -30,7 +30,7 @@ func main() {
 	e[1].Const(false)
 
 	n[0] = tbi(e[0])
-	n[1] = flowgraph.FuncFft(e[0], e[1], e[2])
+	n[1] = flowgraph.FuncFFT(e[0], e[1], e[2])
 	n[2] = tbo(e[2])
 
 	flowgraph.RunAll(n, time.Second)

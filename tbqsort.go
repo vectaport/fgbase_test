@@ -110,9 +110,11 @@ func main() {
 
 	poolSzp := flag.Int("poolsz", 64, "qsort pool size")
 	numCorep := flag.Int("numcore", 1, "num cores to use")
+	secp := flag.Int("sec", 1, "seconds to run")
 	flag.Parse()
 	poolSz := *poolSzp
 	runtime.GOMAXPROCS(*numCorep)
+	sec := *secp
 
 	flowgraph.TraceLevel = flowgraph.V
 
@@ -124,6 +126,6 @@ func main() {
 	p := n[2:poolSz+2]
 	copy(p, flowgraph.FuncQsort(e[0], e[1], poolSz))
 
-	flowgraph.RunAll(n, 1*time.Second)
+	flowgraph.RunAll(n, time.Duration(sec)*time.Second)
 
 }
