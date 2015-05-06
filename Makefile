@@ -1,4 +1,4 @@
-all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort
+all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite
 
 tbpromote:
 	go run tbpromote.go
@@ -63,3 +63,10 @@ tbrsh:
 
 tbqsort:
 	go run tbqsort.go
+
+tbread:
+	go run tbread.go Makefile
+
+tbwrite:
+	go run tbwrite.go testout
+
