@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math/rand"
 	"time"
 
 	"github.com/vectaport/flowgraph"
@@ -8,7 +9,12 @@ import (
 
 func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
-	x.Val = make([]complex128, 32, 32)
+	l := 1024
+	buf := make([]complex128, l, l)
+	for i := 0; i<l; i++ {
+		buf[i] = complex(rand.Float64(), rand.Float64())
+	}
+	x.Val = buf
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
