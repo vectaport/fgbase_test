@@ -96,11 +96,11 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
 		func(n *flowgraph.Node) {
 			switch v := a.Val.(type) {
-			case flowgraph.Interface2: {
+			case flowgraph.SortInterface: {
 				n.Tracef("Original(%p) sorted %t, Sliced sorted %t, depth=%d, id=%d, len=%d\n", v.Orig(), v.OrigSorted(), v.Sorted(), v.Depth(), v.ID(), v.Len())
 			}
 			default: {
-				n.Tracef("not of type flowgraph.Interface2\n")
+				n.Tracef("not of type flowgraph.SortInterface\n")
 			}
 			}})
 	return node
