@@ -1,9 +1,11 @@
 ipledit(32,18
     gs( :fillbg 1 :nonebr :fgcolor "White",1,1,1 :bgcolor "White",1,1,1 :graypat 0),
     gs( :fillbg 1 :brush 65535,0 :fgcolor "Black",0,0,0 :bgcolor "White",1,1,1 :font "-*-helvetica-medium-r-normal-*-12-*-*-*-*-*-*-*","Helvetica",12 :graypat 1),
-    gs( :fillbg 1 :brush 65535,0 :fgcolor "Black",0,0,0 :bgcolor "White",1,1,1 :graypat 0),
+    gs( :fillbg 1 :brush 65535,0 :fgcolor "LtGray",0.762951,0.762951,0.762951 :bgcolor "White",1,1,1 :graypat 0),
+    gs( :fillbg 0 :fgcolor "Black",0,0,0 :font "-*-helvetica-medium-r-normal-*-12-*-*-*-*-*-*-*","Helvetica",12 :graypat 0),
+    gs( :fillbg 1 :brush 65535,2 :fgcolor "Black",0,0,0 :bgcolor "White",1,1,1 :nonepat),
     frame(
-        rectangle(41,173,563,423 :gs 0 :transform 1,-0,-0,1,197,134),
+        rectangle(41,173,563,423 :gs 0 :transform 1,-0,-0,1,197,134.25),
         invo( :width 64 :height 64 :nsrc 0 :ndst 1 :funcname "tbi" :gs 1 :transform 1,0,0,1,290,434.5),
         invo( :width 64 :height 64 :nsrc 1 :ndst 0 :funcname "tbo" :gs 1 :transform 1,0,0,1,708,434.5),
         conn(336,434,516,493 :arrowscale 1.5 :tail :startnode 0 :endnode 2 :startsubnode 0 :endsubnode 0 :gs 2),
@@ -53,6 +55,15 @@ ipledit(32,18
         conn(512,397,662,434 :arrowscale 1.5 :tail :startnode 14 :endnode 1 :startsubnode 0 :endsubnode 0 :gs 2),
         conn(504,389,662,434 :arrowscale 1.5 :tail :startnode 15 :endnode 1 :startsubnode 0 :endsubnode 0 :gs 2),
         conn(496,381,662,434 :arrowscale 1.5 :tail :startnode 16 :endnode 1 :startsubnode 0 :endsubnode 0 :gs 2),
-        conn(488,373,662,434 :arrowscale 1.5 :tail :startnode 17 :endnode 1 :startsubnode 0 :endsubnode 0 :gs 2)
+        conn(488,373,662,434 :arrowscale 1.5 :tail :startnode 17 :endnode 1 :startsubnode 0 :endsubnode 0 :gs 2),
+        text(12,"e0" :gs 3 :transform 1,0,0,1,385,484.25),
+        text(12,"e1" :gs 3 :transform 1,0,0,1,620.25,498),
+        arrowspline((334,321),(323,340),(291,321),(269,300),(217,288),(203,308),(202,327),(202,327),(202,327),(198,301),
+            (188,281),(152,274),(107,245),(68,183),(55,132),(43,97),(61,89),(61,89),(61,88) :arrowscale 4 :gs 4 :transform 0.25,-0,-0,0.25,341,386.25),
+        arrowspline( :arrowscale 4 :gs 4 :transform 0.25,-0,-0,0.25,341,386.25),
+        arrowspline( :gs 4 :transform 1,-0,-0,1,299.5,197),
+        arrowspline((390,333),(397,354),(390,377),(358,391),(349,393),(343,409),(347,418),(347,418),(338,405),(291,377),
+            (254,313),(229,213),(221,173),(222,107),(228,96),(243,96),(248,107) :arrowscale 4 :gs 4 :transform 0.25,-0,-0,0.25,541.5,383.25),
+        arrowspline( :gs 4 :transform 1,-0,-0,1,292.5,177)
         )
 )
