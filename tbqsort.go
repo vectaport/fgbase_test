@@ -4,7 +4,6 @@ import (
 	"flag"
 	"math/rand"
 	"runtime"
-	"sort"
 	"sync/atomic"
 	"time"
 
@@ -14,80 +13,75 @@ import (
 var bushelCnt int64
 
 type bushel struct {
+	Slic []int
+	Orig []int
 	depth int64
 	bushelID int64
-	Original []int
-	Sliced []int
 }
 
 // borrowed from Golang 1.4.2 sort example, copyright notice in flowgraph/GO-LICENSE
-func (a bushel) Len() int           { return len(a.Sliced) }
-func (a bushel) Swap(i, j int)      { a.Sliced[i], a.Sliced[j] = a.Sliced[j], a.Sliced[i] }
-func (a bushel) Less(i, j int) bool { return a.Sliced[i] < a.Sliced[j] }
+func (a bushel) Len() int           { return len(a.Slic) }
+func (a bushel) Swap(i, j int)      { a.Slic[i], a.Slic[j] = a.Slic[j], a.Slic[i] }
+func (a bushel) Less(i, j int) bool { return a.Slic[i] < a.Slic[j] }
 
-func (a bushel) Sorted() bool {
-	l := len(a.Sliced)
+func (a bushel) SubSlice(n, m int) flowgraph.Datum {
+	a.Slic = a.Slic[n:m]
+	a.depth += 1
+	return a
+}
+
+func (a bushel) Slice() []int {
+	return a.Slic
+}
+
+func (a bushel) SliceSorted() bool {
+	l := len(a.Slic)
 	for i:= 0; i<l-1; i++ {
-		if a.Sliced[i] > a.Sliced[i+1] {
+		if a.Slic[i] > a.Slic[i+1] {
 			return false
 	}
 	}
 	return true
 }
 
-func (a bushel) SubSlice(n, m int) flowgraph.Datum {
-	a.Sliced = a.Sliced[n:m]
-	a.depth += 1
-	return a
+func (a bushel) Original() []int {
+	return a.Orig
 }
 
-func (a bushel) OrigSorted() bool {
-	l := len(a.Original)
+func (a bushel) OriginalSorted() bool {
+	l := len(a.Orig)
 	for i:= 0; i<l-1; i++ {
-		if a.Original[i] > a.Original[i+1] {
+		if a.Orig[i] > a.Orig[i+1] {
 			return false
 		}
 	}
 	return true
 }
 
-func (a bushel) Orig() []int {
-	return a.Original
-}
-
-func (a bushel) Slic() []int {
-	return a.Sliced
-}
-
 func (a bushel) Depth() int64 { 
 	return a.depth
-}
-
-func (a *bushel) DepthIncr() { 
-	
-	a.depth += 1
 }
 
 func (a bushel) ID() int64 {
 	return a.bushelID
 }
 
-func tbiRand() sort.Interface {
+func tbiRand() flowgraph.RecursiveSort {
 	var s bushel
 	s.bushelID = atomic.AddInt64(&bushelCnt, 1)-1
-	n := 1024*1024
+	n := rand.Intn(1<<20)
 	l := rand.Intn(n)
 	for i:=0; i<l; i++ {
-		s.Original = append(s.Original, rand.Intn(n))
+		s.Orig = append(s.Orig, rand.Intn(l))
 	}
-	s.Sliced = s.Original
+	s.Slic = s.Orig
 	return s
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
-		func(n *flowgraph.Node) { n.Dsts[0].Val = tbiRand() })
+		func(n *flowgraph.Node) { x.Val = tbiRand() })
 	return node
 }
 
@@ -96,11 +90,11 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
 		func(n *flowgraph.Node) {
 			switch v := a.Val.(type) {
-			case flowgraph.SortInterface: {
-				n.Tracef("Original(%p) sorted %t, Sliced sorted %t, depth=%d, id=%d, len=%d\n", v.Orig(), v.OrigSorted(), v.Sorted(), v.Depth(), v.ID(), v.Len())
+			case flowgraph.RecursiveSort: {
+				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d\n", v.Original(), v.OriginalSorted(), v.SliceSorted(), v.Depth(), v.ID(), v.Len())
 			}
 			default: {
-				n.Tracef("not of type flowgraph.SortInterface\n")
+				n.Tracef("not of type flowgraph.RecursiveSort\n")
 			}
 			}})
 	return node
@@ -116,7 +110,7 @@ func main() {
 	runtime.GOMAXPROCS(*numCorep)
 	sec := *secp
 
-	flowgraph.TraceLevel = flowgraph.V
+	flowgraph.TraceLevel = flowgraph.VV
 
 	e,n := flowgraph.MakeGraph(2, poolSz+2)
 
