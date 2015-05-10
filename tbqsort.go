@@ -69,7 +69,7 @@ func (a bushel) ID() int64 {
 func tbiRand() flowgraph.RecursiveSort {
 	var s bushel
 	s.bushelID = atomic.AddInt64(&bushelCnt, 1)-1
-	n := rand.Intn(1<<20)
+	n := rand.Intn(1<<20)+1
 	l := rand.Intn(n)
 	for i:=0; i<l; i++ {
 		s.Orig = append(s.Orig, rand.Intn(l))
@@ -102,8 +102,8 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	poolSzp := flag.Int("poolsz", 64, "qsort pool size")
-	numCorep := flag.Int("numcore", 1, "num cores to use")
+	poolSzp := flag.Int("poolsz", 32, "qsort pool size")
+	numCorep := flag.Int("numcore", 1 /*runtime.NumCPU()*/, "num cores to use")
 	secp := flag.Int("sec", 1, "seconds to run")
 	flag.Parse()
 	poolSz := *poolSzp
@@ -111,14 +111,14 @@ func main() {
 	sec := *secp
 
 	flowgraph.TraceLevel = flowgraph.VV
+	flowgraph.TraceSeconds = true
 
 	e,n := flowgraph.MakeGraph(2, poolSz+2)
 
 	n[0] = tbi(e[0])
 	n[1] = tbo(e[1])
 
-	p := n[2:poolSz+2]
-	copy(p, flowgraph.FuncQsort(e[0], e[1], poolSz))
+	copy(n[2:poolSz+2], flowgraph.FuncQsort(e[0], e[1], poolSz, 1))
 
 	flowgraph.RunAll(n, time.Duration(sec)*time.Second)
 
