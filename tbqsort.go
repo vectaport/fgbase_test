@@ -4,6 +4,7 @@ import (
 	"flag"
 	"math/rand"
 	"runtime"
+	"strconv"
 	"sync/atomic"
 	"time"
 
@@ -66,10 +67,10 @@ func (a bushel) ID() int64 {
 	return a.bushelID
 }
 
-func tbiRand() flowgraph.RecursiveSort {
+func tbiRand(pow2 uint) flowgraph.RecursiveSort {
 	var s bushel
 	s.bushelID = atomic.AddInt64(&bushelCnt, 1)-1
-	n := rand.Intn(1<<20)+1
+	n := rand.Intn(1<<pow2)+1
 	l := rand.Intn(n)
 	for i:=0; i<l; i++ {
 		s.Orig = append(s.Orig, rand.Intn(l))
@@ -78,10 +79,10 @@ func tbiRand() flowgraph.RecursiveSort {
 	return s
 }
 
-func tbi(x flowgraph.Edge) flowgraph.Node {
+func tbi(x flowgraph.Edge, pow2 uint) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
-		func(n *flowgraph.Node) { x.Val = tbiRand() })
+		func(n *flowgraph.Node) { x.Val = tbiRand(pow2) })
 	return node
 }
 
@@ -91,7 +92,8 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 		func(n *flowgraph.Node) {
 			switch v := a.Val.(type) {
 			case flowgraph.RecursiveSort: {
-				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d\n", v.Original(), v.OriginalSorted(), v.SliceSorted(), v.Depth(), v.ID(), v.Len())
+				if v.OriginalSorted() { n.Tracef("END for id=%d, depth=%d, len=%d\n", v.ID(), v.Depth(), v.Len()) }
+				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d, poolsz=%d, ratio = %d\n", v.Original(), v.OriginalSorted(), v.SliceSorted(), v.Depth(), v.ID(), len(v.Original()), flowgraph.PoolQsortSz, len(v.Original())/(1+int(v.Depth())))
 			}
 			default: {
 				n.Tracef("not of type flowgraph.RecursiveSort\n")
@@ -102,24 +104,25 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	poolSzp := flag.Int("poolsz", 32, "qsort pool size")
-	numCorep := flag.Int("numcore", 1 /*runtime.NumCPU()*/, "num cores to use")
-	secp := flag.Int("sec", 1, "seconds to run")
+	poolSz := flag.Int("poolsz", 32, "qsort pool size")
+	numCore := flag.Int("numcore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
+	sec := flag.Int("sec", 1, "seconds to run")
+	pow2 := flag.Uint("pow2", 20, "power of 2 to scale random numbers")
+	post := flag.Bool("post", false, "post run dump of nodes")
 	flag.Parse()
-	poolSz := *poolSzp
-	runtime.GOMAXPROCS(*numCorep)
-	sec := *secp
+	runtime.GOMAXPROCS(*numCore)
+	flowgraph.PostDump = *post
 
-	flowgraph.TraceLevel = flowgraph.VV
+	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.TraceSeconds = true
 
-	e,n := flowgraph.MakeGraph(2, poolSz+2)
+	e,n := flowgraph.MakeGraph(2, *poolSz+2)
 
-	n[0] = tbi(e[0])
+	n[0] = tbi(e[0], *pow2)
 	n[1] = tbo(e[1])
 
-	copy(n[2:poolSz+2], flowgraph.FuncQsort(e[0], e[1], poolSz, 1))
+	copy(n[2:*poolSz+2], flowgraph.FuncQsort(e[0], e[1], *poolSz, 1))
 
-	flowgraph.RunAll(n, time.Duration(sec)*time.Second)
+	flowgraph.RunAll(n, time.Duration(*sec)*time.Second)
 
 }
