@@ -104,7 +104,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	poolSz := flag.Int("poolsz", 32, "qsort pool size")
+	poolSz := flag.Int("poolsz", 64, "qsort pool size")
 	numCore := flag.Int("numcore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
 	sec := flag.Int("sec", 1, "seconds to run")
 	pow2 := flag.Uint("pow2", 20, "power of 2 to scale random numbers")
