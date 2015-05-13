@@ -93,7 +93,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 			switch v := a.Val.(type) {
 			case flowgraph.RecursiveSort: {
 				if v.OriginalSorted() { n.Tracef("END for id=%d, depth=%d, len=%d\n", v.ID(), v.Depth(), v.Len()) }
-				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d, poolsz=%d, ratio = %d\n", v.Original(), v.OriginalSorted(), v.SliceSorted(), v.Depth(), v.ID(), len(v.Original()), flowgraph.PoolQsortSz, len(v.Original())/(1+int(v.Depth())))
+				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d, poolsz=%d, ratio = %d\n", v.Original(), v.OriginalSorted(), v.SliceSorted(), v.Depth(), v.ID(), len(v.Original()), flowgraph.PoolQsort.Size(), len(v.Original())/(1+int(v.Depth())))
 			}
 			default: {
 				n.Tracef("not of type flowgraph.RecursiveSort\n")
@@ -104,25 +104,28 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	poolSz := flag.Int("poolsz", 64, "qsort pool size")
-	numCore := flag.Int("numcore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
-	sec := flag.Int("sec", 1, "seconds to run")
-	pow2 := flag.Uint("pow2", 20, "power of 2 to scale random numbers")
-	post := flag.Bool("post", false, "post run dump of nodes")
+	poolSzp := flag.Int("poolsz", 64, "qsort pool size")
+	numCorep := flag.Int("numcore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
+	secp := flag.Int("sec", 1, "seconds to run")
+	pow2p := flag.Uint("pow2", 20, "power of 2 to scale random numbers")
+	postp := flag.Bool("post", false, "post run dump of nodes")
 	flag.Parse()
-	runtime.GOMAXPROCS(*numCore)
-	flowgraph.PostDump = *post
+	runtime.GOMAXPROCS(*numCorep)
+	flowgraph.PostDump = *postp
+	poolSz := int32(*poolSzp)
+	pow2 := *pow2p
 
 	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.TraceSeconds = true
 
-	e,n := flowgraph.MakeGraph(2, *poolSz+2)
+	e,n := flowgraph.MakeGraph(2, poolSz+2)
 
-	n[0] = tbi(e[0], *pow2)
+	n[0] = tbi(e[0], pow2)
 	n[1] = tbo(e[1])
 
-	copy(n[2:*poolSz+2], flowgraph.FuncQsort(e[0], e[1], *poolSz, 1))
+	p := flowgraph.FuncQsort(e[0], e[1], poolSz, 1)
+	copy(n[2:poolSz+2], p.Nodes())
 
-	flowgraph.RunAll(n, time.Duration(*sec)*time.Second)
+	flowgraph.RunAll(n, time.Duration(*secp)*time.Second)
 
 }
