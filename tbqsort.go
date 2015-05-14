@@ -117,7 +117,6 @@ func main() {
 	sec := *secp
 
 	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceSeconds = true
 
 	e,n := flowgraph.MakeGraph(2, poolSz+2)
 
