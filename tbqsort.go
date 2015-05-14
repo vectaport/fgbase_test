@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"runtime"
 	"strconv"
-	"sync/atomic"
 	"time"
 
 	"github.com/vectaport/flowgraph"
@@ -69,7 +68,8 @@ func (a bushel) ID() int64 {
 
 func tbiRand(pow2 uint) flowgraph.RecursiveSort {
 	var s bushel
-	s.bushelID = atomic.AddInt64(&bushelCnt, 1)-1
+	s.bushelID = bushelCnt
+	bushelCnt += 1
 	n := rand.Intn(1<<pow2)+1
 	l := rand.Intn(n)
 	for i:=0; i<l; i++ {
@@ -112,8 +112,9 @@ func main() {
 	flag.Parse()
 	runtime.GOMAXPROCS(*numCorep)
 	flowgraph.PostDump = *postp
-	poolSz := int32(*poolSzp)
+	poolSz := *poolSzp
 	pow2 := *pow2p
+	sec := *secp
 
 	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.TraceSeconds = true
@@ -126,6 +127,6 @@ func main() {
 	p := flowgraph.FuncQsort(e[0], e[1], poolSz, 1)
 	copy(n[2:poolSz+2], p.Nodes())
 
-	flowgraph.RunAll(n, time.Duration(*secp)*time.Second)
+	flowgraph.RunAll(n, time.Duration(sec)*time.Second)
 
 }
