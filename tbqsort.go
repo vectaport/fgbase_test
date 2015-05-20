@@ -4,6 +4,7 @@ import (
 	"flag"
 	"math/rand"
 	"runtime"
+	"sort"
 	"strconv"
 	"time"
 
@@ -34,28 +35,8 @@ func (a bushel) Slice() []int {
 	return a.Slic
 }
 
-func (a bushel) SliceSorted() bool {
-	l := len(a.Slic)
-	for i:= 0; i<l-1; i++ {
-		if a.Slic[i] > a.Slic[i+1] {
-			return false
-	}
-	}
-	return true
-}
-
 func (a bushel) Original() []int {
 	return a.Orig
-}
-
-func (a bushel) OriginalSorted() bool {
-	l := len(a.Orig)
-	for i:= 0; i<l-1; i++ {
-		if a.Orig[i] > a.Orig[i+1] {
-			return false
-		}
-	}
-	return true
 }
 
 func (a bushel) Depth() int64 { 
@@ -92,8 +73,8 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 		func(n *flowgraph.Node) {
 			switch v := a.Val.(type) {
 			case flowgraph.RecursiveSort: {
-				if v.OriginalSorted() { n.Tracef("END for id=%d, depth=%d, len=%d\n", v.ID(), v.Depth(), v.Len()) }
-				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d, poolsz=%d, ratio = %d\n", v.Original(), v.OriginalSorted(), v.SliceSorted(), v.Depth(), v.ID(), len(v.Original()), flowgraph.PoolQsort.Size(), len(v.Original())/(1+int(v.Depth())))
+				if sort.IntsAreSorted(v.Original()) { n.Tracef("END for id=%d, depth=%d, len=%d\n", v.ID(), v.Depth(), v.Len()) }
+				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d, poolsz=%d, ratio = %d\n", v.Original(), sort.IntsAreSorted(v.Original()), sort.IntsAreSorted(v.Slice()), v.Depth(), v.ID(), len(v.Original()), flowgraph.PoolQsort.Size(), len(v.Original())/(1+int(v.Depth())))
 			}
 			default: {
 				n.Tracef("not of type flowgraph.RecursiveSort\n")
