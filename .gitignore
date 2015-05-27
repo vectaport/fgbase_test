@@ -38,3 +38,7 @@ log
 logerr
 
 tbqsort
+
+tbfifo
+
+tbclient
