@@ -62,6 +62,7 @@ func main() {
 
 	flowgraph.TraceLevel = flowgraph.Q
 	flowgraph.TraceSeconds = true
+	flowgraph.ChannelSize = 1024
 
 	e,n := flowgraph.MakeGraph(1,2)
  
