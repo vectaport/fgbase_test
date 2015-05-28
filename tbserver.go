@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+//	"fmt"
 //	"math/rand"
 	"runtime"
 	"strconv"
@@ -24,7 +25,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	nCorep := flag.Int("ncore", 1 /*runtime.NumCPU()-1*/, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
+	nCorep := flag.Int("ncore", 1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
 	flag.Parse()
 	runtime.GOMAXPROCS(*nCorep)
 
@@ -41,6 +42,5 @@ func main() {
 	flowgraph.RunAll(n, 0)
 
 	<- quitChan
-
 }
 
