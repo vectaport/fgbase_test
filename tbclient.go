@@ -1,17 +1,34 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 func main() {
+	portp := flag.Int("port", 8080, "port to use")
+	testp := flag.Bool("test", false, "test mode")
+	flag.Parse()
+	port := *portp
+	test := *testp
+
+	if test {
+		time.Sleep(4*time.Second) 
+	}
+
 	var i int
 	for {
-		resp, err := http.Get("http://localhost:8080/count/a")
+		req := fmt.Sprintf("http://localhost:%d/count/a", port)
+		resp, err := http.Get(req)
 		if err != nil {
-			fmt.Printf("Err from server: %v,%v\n", resp,err)
+			if err.Error() == "Get "+req+": EOF" {
+				break
+			} else {
+				fmt.Printf("Err from server: %v,%v\n", resp,err)
+			}
 		}
 		defer resp.Body.Close()
 		

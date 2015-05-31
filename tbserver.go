@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-//	"fmt"
+	"fmt"
 //	"math/rand"
 	"runtime"
 	"strconv"
-//	"time"
+	"time"
 
 	"github.com/vectaport/flowgraph"
 )
@@ -25,22 +25,38 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	nCorep := flag.Int("ncore", 1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
+	nCorep := flag.Int("ncore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
+	nPortp := flag.Int("nport", 1, "number of server ports")
+	testp := flag.Bool("test", false, "test mode")
 	flag.Parse()
 	runtime.GOMAXPROCS(*nCorep)
+	nPort := *nPortp
+	test := *testp
 
 	flowgraph.TraceLevel = flowgraph.Q
 	flowgraph.TraceSeconds = true
 	flowgraph.ChannelSize = 1024
 
-	e,n := flowgraph.MakeGraph(1,2)
-	quitChan := make(chan flowgraph.Nada)
- 
-	n[0] = flowgraph.FuncHttp(e[0], ":8080", quitChan)
-	n[1] = tbo(e[0])
+	var quitChan chan flowgraph.Nada
+	var wait time.Duration
+	if !test {
+		quitChan = make(chan flowgraph.Nada)
+	} else {
+		wait = 5
+	}
 
-	flowgraph.RunAll(n, 0)
+	e,n := flowgraph.MakeGraph(1,nPort+1)
 
-	<- quitChan
+	for i := 0; i<nPort; i++ {
+		n[i] = flowgraph.FuncHttp(e[0], fmt.Sprintf(":%d", 8080+i), quitChan)
+	}
+
+	n[nPort] = tbo(e[0])
+
+	flowgraph.RunAll(n, time.Duration(wait*time.Second))
+
+	if !test {
+		<- quitChan
+	}
 }
 

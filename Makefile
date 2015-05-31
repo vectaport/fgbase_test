@@ -1,4 +1,4 @@
-all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbdisplay tbcapture
+all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbdisplay tbcapture tbserver.go 
 
 tbpromote:
 	go run tbpromote.go
@@ -75,4 +75,9 @@ tbdisplay:
 
 tbcapture:
 	go run tbcapture.go -test
+
+tbserver:
+	go run tbserver.go -test &
+	go run tbclient.go -test
+
 
