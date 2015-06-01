@@ -16,8 +16,8 @@ func main() {
 	flag.Parse()
 	runtime.GOMAXPROCS(*nCorep)
 
-	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.TraceSeconds = true
+	flowgraph.TraceLevel = flowgraph.Q
+	flowgraph.TraceSeconds = false
 	flowgraph.ChannelSize = 1024
 
 	e,n := flowgraph.MakeGraph(1,2)
