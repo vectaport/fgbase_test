@@ -89,15 +89,14 @@ func main() {
 	numCorep := flag.Int("numcore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
 	secp := flag.Int("sec", 1, "seconds to run")
 	pow2p := flag.Uint("pow2", 20, "power of 2 to scale random numbers")
-	postp := flag.Bool("post", false, "post run dump of nodes")
+	tracep := flag.String("trace", "V", "trace level, Q|V|VV|VVV|VVVV")
 	flag.Parse()
 	runtime.GOMAXPROCS(*numCorep)
-	flowgraph.PostDump = *postp
 	poolSz := *poolSzp
 	pow2 := *pow2p
 	sec := *secp
 
-	flowgraph.TraceLevel = flowgraph.V
+	flowgraph.TraceLevel = flowgraph.TraceLevels[*tracep]
 
 	e,n := flowgraph.MakeGraph(2, poolSz+2)
 

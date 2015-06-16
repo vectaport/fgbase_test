@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"math/rand"
 	"time"
 
@@ -29,7 +30,10 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.V
+	tracep := flag.String("trace", "V", "trace level, Q|V|VV|VVV|VVVV")
+	flag.Parse()
+	
+	flowgraph.TraceLevel = flowgraph.TraceLevels[*tracep]
 
 	e,n := flowgraph.MakeGraph(11, 10)
 

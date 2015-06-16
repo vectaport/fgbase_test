@@ -13,12 +13,10 @@ func main() {
 
 	ncorep := flag.Int("ncore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
 	secp := flag.Int("sec", 100, "seconds to run")
-	postp := flag.Bool("post", false, "post run dump of nodes")
 	nsmoothp := flag.Int("nsmooth", 1, "number of smoothing operations in a pipeline")
-	tracep := flag.String("trace", "Q", "trace level, Q|V|VV|VVV|VVVV")
+	tracep := flag.String("trace", "V", "trace level, Q|V|VV|VVV|VVVV")
 	flag.Parse()
 	runtime.GOMAXPROCS(*ncorep)
-	flowgraph.PostDump = *postp
 	sec := *secp
 	nsmooth := *nsmoothp
 
