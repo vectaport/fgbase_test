@@ -37,12 +37,13 @@ func main() {
 		return
 	}
 
-	e,n := flowgraph.MakeGraph(1,2)
+	e,n := flowgraph.MakeGraph(1,1)
 
 	n[0] = tbi(e[0])
-	n[1] = flowgraph.FuncDst(e[0], conn)
+	e[0].Dst(&n[0], conn)
 
-	flowgraph.RunAll(n, 2*time.Second)
+
+	flowgraph.RunAll(n, 4*time.Second)
 
 }
 
