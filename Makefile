@@ -40,8 +40,8 @@ tbffti:
 	go run tbffti.go
 
 tbsrcdst:
-	go run tbsrc.go -nodeid=1000 &
-	go run tbdst.go -nodeid=2000
+	go run tbsrc.go -nodeid=2000 -chansz 32 &
+	go run tbdst.go -nodeid=1000 -chansz 32
 
 tbfanout:
 	go run tbfanout.go
@@ -81,7 +81,7 @@ tbserver:
 	go run tbclient.go -test
 
 tbsrcdst2:
-	go run tbsrc2.go -nodeid=1000 &
-	go run tbdst2.go -nodeid=2000
+	go run tbsrc2.go -nodeid=2000 -chansz 64 -trace Q &
+	go run tbdst2.go -nodeid=1000 -chansz 64 -trace Q 
 
 
