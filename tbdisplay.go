@@ -6,7 +6,7 @@ import (
 
 	"github.com/lazywei/go-opencv/opencv"
 	"github.com/vectaport/flowgraph"
-	"github.com/vectaport/flowgraph/imagelab"
+	"github.com/vectaport/flowgraph/imglab"
 )
 
 var images = []string{"airplane.jpg", "fruits.jpg", "pic1.png", "pic3.png", "pic5.png", "stuff.jpg",
@@ -41,7 +41,7 @@ func main() {
 	e,n := flowgraph.MakeGraph(1,2)
  
 	n[0] = tbi(e[0])
-	n[1] = imagelab.FuncDisplay(e[0], quitChan)
+	n[1] = imglab.FuncDisplay(e[0], quitChan)
 
 	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.RunAll(n, time.Duration(wait*time.Second))

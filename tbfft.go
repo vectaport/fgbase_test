@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/vectaport/flowgraph"
-	"github.com/vectaport/flowgraph/imagelab"
+	"github.com/vectaport/flowgraph/imglab"
 )
 
 func tbiFire(n *flowgraph.Node) {
@@ -37,7 +37,7 @@ func main() {
 	e[1].Const(false)
 
 	n[0] = tbi(e[0])
-	n[1] = imagelab.FuncFFT(e[0], e[1], e[2])
+	n[1] = imglab.FuncFFT(e[0], e[1], e[2])
 	n[2] = tbo(e[2])
 
 	flowgraph.RunAll(n, time.Second)
