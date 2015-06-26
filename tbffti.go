@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraph/imagelab"
 )
 
 const infitesimal=1.e-15
@@ -69,10 +70,10 @@ func main() {
 
 	n[1] = flowgraph.FuncFork(e[0], e[1], e[2])
 
-	n[2] = flowgraph.FuncFFT(e[1], e[7], e[3])
+	n[2] = imagelab.FuncFFT(e[1], e[7], e[3])
 	n[3] = flowgraph.FuncPass(e[2], e[4])
 
-	n[4] = flowgraph.FuncFFT(e[3], e[8], e[5])
+	n[4] = imagelab.FuncFFT(e[3], e[8], e[5])
 	n[5] = flowgraph.FuncPass(e[4], e[6])
 
 	n[6] = tbo(e[5], e[6])
