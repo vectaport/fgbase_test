@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraph/imagelab"
 )
 
 func main() {
@@ -24,8 +25,8 @@ func main() {
 
 	e,n := flowgraph.MakeGraph(1,2)
  
-	n[0] = flowgraph.FuncCapture(e[0])
-	n[1] = flowgraph.FuncDisplay(e[0], quitChan)
+	n[0] = imagelab.FuncCapture(e[0])
+	n[1] = imagelab.FuncDisplay(e[0], quitChan)
 
 	flowgraph.TraceLevel = flowgraph.V
 	flowgraph.RunAll(n, time.Duration(wait*time.Second))

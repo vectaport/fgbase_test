@@ -7,6 +7,7 @@ import (
 	"time" 
 
 	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraph/imagelab"
 )
 
 func main() {
@@ -24,11 +25,11 @@ func main() {
 
 	e,n := flowgraph.MakeGraph(nsmooth+1,nsmooth+2)
  
-	n[0] = flowgraph.FuncCapture(e[0])
+	n[0] = imagelab.FuncCapture(e[0])
 	for i:= 0; i<nsmooth; i++ {
-		n[i+1] = flowgraph.FuncSmooth(e[i], e[i+1])
+		n[i+1] = imagelab.FuncSmooth(e[i], e[i+1])
 	}
-	n[nsmooth+1] = flowgraph.FuncDisplay(e[nsmooth], nil)
+	n[nsmooth+1] = imagelab.FuncDisplay(e[nsmooth], nil)
 
 	flowgraph.RunAll(n, time.Duration(sec)*time.Second)
 

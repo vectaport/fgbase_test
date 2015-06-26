@@ -40,8 +40,8 @@ tbffti:
 	go run tbffti.go
 
 tbsrcdst:
-	go run tbsrc.go -nodeid=2000 -chansz 32 &
-	go run tbdst.go -nodeid=1000 -chansz 32
+	go run tbsrc.go -nodeid=2000  &
+	go run tbdst.go -nodeid=1000 
 
 tbfanout:
 	go run tbfanout.go
