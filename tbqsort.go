@@ -103,7 +103,8 @@ func main() {
 	n[0] = tbi(e[0], pow2)
 	n[1] = tbo(e[1])
 
-	p := flowgraph.FuncQsort(e[0], e[1], poolSz, 1)
+	p := flowgraph.FuncQsort(e[0], e[1], poolSz)
+	p.Alloc(&n[0], 1) // reserve one for input
 	copy(n[2:poolSz+2], p.Nodes())
 
 	flowgraph.RunAll(n, time.Duration(sec)*time.Second)

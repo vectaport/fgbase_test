@@ -81,7 +81,7 @@ tbserver:
 	go run tbclient.go -test
 
 tbsrcdst2:
-	go run tbsrc2.go -nodeid=2000 -chansz 64 -trace Q &
-	go run tbdst2.go -nodeid=1000 -chansz 64 -trace Q 
+	go run tbsrc2.go -nodeid=2000 -chansz 16 -trace V &
+	go run tbdst2.go -nodeid=1000 -chansz 16 -trace V 
 
 
