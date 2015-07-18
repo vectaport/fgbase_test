@@ -1,8 +1,6 @@
 package main
 
 import (
-	"time"
-
 	"github.com/vectaport/flowgraph"
 )
 
@@ -36,7 +34,7 @@ func tbo(a, x flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.V
+	flowgraph.ConfigByFlag(nil)
 
 	e,n := flowgraph.MakeGraph(4,3)
 
@@ -46,7 +44,7 @@ func main() {
 	n[1] = flowgraph.FuncAdd(e[0], e[1], e[2])
 	n[2] = tbo(e[2], e[3])
 
-	flowgraph.RunAll(n, time.Second)
+	flowgraph.RunAll(n)
 
 }
 

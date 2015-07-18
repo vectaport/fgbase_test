@@ -1,9 +1,7 @@
 package main
 
 import (
-	"flag"
 	"math/rand"
-	"time"
 
 	"github.com/vectaport/flowgraph"
 )
@@ -30,10 +28,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	tracep := flag.String("trace", "V", "trace level, Q|V|VV|VVV|VVVV")
-	flag.Parse()
-	
-	flowgraph.TraceLevel = flowgraph.TraceLevels[*tracep]
+	flowgraph.ConfigByFlag(nil)
 
 	e,n := flowgraph.MakeGraph(11, 10)
 
@@ -55,6 +50,6 @@ func main() {
 
 	n[9] = tbo(e[9])
 
-	flowgraph.RunAll(n, time.Second)
+	flowgraph.RunAll(n)
 
 }

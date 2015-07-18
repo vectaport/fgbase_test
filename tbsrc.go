@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"net"
-	"time"
 
 	"github.com/vectaport/flowgraph"
 )
@@ -17,10 +16,8 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 func main() {
 
 	nodeid := flag.Int("nodeid", 0, "base for node ids")
-	flag.Parse()
+	flowgraph.ConfigByFlag(map[string]interface{} {"sec": 2})
 	flowgraph.NodeID = int64(*nodeid)
-
-	flowgraph.TraceLevel = flowgraph.V
 
 	ln, err := net.Listen("tcp", "localhost:37777")
 	if err != nil {
@@ -38,7 +35,7 @@ func main() {
 	n[0] = flowgraph.FuncSrc(e[0], conn)
 	n[1] = tbo(e[0])
 
-	flowgraph.RunAll(n, 2*time.Second)
+	flowgraph.RunAll(n)
 
 }
 

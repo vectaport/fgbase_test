@@ -2,7 +2,6 @@ package main
 
 import (
 	"math/rand"
-	"time"
 
 	"github.com/vectaport/flowgraph"
 )
@@ -16,7 +15,7 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.V
+	flowgraph.ConfigByFlag(nil)
 
 	e,n := flowgraph.MakeGraph(7,5)
 
@@ -29,6 +28,6 @@ func main() {
 	n[3] = flowgraph.FuncSub(e[2], e[3], e[4])
 	n[4] = flowgraph.FuncSteerc(e[4], e[5], e[6])
 
-	flowgraph.RunAll(n, time.Second)
+	flowgraph.RunAll(n)
 
 }

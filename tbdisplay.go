@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"time"
 
 	"github.com/lazywei/go-opencv/opencv"
 	"github.com/vectaport/flowgraph"
@@ -27,15 +26,13 @@ func main() {
 
 	
 	testp := flag.Bool("test", false, "test mode")
-	flag.Parse()
+	flowgraph.ConfigByFlag(nil)
 	test := *testp
 
 	var quitChan chan flowgraph.Nada
-	var wait time.Duration
 	if !test {
 		quitChan =make(chan flowgraph.Nada)
-	} else {
-		wait = 1
+		flowgraph.RunTime = 0
 	}
 
 	e,n := flowgraph.MakeGraph(1,2)
@@ -43,8 +40,7 @@ func main() {
 	n[0] = tbi(e[0])
 	n[1] = imglab.FuncDisplay(e[0], quitChan)
 
-	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.RunAll(n, time.Duration(wait*time.Second))
+	flowgraph.RunAll(n)
 
 	if !test {
 		<- quitChan

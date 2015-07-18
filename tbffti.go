@@ -3,7 +3,6 @@ package main
 import (
 	"math"
 	"math/rand"
-	"time"
 
 	"github.com/vectaport/flowgraph"
 	"github.com/vectaport/flowgraph/imglab"
@@ -59,7 +58,7 @@ func tbo(a, b flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	flowgraph.TraceLevel = flowgraph.V
+	flowgraph.ConfigByFlag(nil)
 	
 	e,n := flowgraph.MakeGraph(9,7)
 
@@ -78,7 +77,7 @@ func main() {
 
 	n[6] = tbo(e[5], e[6])
 
-	flowgraph.RunAll(n, time.Second)
+	flowgraph.RunAll(n)
 
 }
 

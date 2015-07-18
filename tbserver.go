@@ -3,9 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-//	"math/rand"
-	"runtime"
-	"strconv"
 	"time"
 
 	"github.com/vectaport/flowgraph"
@@ -18,7 +15,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 		func (n *flowgraph.Node) {
 			// time.Sleep(time.Duration(rand.Intn(150000)))
 			if n.Cnt%10000==0 {
-				flowgraph.StdoutLog.Printf("%.2f: %d (rps=%.2f)\n", flowgraph.TimeSinceStart(), n.Cnt, float64(n.Cnt)/flowgraph.TimeSinceStart())
+				flowgraph.StdoutLog.Printf("%.2f: %d (%.2f hz)\n", flowgraph.TimeSinceStart(), n.Cnt, float64(n.Cnt)/flowgraph.TimeSinceStart())
 			}
 		})
 	return node
@@ -26,24 +23,20 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	nCorep := flag.Int("ncore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
 	nPortp := flag.Int("nport", 1, "number of server ports")
 	testp := flag.Bool("test", false, "test mode")
-	flag.Parse()
-	runtime.GOMAXPROCS(*nCorep)
+	flowgraph.ConfigByFlag(map[string]interface{} {"trace": "Q", "chansz": 1024})
 	nPort := *nPortp
 	test := *testp
 
-	flowgraph.TraceLevel = flowgraph.Q
 	flowgraph.TraceSeconds = true
-	flowgraph.ChannelSize = 1024
 
 	var quitChan chan flowgraph.Nada
-	var wait time.Duration
 	if !test {
 		quitChan = make(chan flowgraph.Nada)
+		flowgraph.RunTime = 0
 	} else {
-		wait = 5
+		flowgraph.RunTime = 10*time.Second
 	}
 
 	e,n := flowgraph.MakeGraph(1,nPort+1)
@@ -54,7 +47,7 @@ func main() {
 
 	n[nPort] = tbo(e[0])
 
-	flowgraph.RunAll(n, time.Duration(wait*time.Second))
+	flowgraph.RunAll(n)
 
 	if !test {
 		<- quitChan

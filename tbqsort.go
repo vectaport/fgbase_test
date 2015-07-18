@@ -3,15 +3,13 @@ package main
 import (
 	"flag"
 	"math/rand"
-	"runtime"
 	"sort"
-	"strconv"
-	"time"
 
 	"github.com/vectaport/flowgraph"
 )
 
 var bushelCnt int64
+var qsortPool flowgraph.Pool
 
 type bushel struct {
 	Slic []int
@@ -74,7 +72,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 			switch v := a.Val.(type) {
 			case flowgraph.RecursiveSort: {
 				if sort.IntsAreSorted(v.Original()) { n.Tracef("END for id=%d, depth=%d, len=%d\n", v.ID(), v.Depth(), v.Len()) }
-				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d, poolsz=%d, ratio = %d\n", v.Original(), sort.IntsAreSorted(v.Original()), sort.IntsAreSorted(v.Slice()), v.Depth(), v.ID(), len(v.Original()), flowgraph.PoolQsort.Size(), len(v.Original())/(1+int(v.Depth())))
+				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d, poolsz=%d, ratio = %d\n", v.Original(), sort.IntsAreSorted(v.Original()), sort.IntsAreSorted(v.Slice()), v.Depth(), v.ID(), len(v.Original()), qsortPool.Size(), len(v.Original())/(1+int(v.Depth())))
 			}
 			default: {
 				n.Tracef("not of type flowgraph.RecursiveSort\n")
@@ -86,17 +84,10 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 func main() {
 
 	poolSzp := flag.Int("poolsz", 64, "qsort pool size")
-	numCorep := flag.Int("numcore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
-	secp := flag.Int("sec", 1, "seconds to run")
 	pow2p := flag.Uint("pow2", 20, "power of 2 to scale random numbers")
-	tracep := flag.String("trace", "V", "trace level, Q|V|VV|VVV|VVVV")
-	flag.Parse()
-	runtime.GOMAXPROCS(*numCorep)
+	flowgraph.ConfigByFlag(nil)
 	poolSz := *poolSzp
 	pow2 := *pow2p
-	sec := *secp
-
-	flowgraph.TraceLevel = flowgraph.TraceLevels[*tracep]
 
 	e,n := flowgraph.MakeGraph(2, poolSz+2)
 
@@ -104,9 +95,9 @@ func main() {
 	n[1] = tbo(e[1])
 
 	p := flowgraph.FuncQsort(e[0], e[1], poolSz)
-	p.Alloc(&n[0], 1) // reserve one for input
+	p.Alloc(&n[2], 1) // reserve one for input
 	copy(n[2:poolSz+2], p.Nodes())
 
-	flowgraph.RunAll(n, time.Duration(sec)*time.Second)
+	flowgraph.RunAll(n)
 
 }

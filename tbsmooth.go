@@ -12,16 +12,10 @@ import (
 
 func main() {
 
-	ncorep := flag.Int("ncore", runtime.NumCPU()-1, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
-	secp := flag.Int("sec", 100, "seconds to run")
 	nsmoothp := flag.Int("nsmooth", 1, "number of smoothing operations in a pipeline")
-	tracep := flag.String("trace", "V", "trace level, Q|V|VV|VVV|VVVV")
-	flag.Parse()
-	runtime.GOMAXPROCS(*ncorep)
-	sec := *secp
+	flowgraph.ConfigByFlag(map[string]interface{} {"sec": 100})
 	nsmooth := *nsmoothp
 
-	flowgraph.TraceLevel = flowgraph.TraceLevels[*tracep]
 
 	e,n := flowgraph.MakeGraph(nsmooth+1,nsmooth+2)
  
@@ -31,7 +25,7 @@ func main() {
 	}
 	n[nsmooth+1] = imglab.FuncDisplay(e[nsmooth], nil)
 
-	flowgraph.RunAll(n, time.Duration(sec)*time.Second)
+	flowgraph.RunAll(n)
 
 }
 

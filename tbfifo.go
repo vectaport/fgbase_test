@@ -45,7 +45,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 				oneDelay = false
 			}
 			if n.Cnt%100000==0 {
-				flowgraph.StdoutLog.Printf("%.2f: %d (rps=%.2f)  datamax=%d, ackmax=%d, datalen=%d, acklen=%d, datacap=%d, ackcap=%d\n", flowgraph.TimeSinceStart(), n.Cnt, float64(n.Cnt)/flowgraph.TimeSinceStart(),
+				flowgraph.StdoutLog.Printf("%.2f: %d (%.2f hz)  datamax=%d, ackmax=%d, datalen=%d, acklen=%d, datacap=%d, ackcap=%d\n", flowgraph.TimeSinceStart(), n.Cnt, float64(n.Cnt)/flowgraph.TimeSinceStart(),
 					maxTbi, maxTbo, lenTbi, lenTbo, capTbi, capTbo)
 				maxTbi = 0
 				maxTbo = 0
@@ -56,20 +56,16 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 func main() {
 
-	nCorep := flag.Int("ncore", 1 /*runtime.NumCPU()-1*/, "num cores to use, max is "+strconv.Itoa(runtime.NumCPU()))
-	flag.Parse()
-	runtime.GOMAXPROCS(*nCorep)
+	flowgraph.ConfigByFlag(map[string]interface{} {"ncore": 1, "chansz": 1024, "sec": 60})
 
-	flowgraph.TraceLevel = flowgraph.Q
 	flowgraph.TraceSeconds = true
-	flowgraph.ChannelSize = 1024
 
 	e,n := flowgraph.MakeGraph(1,2)
  
 	n[0] = tbi(e[0])
 	n[1] = tbo(e[0])
 
-	flowgraph.RunAll(n, time.Duration(60)*time.Second)
+	flowgraph.RunAll(n)
 
 }
 

@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"os"
-	"time"
 
 	"github.com/vectaport/flowgraph"
 )
@@ -23,14 +22,12 @@ func check(e error) {
 		
 func main() {
 
-	flag.Parse()
+	flowgraph.ConfigByFlag(map[string]interface{} {"sec": 2})
 	if len(flag.Args()) == 0  { 
 		flag.Usage()
 		os.Exit(1)
 	}
 	fileName := flag.Arg(0)
-
-	flowgraph.TraceLevel = flowgraph.V
 
 	f, err := os.Open(fileName)
 	check(err)
@@ -40,7 +37,7 @@ func main() {
 	n[0] = flowgraph.FuncRead(e[0], f)
 	n[1] = tbo(e[0])
 
-	flowgraph.RunAll(n, 2*time.Second)
+	flowgraph.RunAll(n)
 
 }
 

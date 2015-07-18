@@ -37,8 +37,5 @@ func main() {
 			fmt.Printf("Err from server: %v,%v\n", body,err)
 		}
                 i++
-                if i%10000==0 {
-                        fmt.Printf("request %d\n", i)
-                }
 	}
 }

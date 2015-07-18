@@ -24,11 +24,8 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 func main() {
 
 	nodeid := flag.Int("nodeid", 0, "base for node ids")
-	flag.Parse()
+	flowgraph.ConfigByFlag(map[string]interface{} {"sec": 2})
 	flowgraph.NodeID = int64(*nodeid)
-
-	flowgraph.TraceLevel = flowgraph.V
-	flowgraph.ChannelSize = 16
 
 	time.Sleep(1*time.Second)
 	conn, err := net.Dial("tcp", "localhost:37777")
@@ -42,7 +39,7 @@ func main() {
 	n[0] = tbi(e[0])
 	n[1] = flowgraph.FuncDst(e[0], conn)
 
-	flowgraph.RunAll(n, 2*time.Second)
+	flowgraph.RunAll(n)
 
 }
 
