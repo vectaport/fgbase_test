@@ -1,4 +1,4 @@
-all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbdisplay tbcapture tbserver tbsrcdst2
+all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbdisplay tbcapture tbserver tbsrcdst2 tbmap
 
 tbpromote:
 	go run tbpromote.go
@@ -84,4 +84,5 @@ tbsrcdst2:
 	go run tbsrc2.go -nodeid=2000 -chansz 16 -trace V &
 	go run tbdst2.go -nodeid=1000 -chansz 16 -trace V 
 
-
+tbmap: 
+	go run tbmap.go -chansz 32768 -nmap 6  -nreduce 26 -sec 4 -ncore 3 -trace Q
