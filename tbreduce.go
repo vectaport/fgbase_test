@@ -72,15 +72,15 @@ func reducer(n *flowgraph.Node, s, d flowgraph.Datum) flowgraph.Datum {
 	}
 	i := lo
 	
-	if i==len(dict) {
-		dict = append(dict, ss)
-	} else {
-		dict = append(dict, "")
+
+	dict = append(dict, ss)
+	if i<len(dict)-1 {
 		copy(dict[i+1:], dict[i:])
 		dict[i] = ss
-
-		testOrder(n, dict)
 	}
+	
+	testOrder(n, dict)
+
 	return dict
 	
 }
