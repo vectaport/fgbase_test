@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"math/rand"
-	"time"
 
 	"github.com/vectaport/flowgraph"
 )
@@ -25,7 +24,6 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 	x.Ack = make(chan flowgraph.Nada, flowgraph.ChannelSize)
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) { 
-			time.Sleep(time.Second/100000)
 			l:=len((*x.Data)[0])
 			if MaxChanLen < l {
 				MaxChanLen = l
@@ -67,6 +65,7 @@ func reducer(n *flowgraph.Node, s, d flowgraph.Datum) flowgraph.Datum {
 		} else if ss > dict[mid] {
 			lo = mid+1
 		} else {
+			lo = mid
 			break	
 		}
 	}
@@ -91,7 +90,7 @@ func main() {
 	
 	nreducep := flag.Int("nreduce", 26, "number of reducers")
 	nmapp := flag.Int("nmap", 128, "number of mappers")
-	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":6, "chansz":128, "trace": "Q", "sec":4})
+	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":6, "trace": "Q", "sec":4})
 	nreduce := *nreducep
 	nmap := *nmapp
 
