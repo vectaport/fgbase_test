@@ -101,7 +101,7 @@ func main() {
 		n[i] = tbi(e[i])
 	}
 
-	var mapSel = func(n *flowgraph.Node) int {
+	var mapper = func(n *flowgraph.Node) int {
 		i,ok := n.Srcs[0].Val.(int)
 		if ok {return i%nreduce}
 		s,ok := n.Srcs[0].Val.(string)
@@ -111,7 +111,7 @@ func main() {
 		return -1
 	}
 
-	p := flowgraph.FuncMap(e[0:nmap], e[nmap:nmap+nreduce], mapSel)
+	p := flowgraph.FuncMap(e[0:nmap], e[nmap:nmap+nreduce], mapper)
 	copy(n[nmap:2*nmap], p.Nodes())
 	
 	for i:= 0; i<nreduce; i++ {
