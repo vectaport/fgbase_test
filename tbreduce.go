@@ -45,6 +45,17 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
+func mapper(n *flowgraph.Node, datum flowgraph.Datum) int {
+	nreduce := len(n.Dsts)
+	i,ok := datum.(int)
+	if ok {return i%nreduce}
+	s,ok := datum.(string)
+	if ok { 
+		return int(s[0]-'A')*nreduce/26
+	}
+	return -1
+}
+
 func testOrder(n *flowgraph.Node, dict []string) {
 	for i := 0; i<len(dict)-1; i++ {
 		if dict[i]>=dict[i+1] {
@@ -53,16 +64,16 @@ func testOrder(n *flowgraph.Node, dict []string) {
 	}
 }
 
-func reducer(n *flowgraph.Node, s, d flowgraph.Datum) flowgraph.Datum {
-	dict := d.([]string)
-	ss := s.(string)
+func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datum {
+	s := datum.(string)
+	c := collection.([]string)
 	lo := 0
-	hi := len(dict)-1
+	hi := len(c)-1
 	for lo<=hi {
 		mid := (lo+hi)/2
-		if ss < dict[mid] {
+		if s < c[mid] {
 			hi = mid-1
-		} else if ss > dict[mid] {
+		} else if s > c[mid] {
 			lo = mid+1
 		} else {
 			lo = mid
@@ -70,23 +81,21 @@ func reducer(n *flowgraph.Node, s, d flowgraph.Datum) flowgraph.Datum {
 		}
 	}
 	i := lo
-	
 
-	dict = append(dict, ss)
-	if i<len(dict)-1 {
-		copy(dict[i+1:], dict[i:])
-		dict[i] = ss
+	c = append(c, s)
+	if i<len(c)-1 {
+		copy(c[i+1:], c[i:])
+		c[i] = s
 	}
 	
-	testOrder(n, dict)
+	testOrder(n, c)
 
-	return dict
+	return c
 	
 }
 
 
 func main() {
-
 	
 	nreducep := flag.Int("nreduce", 26, "number of reducers")
 	nmapp := flag.Int("nmap", 128, "number of mappers")
@@ -99,16 +108,6 @@ func main() {
 
 	for i:= 0; i<nmap; i++ {
 		n[i] = tbi(e[i])
-	}
-
-	var mapper = func(n *flowgraph.Node) int {
-		i,ok := n.Srcs[0].Val.(int)
-		if ok {return i%nreduce}
-		s,ok := n.Srcs[0].Val.(string)
-		if ok { 
-			return int(s[0]-'A')*nreduce/26
-		}
-		return -1
 	}
 
 	p := flowgraph.FuncMap(e[0:nmap], e[nmap:nmap+nreduce], mapper)
@@ -130,11 +129,17 @@ func main() {
 	for i:=0; i<len(tboHz); i++ {
 		sum += tboHz[i]
 	}
+
+	speed := sum/1000
+	hzstr := "Khz\n"
 	if sum>1000*1000 {
-		flowgraph.StdoutLog.Printf("%.2f Mhz\n", sum/1000/1000)
-	} else {
-		flowgraph.StdoutLog.Printf("%.2f Khz\n", sum/1000)
+		speed = speed/1000
+		hzstr = "Mhz\n"
 	}
-	flowgraph.StdoutLog.Printf("(maxchansz=%d)\n", MaxChanLen)
+	if flowgraph.TraceLevel==flowgraph.QQ {
+		hzstr = ""
+	}
+	flowgraph.StdoutLog.Printf("%.2f%s", speed, hzstr)
+	// flowgraph.StdoutLog.Printf("(maxchansz=%d)\n", MaxChanLen)
 }
 

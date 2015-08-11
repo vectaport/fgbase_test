@@ -50,3 +50,15 @@ co 26.pdf
 logd
 
 logs
+
+*.csv~
+
+*.csv
+
+reducetrials.numbers
+
+chansz.png
+
+ncore.pdf
+
+ncore.png

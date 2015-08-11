@@ -45,6 +45,17 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
+func mapper(n *flowgraph.Node, datum flowgraph.Datum) int {
+	nreduce := len(n.Dsts)
+	i,ok := datum.(int)
+	if ok {return i%nreduce}
+	s,ok := datum.(string)
+	if ok { 
+		return int(s[0]-'A')*nreduce/26
+	}
+	return -1
+}
+
 func main() {
 
 	
@@ -61,15 +72,6 @@ func main() {
 		n[i] = tbi(e[i])
 	}
 
-	var mapper = func(n *flowgraph.Node) int {
-		i,ok := n.Srcs[0].Val.(int)
-		if ok {return i%nreduce}
-		s,ok := n.Srcs[0].Val.(string)
-		if ok { 
-			return int(s[0]-'A')*nreduce/26
-		}
-		return -1
-	}
 	p := flowgraph.FuncMap(e[0:nmap], e[nmap:nmap+nreduce], mapper)
 	copy(n[nmap:2*nmap], p.Nodes())
 
