@@ -11,22 +11,22 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) {
-			if x.Aux.(int)%3==0 {
+			if n.Aux.(int)%3==0 {
 				s := []int{0,1,2,3,4,5,6,7}
 				x.Val = s
-			} else if x.Aux.(int)%3==1 {
-				x.Val = float32(x.Aux.(int))+.5
+			} else if n.Aux.(int)%3==1 {
+				x.Val = float32(n.Aux.(int))+.5
 			} else {
-				x.Val = x.Aux
+				x.Val = n.Aux
 			}
 
-			x.Aux = x.Aux.(int) + 1
+			n.Aux = n.Aux.(int) + 1
 			if n.Cnt%10000==0 {
 				flowgraph.StdoutLog.Printf("%2.f: %d (%.2f hz)\n", flowgraph.TimeSinceStart(), n.Cnt, float64(n.Cnt)/flowgraph.TimeSinceStart())
 				
 			}
 		})
-	x.Aux = 0
+	node.Aux = 0
 	return node
 
 }

@@ -6,11 +6,11 @@ import (
 
 func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
-	x.Val = x.Aux
-	if (x.Aux.(int)<=1) {
-		x.Aux = (x.Aux.(int) + 1)%2
+	x.Val = n.Aux
+	if (n.Aux.(int)<=1) {
+		n.Aux = (n.Aux.(int) + 1)%2
 	} else {
-		x.Aux = x.Aux.(int) + 1
+		n.Aux = n.Aux.(int) + 1
 	}
 }
 
@@ -30,15 +30,15 @@ func main() {
 
 	e,n := flowgraph.MakeGraph(4,5)
 
-	// initialize different state in the two source testbenches (tbi)
-	e[0].Aux = 0
-	e[1].Aux = 1000
-
 	n[0] = tbi(e[0])
 	n[1] = tbi(e[1])
 	n[2] = flowgraph.FuncSteerv(e[0], e[1], e[2], e[3])
 	n[3] = tbo(e[2])
 	n[4] = tbo(e[3])
+
+	// initialize different state in the two source testbenches (tbi)
+	n[0].Aux = 0
+	n[1].Aux = 1000
 
 	flowgraph.RunAll(n)
 

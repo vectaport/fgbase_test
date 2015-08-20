@@ -13,86 +13,80 @@ func tbi(x, y flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
-func tbiRun(node *flowgraph.Node) {
-	x := node.Dsts[0]
-	y := node.Dsts[1]
+func tbiRun(n *flowgraph.Node) {
+	x := n.Dsts[0]
+	y := n.Dsts[1]
 
-	x.Aux = 0
-	y.Aux = 0
+	n.Aux = []int{0, 0}
 	var i int = 0
 	for {
 		if (i>10) { break }
-		if node.RdyAll() {
-			x.Val = x.Aux
-			y.Val = y.Aux
-			x.Aux = x.Aux.(int) + 2
-			y.Aux = y.Aux.(int) + 1
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux.([]int)[0]
+			y.Val = n.Aux.([]int)[1]
+			n.Aux = []int{x.Val.(int)+1, y.Val.(int)+2}
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	x.Aux = float32(0)
-	y.Aux = float32(0)
+
+	n.Aux = []float32{0,0}
 	i = 0
 	for {
 		if (i>9) { break }
-		if node.RdyAll(){
-			x.Val = x.Aux
-			y.Val = y.Aux
-			x.Aux = x.Aux.(float32) - 1.
-			y.Aux = y.Aux.(float32) + 1.
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = n.Aux.([]float32)[0]
+			y.Val = n.Aux.([]float32)[1]
+			n.Aux = []float32{x.Val.(float32) - 1., y.Val.(float32) + 1.}
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 	
-	x.Aux = uint64(math.MaxUint64)
-	y.Aux = -1
+	n.Aux = []flowgraph.Datum{uint64(math.MaxUint64), -1}
 	i = 0
 	for {
 		if (i > 0) { break }
-		if node.RdyAll(){
-			x.Val = x.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = n.Aux.([]flowgraph.Datum)[0]
+			y.Val = n.Aux.([]flowgraph.Datum)[1]
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	x.Aux = int8(-1)
-	y.Aux = uint64(math.MaxUint64)
+	n.Aux = []flowgraph.Datum{int8(-1), uint64(math.MaxUint64)}
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll(){
-			x.Val = x.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = n.Aux.([]flowgraph.Datum)[0]
+			y.Val = n.Aux.([]flowgraph.Datum)[1]
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	x.Aux = int8(-1)
-	y.Aux = uint32(math.MaxUint32)
+	n.Aux = []flowgraph.Datum{int8(-1), uint32(math.MaxUint32)}
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll(){
-			x.Val = x.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = n.Aux.([]flowgraph.Datum)[0]
+			y.Val = n.Aux.([]flowgraph.Datum)[1]
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
 	for  {
-		node.RecvOne()
+		n.RecvOne()
 	}
 
 }

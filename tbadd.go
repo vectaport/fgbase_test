@@ -13,117 +13,113 @@ func tbi(x, y flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
-func tbiRun (node *flowgraph.Node) {
-	x := node.Dsts[0]
-	y := node.Dsts[1]
+func tbiRun (n *flowgraph.Node) {
+	x := n.Dsts[0]
+	y := n.Dsts[1]
 
-	x.Aux = 0
-	y.Aux = 0
+	n.Aux = 0
 	var i int = 0
 	for {
 		if (i>10) { break }
-		if node.RdyAll(){
-			x.Val = x.Aux
-			y.Val = y.Aux
-			x.Aux = x.Aux.(int) + 1
-			y.Aux = y.Aux.(int) + 1
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = n.Aux
+			y.Val = n.Aux
+			n.Aux = n.Aux.(int) + 1
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	x.Aux = float32(0)
-	y.Aux = float32(0)
+	n.Aux = float32(0)
 	i = 0
 	for {
 		if (i>9) { break }
-		if node.RdyAll(){
-			x.Val = x.Aux
-			y.Val = y.Aux
-			x.Aux = x.Aux.(float32) + 1
-			y.Aux = y.Aux.(float32) + 1
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = n.Aux
+			y.Val = n.Aux
+			n.Aux = n.Aux.(float32) + 1
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	x.Aux = uint64(math.MaxUint64)
-	y.Aux = -1
+	n.Aux = uint64(math.MaxUint64)
+	n.Aux = -1
 	i = 0
 	for {
 		if (i > 0) { break }
-		if node.RdyAll(){
-			x.Val = x.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = n.Aux
+			y.Val = n.Aux
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	x.Aux = int8(0)
-	y.Aux = uint64(0)
+	n.Aux = int8(0)
+	n.Aux = uint64(0)
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = x.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux
+			y.Val = n.Aux
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	x.Aux = int8(0)
-	y.Aux = int16(0)
+	n.Aux = int8(0)
+	n.Aux = int16(0)
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = x.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux
+			y.Val = n.Aux
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
 
-	x.Aux = "Can you add an int to a string?"
-	y.Aux = int8(77)
+	n.Aux = "Can you add an int to a string?"
+	n.Aux = int8(77)
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = x.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux
+			y.Val = n.Aux
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	x.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
-	y.Aux = int8(77)
+	n.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
+	n.Aux = int8(77)
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = x.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux
+			y.Val = n.Aux
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 	
 
 	// read all the acks to clean up
 	for  {
-		node.RecvOne()
+		n.RecvOne()
 	}
 	
 

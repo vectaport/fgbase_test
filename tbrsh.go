@@ -17,15 +17,15 @@ func tbiRun (node *flowgraph.Node) {
 	x := node.Dsts[0]
 	y := node.Dsts[1]
 
-	x.Aux = uint(0)
+	n.Aux = uint(0)
 	y.Aux = uint(0)
 	var i uint = 0
 	for {
 		if (i>10) { break }
 		if node.RdyAll(){
-			x.Val = x.Aux
+			x.Val = n.Aux
 			y.Val = y.Aux
-			x.Aux = x.Aux.(uint) + 1
+			n.Aux = x.Aux.(uint) + 1
 			y.Aux = y.Aux.(uint) + 1
 			node.SendAll()
 			i = i + 1
@@ -33,15 +33,15 @@ func tbiRun (node *flowgraph.Node) {
 		node.RecvOne()
 	}
 
-	x.Aux = float32(0)
+	n.Aux = float32(0)
 	y.Aux = float32(0)
 	i = 0
 	for {
 		if (i>9) { break }
 		if node.RdyAll(){
-			x.Val = x.Aux
+			x.Val = n.Aux
 			y.Val = y.Aux
-			x.Aux = x.Aux.(float32) + 1
+			n.Aux = x.Aux.(float32) + 1
 			y.Aux = y.Aux.(float32) + 1
 			node.SendAll()
 			i = i + 1
@@ -49,13 +49,13 @@ func tbiRun (node *flowgraph.Node) {
 		node.RecvOne()
 	}
 
-	x.Aux = uint64(math.MaxUint64)
+	n.Aux = uint64(math.MaxUint64)
 	y.Aux = -1
 	i = 0
 	for {
 		if (i > 0) { break }
 		if node.RdyAll(){
-			x.Val = x.Aux
+			x.Val = n.Aux
 			y.Val = y.Aux
 			node.SendAll()
 			i = i + 1
@@ -63,13 +63,13 @@ func tbiRun (node *flowgraph.Node) {
 		node.RecvOne()
 	}
 
-	x.Aux = uint8(0)
+	n.Aux = uint8(0)
 	y.Aux = uint64(0)
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if node.RdyAll() {
-			x.Val = x.Aux
+			x.Val = n.Aux
 			y.Val = y.Aux
 			node.SendAll()
 			i = i + 1
@@ -77,13 +77,13 @@ func tbiRun (node *flowgraph.Node) {
 		node.RecvOne()
 	}
 
-	x.Aux = uint8(0)
+	n.Aux = uint8(0)
 	y.Aux = uint16(0)
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if node.RdyAll() {
-			x.Val = x.Aux
+			x.Val = n.Aux
 			y.Val = y.Aux
 			node.SendAll()
 			i = i + 1
@@ -92,13 +92,13 @@ func tbiRun (node *flowgraph.Node) {
 	}
 
 
-	x.Aux = "Can you right shift a string by an int?"
+	n.Aux = "Can you right shift a string by an int?"
 	y.Aux = uint8(77)
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if node.RdyAll() {
-			x.Val = x.Aux
+			x.Val = n.Aux
 			y.Val = y.Aux
 			node.SendAll()
 			i = i + 1
@@ -106,13 +106,13 @@ func tbiRun (node *flowgraph.Node) {
 		node.RecvOne()
 	}
 
-	x.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
+	n.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
 	y.Aux = uint8(77)
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if node.RdyAll() {
-			x.Val = x.Aux
+			x.Val = n.Aux
 			y.Val = y.Aux
 			node.SendAll()
 			i = i + 1

@@ -6,14 +6,14 @@ import (
 
 func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
-	x.Val = x.Aux
-	x.Aux = (x.Aux.(int) + 1)%2
+	x.Val = n.Aux
+	n.Aux = (n.Aux.(int) + 1)%2
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node:=flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, tbiFire)
-	x.Aux = 0
+	node.Aux = 0
 	return node
 	
 }

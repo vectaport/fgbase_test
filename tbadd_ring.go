@@ -7,16 +7,14 @@ import (
 func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
 	y := n.Dsts[1]
-	x.Val = x.Aux
-	y.Val = y.Aux
-	x.Aux = x.Aux.(int) + 1
-	y.Aux = y.Aux.(int) + 1
+	x.Val = n.Aux
+	y.Val = n.Aux
+	n.Aux = n.Aux.(int) + 1
 }
 
 func tbi(a, x, y flowgraph.Edge) flowgraph.Node {
 	node := flowgraph.MakeNode("tbi", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x, &y}, nil, tbiFire)
-	x.Aux = 1
-	y.Aux = 1
+	node.Aux = 1
 	return node
 }
 

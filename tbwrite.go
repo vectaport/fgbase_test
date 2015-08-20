@@ -11,11 +11,11 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) {
-			x.Val = x.Aux
-			x.Aux = x.Aux.(int) + 1
+			x.Val = n.Aux
+			n.Aux = x.Aux.(int) + 1
 		})
 
-	x.Aux = 0
+	n.Aux = 0
 	return node
 
 }

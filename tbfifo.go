@@ -26,9 +26,9 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 			lenTbi = len((*x.Data)[0]) 
 			if len((*x.Data)[0])>maxTbi { maxTbi = len((*x.Data)[0])}
 			// time.Sleep(1)
-			if x.Aux==nil { x.Aux = 0 }
-			x.Val = x.Aux
-			x.Aux = x.Aux.(int) + 1
+			if n.Aux==nil { x.Aux = 0 }
+			x.Val = n.Aux
+			n.Aux = x.Aux.(int) + 1
 		})
 	return node
 }
