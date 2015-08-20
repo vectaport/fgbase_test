@@ -98,8 +98,8 @@ func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datu
 func main() {
 	
 	nreducep := flag.Int("nreduce", 26, "number of reducers")
-	nmapp := flag.Int("nmap", 128, "number of mappers")
-	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":6, "trace": "Q", "sec":4})
+	nmapp := flag.Int("nmap", 4, "number of mappers")
+	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace": "Q", "sec":4})
 	nreduce := *nreducep
 	nmap := *nmapp
 
