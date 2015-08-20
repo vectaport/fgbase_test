@@ -17,74 +17,67 @@ func tbiRun (node *flowgraph.Node) {
 	x := node.Dsts[0]
 	y := node.Dsts[1]
 
-	n.Aux = uint(0)
-	y.Aux = uint(0)
 	var i uint = 0
 	for {
 		if (i>10) { break }
 		if node.RdyAll(){
-			x.Val = n.Aux
-			y.Val = y.Aux
-			n.Aux = x.Aux.(uint) + 1
-			y.Aux = y.Aux.(uint) + 1
+			x.Val = i
+			y.Val = i
 			node.SendAll()
 			i = i + 1
 		}
 		node.RecvOne()
 	}
 
-	n.Aux = float32(0)
-	y.Aux = float32(0)
+	var xv interface{} = float32(0)
 	i = 0
 	for {
 		if (i>9) { break }
 		if node.RdyAll(){
-			x.Val = n.Aux
-			y.Val = y.Aux
-			n.Aux = x.Aux.(float32) + 1
-			y.Aux = y.Aux.(float32) + 1
+			x.Val = xv
+			y.Val = xv
 			node.SendAll()
 			i = i + 1
 		}
 		node.RecvOne()
 	}
 
-	n.Aux = uint64(math.MaxUint64)
-	y.Aux = -1
+	xv = uint64(math.MaxUint64)
+	var yv interface{} = -1
 	i = 0
 	for {
 		if (i > 0) { break }
 		if node.RdyAll(){
-			x.Val = n.Aux
-			y.Val = y.Aux
+			x.Val = xv
+			y.Val = yv
 			node.SendAll()
 			i = i + 1
 		}
 		node.RecvOne()
 	}
 
-	n.Aux = uint8(0)
-	y.Aux = uint64(0)
+	xv = uint8(0)
+	yv = uint64(0)
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
+			x.Val = xv
+			y.Val = yv
 			node.SendAll()
 			i = i + 1
 		}
 		node.RecvOne()
 	}
 
-	n.Aux = uint8(0)
-	y.Aux = uint16(0)
+	xv = uint8(0)
+	yv = uint16(0)
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
+			x.Val = xv
+			y.Val = yv
 			node.SendAll()
 			i = i + 1
 		}
@@ -92,28 +85,28 @@ func tbiRun (node *flowgraph.Node) {
 	}
 
 
-	n.Aux = "Can you left shift a string by an int?"
-	y.Aux = uint8(77)
+	xv = "Can you left shift a string by an int?"
+	yv = uint8(77)
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
+			x.Val = xv
+			y.Val = yv
 			node.SendAll()
 			i = i + 1
 		}
 		node.RecvOne()
 	}
 
-	n.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
-	y.Aux = uint8(77)
+	xv = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
+	yv = uint8(77)
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
+			x.Val = xv
+			y.Val = yv
 			node.SendAll()
 			i = i + 1
 		}

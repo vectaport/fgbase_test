@@ -13,117 +13,108 @@ func tbi(x, y flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
-func tbiRun (node *flowgraph.Node) {
-	x := node.Dsts[0]
-	y := node.Dsts[1]
+func tbiRun (n *flowgraph.Node) {
+	x := n.Dsts[0] 
+	y := n.Dsts[1]
 
 	n.Aux = 0
-	y.Aux = 0
 	var i int = 0
 	for {
 		if (i>10) { break }
-		if node.RdyAll(){
+		if n.RdyAll(){
 			x.Val = n.Aux
-			y.Val = y.Aux
-			n.Aux = x.Aux.(int) + 1
-			y.Aux = y.Aux.(int) + 1
-			node.SendAll()
+			y.Val = n.Aux
+			n.Aux = n.Aux.(int) + 1
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
 	n.Aux = float32(0)
-	y.Aux = float32(0)
 	i = 0
 	for {
 		if (i>9) { break }
-		if node.RdyAll(){
+		if n.RdyAll(){
 			x.Val = n.Aux
-			y.Val = y.Aux
-			n.Aux = x.Aux.(float32) + 1
-			y.Aux = y.Aux.(float32) + 1
-			node.SendAll()
+			y.Val = n.Aux
+			n.Aux = n.Aux.(float32) + 1
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	n.Aux = uint64(math.MaxUint64)
-	y.Aux = -1
+	n.Aux = []interface{}{uint64(math.MaxUint64), -1}
 	i = 0
 	for {
 		if (i > 0) { break }
-		if node.RdyAll(){
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = n.Aux.([]interface{})[0]
+			y.Val = n.Aux.([]interface{})[1]
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	n.Aux = int8(0)
-	y.Aux = uint64(0)
+	n.Aux = []interface{}{int8(0), uint64(0)}
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux.([]interface{})[0]
+			y.Val = n.Aux.([]interface{})[1]
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	n.Aux = int8(0)
-	y.Aux = int16(0)
+	n.Aux = []interface{}{int8(0),int16(0)}
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux.([]interface{})[0]
+			y.Val = n.Aux.([]interface{})[1]
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
 
-	n.Aux = "Can you multiply an int to a string?"
-	y.Aux = int8(77)
+	n.Aux = []interface{}{"Can you multiply an int to a string?", int8(77)}
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux.([]interface{})[0]
+			y.Val = n.Aux.([]interface{})[1]
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	n.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
-	y.Aux = int8(77)
+	n.Aux = []interface{}{[4]complex128 {0+0i,0+0i,0+0i,0+0i},int8(77)}
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = n.Aux.([]interface{})[0]
+			y.Val = n.Aux.([]interface{})[1]
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 	
 
 	// read all the acks to clean up
 	for  {
-		node.RecvOne()
+		n.RecvOne()
 	}
 	
 

@@ -13,117 +13,97 @@ func tbi(x, y flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
-func tbiRun (node *flowgraph.Node) {
-	x := node.Dsts[0]
-	y := node.Dsts[1]
+func tbiRun (n *flowgraph.Node) {
+	x := n.Dsts[0]
+	y := n.Dsts[1]
 
-	n.Aux = 0
-	y.Aux = 0
-	var i int = 0
+	i := 0
 	for {
 		if (i>10) { break }
-		if node.RdyAll(){
-			x.Val = n.Aux
-			y.Val = y.Aux
-			n.Aux = x.Aux.(int) + 1
-			y.Aux = y.Aux.(int) + 1
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = i
+			y.Val = 2
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	n.Aux = float32(0)
-	y.Aux = float32(0)
-	i = 0
-	for {
-		if (i>9) { break }
-		if node.RdyAll(){
-			x.Val = n.Aux
-			y.Val = y.Aux
-			n.Aux = x.Aux.(float32) + 1
-			y.Aux = y.Aux.(float32) + 1
-			node.SendAll()
-			i = i + 1
-		}
-		node.RecvOne()
-	}
-
-	n.Aux = uint64(math.MaxUint64)
-	y.Aux = -1
+	var xv interface{} = uint64(math.MaxUint64)
+	var yv interface{} = -1
 	i = 0
 	for {
 		if (i > 0) { break }
-		if node.RdyAll(){
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll(){
+			x.Val = xv
+			y.Val = yv
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	n.Aux = int8(0)
-	y.Aux = uint64(0)
+	xv = int8(0)
+	yv =  uint64(0)
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = xv
+			y.Val = yv
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	n.Aux = int8(0)
-	y.Aux = int16(0)
+	xv = int8(0)
+	yv = int16(0)
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = xv
+			y.Val = yv
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
 
-	n.Aux = "Can you divide an int to a string?"
-	y.Aux = int8(77)
+	xv = "Can you divide an int to a string?"
+	yv= int8(77)
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = xv
+			y.Val = yv
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 
-	n.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
-	y.Aux = int8(77)
+	xv = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
+	yv = int8(77)
 	i = 0
 	for  {
 		if (i > 0) { break }
-		if node.RdyAll() {
-			x.Val = n.Aux
-			y.Val = y.Aux
-			node.SendAll()
+		if n.RdyAll() {
+			x.Val = xv
+			y.Val = yv
+			n.SendAll()
 			i = i + 1
 		}
-		node.RecvOne()
+		n.RecvOne()
 	}
 	
 
 	// read all the acks to clean up
 	for  {
-		node.RecvOne()
+		n.RecvOne()
 	}
 	
 
