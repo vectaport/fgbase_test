@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"math/rand"
+	"time"
 
 	"github.com/vectaport/flowgraph"
 )
@@ -48,6 +49,7 @@ func tbc(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbc", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) { 
+			time.Sleep(10000000)
 			x.Val = true
 		})
 	return node
@@ -79,7 +81,10 @@ func reducerTop(n *flowgraph.Node, srcs []flowgraph.Datum) (dsts []flowgraph.Dat
 
 func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datum {
 	s := datum.(string)
-	c := collection.([]string)
+	c,ok := collection.([]string)
+	if !ok {
+		c = []string{}
+	}
 	lo := 0
 	hi := len(c)-1
 	for lo<=hi {
