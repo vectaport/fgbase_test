@@ -42,7 +42,7 @@ func main() {
 	e,n := flowgraph.MakeGraph(1,nPort+1)
 
 	for i := 0; i<nPort; i++ {
-		n[i] = weblab.FuncHttp(e[0], fmt.Sprintf(":%d", 8080+i), quitChan)
+		n[i] = weblab.FuncHTTP(e[0], fmt.Sprintf(":%d", 8080+i), quitChan)
 	}
 
 	n[nPort] = tbo(e[0])
