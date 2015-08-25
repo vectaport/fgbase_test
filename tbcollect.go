@@ -20,6 +20,9 @@ func randSeq(n int) string {
 
 var MaxChanLen = 0
 
+var tbiHz []float64
+var tbiBase int64 = 0
+
 func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
@@ -28,20 +31,16 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 			if MaxChanLen < l {
 				MaxChanLen = l
 			}
-			x.Val = n.NodeWrap(randSeq(16), x.Ack)})
+			x.Val = n.NodeWrap(randSeq(16), x.Ack)
+			if n.Cnt%100==0 {
+				tbiHz[n.ID-tbiBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
+			}})
 	return node
 }
 
-var tboHz []float64
-var tboBase int64
-
 func tbo(a flowgraph.Edge) flowgraph.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
-		func (n *flowgraph.Node) { 
-			if n.Cnt%100==0 {
-				tboHz[n.ID-tboBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
-			}})
+	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
 	return node
 }
 
@@ -68,22 +67,23 @@ func mapper(n *flowgraph.Node, datum flowgraph.Datum) int {
 
 func testOrder(n *flowgraph.Node, dict []string) {
 	for i := 0; i<len(dict)-1; i++ {
-		if dict[i]>=dict[i+1] {
+		if dict[i]>dict[i+1] {
 			n.LogError("out of order %v\n", dict)
+		}
+		if dict[i]==dict[i+1] {
+			n.Tracef("WARNING:  duplicate string found %v\n", dict[i])
 		}
 	}
 }
 
-func reducerTop(n *flowgraph.Node, srcs []flowgraph.Datum) (dsts []flowgraph.Datum) {
-	n.Aux = reducer(n, srcs[0], n.Aux)
-	return []flowgraph.Datum{n.Aux}
-}
-
 func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datum {
-	s := datum.(string)
 	c,ok := collection.([]string)
 	if !ok {
 		c = []string{}
+	}
+	s,ok := datum.(string)
+	if !ok {
+		return c
 	}
 	lo := 0
 	hi := len(c)-1
@@ -113,20 +113,61 @@ func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datu
 }
 
 
+
 func main() {
 	
 	
 	nreducep := flag.Int("nreduce", 26, "number of reducers")
 	nmapp := flag.Int("nmap", 4, "number of mappers")
-	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace": "Q", "sec":4})
+	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4, "trsec":true})
 	nreduce := *nreducep
 	nmap := *nmapp
 
+	type collRdy struct {
+		collection flowgraph.Datum
+		lastRdy int
+	}
+
+	var rdyFunc = func(n *flowgraph.Node) bool {
+		if n.Aux == nil {
+			n.Aux = collRdy{nil, 0}
+		}
+		c := n.Aux.(collRdy)
+		lastRdy := c.lastRdy
+		if lastRdy!=0 && n.Srcs[0].SrcRdy(n) {
+			n.Aux = collRdy{c.collection,0}
+			return true
+		}
+		if n.Srcs[1].SrcRdy(n) && n.Dsts[0].DstRdy(n) {
+			n.Aux = collRdy{c.collection,1}
+			return true
+		}
+		if n.Srcs[0].SrcRdy(n) {
+			n.Aux = collRdy{c.collection,0}
+			return true
+		}
+		return false
+	}
+
+	var fireFunc = func(n *flowgraph.Node) {
+		c := n.Aux.(collRdy)
+		lastRdy := c.lastRdy
+		if lastRdy == 0 {
+			n.Aux = collRdy{reducer(n, n.Srcs[0].Val, c.collection), lastRdy}
+			n.Srcs[1].NoOut = true
+			n.Dsts[0].NoOut = true
+			return
+		}
+		n.Dsts[0].Val = c.collection
+		n.Srcs[0].NoOut = true
+		return
+	}
+
 	e,n := flowgraph.MakeGraph(nmap+nreduce*3,nmap*2+nreduce*3)
 
-	tboBase = int64(2*nmap+nreduce)
+	tboBase := 2*nmap+nreduce
 	tboEdgeBase := nmap+nreduce
-	tbcBase := int(tboBase)+nreduce
+	tbcBase := tboBase+nreduce
 	tbcEdgeBase := tboEdgeBase+nreduce
 
 	for i:= 0; i<nmap; i++ {
@@ -137,25 +178,24 @@ func main() {
 	copy(n[nmap:2*nmap], p.Nodes())
 	
 	for i:= 0; i<nreduce; i++ {
-		any := true
-		n[2*nmap+i] = flowgraph.FuncFunc([]flowgraph.Edge{e[nmap+i],e[tbcEdgeBase+i]}, []flowgraph.Edge{e[nmap+nreduce+i]}, reducerTop, any)
+		n[2*nmap+i] = flowgraph.FuncFunc([]flowgraph.Edge{e[nmap+i],e[tbcEdgeBase+i]}, []flowgraph.Edge{e[nmap+nreduce+i]}, rdyFunc, fireFunc)
 	}
 
 	for i:= 0; i<nreduce; i++ {
-		n[tboBase+int64(i)] = tbo(e[tboEdgeBase+i])
+		n[tboBase+i] = tbo(e[tboEdgeBase+i])
 	}
 
 	for i:= 0; i<nreduce; i++ {
 		n[tbcBase+i] = tbc(e[tbcEdgeBase+i])
 	}
 
-	tboHz = make([]float64, nreduce)
+	tbiHz = make([]float64, nreduce)
 
 	flowgraph.RunAll(n)
 
 	sum := 0.0
-	for i:=0; i<len(tboHz); i++ {
-		sum += tboHz[i]
+	for i:=0; i<len(tbiHz); i++ {
+		sum += tbiHz[i]
 	}
 
 	speed := sum/1000
