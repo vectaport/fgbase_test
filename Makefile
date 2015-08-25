@@ -1,4 +1,4 @@
-all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbdisplay tbcapture tbserver tbsrcdst2 tbmap tbreduce
+all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbdisplay tbcapture tbserver tbsrcdst2 tbmap tbreduce tbcollect
 
 tbpromote:
 	go run tbpromote.go
@@ -89,3 +89,6 @@ tbmap:
 
 tbreduce:
 	go run tbreduce.go
+
+tbcollect:
+	go run tbcollect.go

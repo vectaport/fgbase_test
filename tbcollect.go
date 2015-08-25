@@ -112,17 +112,10 @@ func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datu
 	
 }
 
-
-
 func main() {
 	
 	
-	nreducep := flag.Int("nreduce", 26, "number of reducers")
-	nmapp := flag.Int("nmap", 4, "number of mappers")
-	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4, "trsec":true})
-	nreduce := *nreducep
-	nmap := *nmapp
-
+	// FuncFunc rdy and fire funcs plus struct for them to communicate via n.Aux
 	type collRdy struct {
 		collection flowgraph.Datum
 		lastRdy int
@@ -163,6 +156,12 @@ func main() {
 		return
 	}
 
+	nreducep := flag.Int("nreduce", 26, "number of reducers")
+	nmapp := flag.Int("nmap", 4, "number of mappers")
+	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4, "trsec":true})
+	nreduce := *nreducep
+	nmap := *nmapp
+
 	e,n := flowgraph.MakeGraph(nmap+nreduce*3,nmap*2+nreduce*3)
 
 	tboBase := 2*nmap+nreduce
@@ -193,6 +192,7 @@ func main() {
 
 	flowgraph.RunAll(n)
 
+	// generate total frequency for tbi
 	sum := 0.0
 	for i:=0; i<len(tbiHz); i++ {
 		sum += tbiHz[i]
