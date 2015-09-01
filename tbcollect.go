@@ -177,7 +177,7 @@ func main() {
 	copy(n[nmap:2*nmap], p.Nodes())
 	
 	for i:= 0; i<nreduce; i++ {
-		n[2*nmap+i] = flowgraph.FuncFunc([]flowgraph.Edge{e[nmap+i],e[tbcEdgeBase+i]}, []flowgraph.Edge{e[nmap+nreduce+i]}, rdyFunc, fireFunc)
+		n[2*nmap+i] = flowgraph.FuncFunc("reducer", []flowgraph.Edge{e[nmap+i],e[tbcEdgeBase+i]}, []flowgraph.Edge{e[nmap+nreduce+i]}, rdyFunc, fireFunc)
 	}
 
 	for i:= 0; i<nreduce; i++ {
