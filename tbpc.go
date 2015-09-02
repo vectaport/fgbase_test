@@ -7,11 +7,20 @@ import (
 var pcHz []float64
 var pcBase int64 = 1
 
+// 
+const (
+	inc = iota
+	rel
+	abs
+)
+
+var path = "pc.csv"
+
 func tbi(incRail,relRail,absRail,addrIn flowgraph.Edge) flowgraph.Node {
 
 	var nada flowgraph.Nada
 
-	node := flowgraph.FuncFunc("tbi", nil, []*flowgraph.Edge{&incRail,&relRail,&absRail,&addrIn}, nil,
+	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&incRail,&relRail,&absRail,&addrIn}, nil,
 		func (n *flowgraph.Node) { 
 			incRail.Val = nada
 			relRail.NoOut = true
@@ -23,60 +32,52 @@ func tbi(incRail,relRail,absRail,addrIn flowgraph.Edge) flowgraph.Node {
 
 func pc(incRail,relRail,absRail,addrIn,addrOut flowgraph.Edge) flowgraph.Node {
 
-	const (
-		incState = iota
-		relState
-		absState
-	)
-
-	node := flowgraph.FuncFunc("pc", []*flowgraph.Edge{&incRail,&relRail,&absRail,&addrIn}, []*flowgraph.Edge{&addrOut}, 
-
-		/* rdyFunc */
-		func (n *flowgraph.Node) bool {
-			if addrOut.DstRdy(n) {
-				if incRail.SrcRdy(n) {
-					n.RdyState = incState
-					relRail.NoOut = true
+	var rdyFunc = func (n *flowgraph.Node) bool {
+		if addrOut.DstRdy(n) {
+			if incRail.SrcRdy(n) {
+				n.RdyState = inc
+				relRail.NoOut = true
+				absRail.NoOut = true
+				addrIn.NoOut = true
+				return true
+			}
+			if addrIn.SrcRdy(n) { 
+				if relRail.SrcRdy(n) {
+					n.RdyState = rel
+					incRail.NoOut = true
 					absRail.NoOut = true
-					addrIn.NoOut = true
 					return true
 				}
-				if addrIn.SrcRdy(n) { 
-					if relRail.SrcRdy(n) {
-						n.RdyState = relState
-						incRail.NoOut = true
-						absRail.NoOut = true
-						return true
-					}
-					if absRail.SrcRdy(n) {
-						n.RdyState = absState
-						incRail.NoOut = true
-						relRail.NoOut = true
-						return true
-					}
-				}			
-			}
-			return false
-		},
-
-		/* fireFunc */
-		func (n *flowgraph.Node) { 
-			if n.RdyState==absState {
-				p := addrIn.Val.(int)
-				addrOut.Val = p
-				n.Aux = p
-			} else {
-				addrOut.Val = n.Aux.(int)
-				if n.RdyState==incState {
-					n.Aux = addrOut.Val.(int)+1
-				} else {
-					n.Aux = addrOut.Val.(int)+addrIn.Val.(int)
+				if absRail.SrcRdy(n) {
+					n.RdyState = abs
+					incRail.NoOut = true
+					relRail.NoOut = true
+					return true
 				}
+			}			
+		}
+		return false
+	}
+
+	var fireFunc = func (n *flowgraph.Node) { 
+		if n.RdyState==abs {
+			p := addrIn.Val.(int)
+			addrOut.Val = p
+			n.Aux = p
+		} else {
+			addrOut.Val = n.Aux.(int)
+			if n.RdyState==inc {
+				n.Aux = addrOut.Val.(int)+1
+			} else {
+				n.Aux = addrOut.Val.(int)+addrIn.Val.(int)
 			}
-			
-			if n.Cnt%1024==0 {
-				pcHz[n.ID-pcBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
-			}})
+		}
+		
+		if n.Cnt%1024==0 {
+			pcHz[n.ID-pcBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
+		}}
+	
+	node := flowgraph.MakeNode("pc", []*flowgraph.Edge{&incRail,&relRail,&absRail,&addrIn}, []*flowgraph.Edge{&addrOut}, rdyFunc, fireFunc)
 	node.Aux = 0
 	return node
 }

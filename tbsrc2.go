@@ -14,6 +14,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 				flowgraph.StdoutLog.Printf("%2.f: %d (%.2f hz)\n", flowgraph.TimeSinceStart(), n.Cnt, float64(n.Cnt)/flowgraph.TimeSinceStart())
 			}
 		})
+
 	return node
 }
 

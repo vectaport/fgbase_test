@@ -112,50 +112,56 @@ func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datu
 	
 }
 
-func main() {
-	
-	
-	// FuncFunc rdy and fire funcs plus struct for them to communicate via n.Aux
-	type collRdy struct {
-		collection flowgraph.Datum
-		lastRdy int
-	}
+const (
+	rdcState = iota
+	cllState 
+)
+
+func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datum) flowgraph.Node {
 
 	var rdyFunc = func(n *flowgraph.Node) bool {
-		if n.Aux == nil {
-			n.Aux = collRdy{nil, 0}
-		}
-		c := n.Aux.(collRdy)
-		lastRdy := c.lastRdy
-		if lastRdy!=0 && n.Srcs[0].SrcRdy(n) {
-			n.Aux = collRdy{c.collection,0}
+		lastRdy := n.RdyState
+		if lastRdy!=rdcState && rdc.SrcRdy(n) {
+			n.RdyState = rdcState
+			cll.NoOut = true
+			snd.NoOut = true
 			return true
 		}
-		if n.Srcs[1].SrcRdy(n) && n.Dsts[0].DstRdy(n) {
-			n.Aux = collRdy{c.collection,1}
+		if cll.SrcRdy(n) && snd.DstRdy(n) {
+			n.RdyState = cllState
+			rdc.NoOut = true
 			return true
 		}
-		if n.Srcs[0].SrcRdy(n) {
-			n.Aux = collRdy{c.collection,0}
+		if rdc.SrcRdy(n) {
+			n.RdyState = rdcState
+			cll.NoOut = true
+			snd.NoOut = true
 			return true
 		}
 		return false
 	}
 
 	var fireFunc = func(n *flowgraph.Node) {
-		c := n.Aux.(collRdy)
-		lastRdy := c.lastRdy
-		if lastRdy == 0 {
-			n.Aux = collRdy{reducer(n, n.Srcs[0].Val, c.collection), lastRdy}
-			n.Srcs[1].NoOut = true
-			n.Dsts[0].NoOut = true
+		c := n.Aux
+		lastRdy := n.RdyState
+		if lastRdy == rdcState {
+			n.Aux = reducer(n, rdc.Val, c)
+			cll.NoOut = true
+			snd.NoOut = true
 			return
 		}
-		n.Dsts[0].Val = c.collection
-		n.Srcs[0].NoOut = true
+		snd.Val = c
+		rdc.NoOut = true
 		return
 	}
 
+	node := flowgraph.MakeNode("reduce2", []*flowgraph.Edge{&rdc,&cll}, []*flowgraph.Edge{&snd}, rdyFunc, fireFunc)
+	return node
+}
+
+func main() {
+	
+	
 	nreducep := flag.Int("nreduce", 26, "number of reducers")
 	nmapp := flag.Int("nmap", 4, "number of mappers")
 	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4, "trsec":true})
@@ -177,7 +183,7 @@ func main() {
 	copy(n[nmap:2*nmap], p.Nodes())
 	
 	for i:= 0; i<nreduce; i++ {
-		n[2*nmap+i] = flowgraph.FuncFunc("reducer", []flowgraph.Edge{e[nmap+i],e[tbcEdgeBase+i]}, []flowgraph.Edge{e[nmap+nreduce+i]}, rdyFunc, fireFunc)
+		n[2*nmap+i] = reduce2(e[nmap+i],e[tbcEdgeBase+i], e[nmap+nreduce+i], reducer)
 	}
 
 	for i:= 0; i<nreduce; i++ {

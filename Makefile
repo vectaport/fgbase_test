@@ -92,3 +92,6 @@ tbreduce:
 
 tbcollect:
 	go run tbcollect.go
+
+tbpc:
+	go run tbpc.go
