@@ -44,7 +44,7 @@ func main() {
 	e,n := flowgraph.MakeGraph(1,1)
 
 	n[0] = tbi(e[0])
-	e[0].Dst(&n[0], "localhost:37777")
+	e[0].DstJSON(&n[0], "localhost:37777")
 
 	flowgraph.RunAll(n)
 

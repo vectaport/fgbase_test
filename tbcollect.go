@@ -113,27 +113,27 @@ func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datu
 }
 
 const (
-	rdcState = iota
-	cllState 
+	rdcRdy = iota
+	cllRdy 
 )
 
 func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datum) flowgraph.Node {
 
 	var rdyFunc = func(n *flowgraph.Node) bool {
 		lastRdy := n.RdyState
-		if lastRdy!=rdcState && rdc.SrcRdy(n) {
-			n.RdyState = rdcState
+		if lastRdy!=rdcRdy && rdc.SrcRdy(n) {
+			n.RdyState = rdcRdy
 			cll.NoOut = true
 			snd.NoOut = true
 			return true
 		}
 		if cll.SrcRdy(n) && snd.DstRdy(n) {
-			n.RdyState = cllState
+			n.RdyState = cllRdy
 			rdc.NoOut = true
 			return true
 		}
 		if rdc.SrcRdy(n) {
-			n.RdyState = rdcState
+			n.RdyState = rdcRdy
 			cll.NoOut = true
 			snd.NoOut = true
 			return true
@@ -144,7 +144,7 @@ func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,c
 	var fireFunc = func(n *flowgraph.Node) {
 		c := n.Aux
 		lastRdy := n.RdyState
-		if lastRdy == rdcState {
+		if lastRdy == rdcRdy {
 			n.Aux = reducer(n, rdc.Val, c)
 			cll.NoOut = true
 			snd.NoOut = true
