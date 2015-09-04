@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/csv"
 	"os"
 
 	"github.com/vectaport/flowgraph"
@@ -68,34 +67,14 @@ func pc(pcCtrl,addrIn,addrOut flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
-func tbo(a flowgraph.Edge, csvOut string) flowgraph.Node {
-
-	f, err := os.Open(csvOut)
-	check(err)
-
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
-		func (n *flowgraph.Node) {
-/*
-			r := n.Aux.(*csv.Reader)
-			record,_ := r.Read()
-			n.Tracef("record %v\n", record)
-*/
-		})
-	
-	r := csv.NewReader(f)
-	node.Aux = r
-	_,err = r.Read()
-	check(err)
-
-	return node
-}
-
 func main() {
 	
 	
 	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4})
 
 	fi, err := os.Open(pathIn)
+	check(err)
+	fo, err := os.Open(pathOut)
 	check(err)
 
 	e,n := flowgraph.MakeGraph(3, 3)
@@ -106,7 +85,7 @@ func main() {
 
 	n[0] = flowgraph.FuncCSVI(e[0:2], fi)
 	n[1] = pc(e[0], e[1], e[2])
-	n[2] = tbo(e[2], pathOut)
+	n[2] = flowgraph.FuncCSVO(e[2:3], fo)
 
 	pcHz = make([]float64, 1)
 
