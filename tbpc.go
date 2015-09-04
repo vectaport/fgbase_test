@@ -26,37 +26,12 @@ func check(e error) {
 	}
 }
 		
-func tbi(pcCtrl,addrIn flowgraph.Edge, csvIn string) flowgraph.Node {
-
-	f, err := os.Open(csvIn)
-	check(err)
-
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&pcCtrl,&addrIn}, nil,
-		func (n *flowgraph.Node) { 
-/*
-			r := n.Aux.(*csv.Reader)
-			record,_ := r.Read()
-			n.Tracef("record %v\n", record)
-*/
-			pcCtrl.Val = incRail
-			addrIn.NoOut = true
-		})
-
-	r := csv.NewReader(f)
-	node.Aux = r
-	record,err := r.Read()
-	check(err)
-	node.Tracef("in titles %v\n", record)
-
-	return node
-}
-
 func pc(pcCtrl,addrIn,addrOut flowgraph.Edge) flowgraph.Node {
 
 	var rdyFunc = func (n *flowgraph.Node) bool {
 		if addrOut.DstRdy(n) {
 			if pcCtrl.SrcRdy(n) {
-				if pcCtrl.Val==incRail {
+				if pcCtrl.Val.(int)==incRail {
 					n.RdyState = incRail
 					addrIn.NoOut = true
 					return true
@@ -109,9 +84,8 @@ func tbo(a flowgraph.Edge, csvOut string) flowgraph.Node {
 	
 	r := csv.NewReader(f)
 	node.Aux = r
-	record,err := r.Read()
+	_,err = r.Read()
 	check(err)
-	node.Tracef("in titles %v\n", record)
 
 	return node
 }
@@ -121,6 +95,8 @@ func main() {
 	
 	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4})
 
+	fi, err := os.Open(pathIn)
+	check(err)
 
 	e,n := flowgraph.MakeGraph(3, 3)
 
@@ -128,7 +104,7 @@ func main() {
         e[1].Name = "addrIn"
 	e[2].Name = "addrOut"
 
-	n[0] = tbi(e[0], e[1], pathIn)
+	n[0] = flowgraph.FuncCSVI(e[0:2], fi)
 	n[1] = pc(e[0], e[1], e[2])
 	n[2] = tbo(e[2], pathOut)
 
