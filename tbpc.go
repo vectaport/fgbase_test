@@ -11,8 +11,8 @@ var pcBase int64 = 1
 
 const (
 	incRail = iota
-	relRail
 	absRail
+	relRail
 )
 
 var pathIn = "pc_inputs.csv"
