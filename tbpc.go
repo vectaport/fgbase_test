@@ -70,7 +70,7 @@ func pc(pcCtrl,addrIn,addrOut flowgraph.Edge) flowgraph.Node {
 func main() {
 	
 	
-	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4})
+	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"V", "sec":4})
 
 	fi, err := os.Open(pathIn)
 	check(err)
