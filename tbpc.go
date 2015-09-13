@@ -106,6 +106,6 @@ func main() {
 	if flowgraph.TraceLevel==flowgraph.QQ {
 		hzstr = ""
 	}
-	flowgraph.StdoutLog.Printf("%.2f%s", speed, hzstr)
+	// flowgraph.StdoutLog.Printf("%.2f%s", speed, hzstr)
 }
 
