@@ -46,15 +46,15 @@ func pc(pcCtrl,addrIn,addrOut flowgraph.Edge) flowgraph.Node {
 
 	var fireFunc = func (n *flowgraph.Node) { 
 		if n.RdyState==absRail {
-			p := addrIn.Val.(int)
+			p := addrIn.Val.(uint16)
 			addrOut.Val = p
 			n.Aux = p
 		} else {
-			addrOut.Val = n.Aux.(int)
+			addrOut.Val = n.Aux.(uint16)
 			if n.RdyState==incRail {
-				n.Aux = addrOut.Val.(int)+1
+				n.Aux = addrOut.Val.(uint16)+1
 			} else {
-				n.Aux = addrOut.Val.(int)+addrIn.Val.(int)
+				n.Aux = uint16((int32(addrOut.Val.(uint16))+int32(addrIn.Val.(int)))&0xffff)
 			}
 		}
 		
@@ -63,7 +63,7 @@ func pc(pcCtrl,addrIn,addrOut flowgraph.Edge) flowgraph.Node {
 		}}
 
 	node := flowgraph.MakeNode("pc", []*flowgraph.Edge{&pcCtrl,&addrIn}, []*flowgraph.Edge{&addrOut}, rdyFunc, fireFunc)
-	node.Aux = 0
+	node.Aux = uint16(0)
 	return node
 }
 
@@ -107,5 +107,6 @@ func main() {
 		hzstr = ""
 	}
 	// flowgraph.StdoutLog.Printf("%.2f%s", speed, hzstr)
+	_ = hzstr
 }
 
