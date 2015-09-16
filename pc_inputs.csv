@@ -8,6 +8,6 @@ pcCtrl,addrIn
 0,*
 0,*
 1,0xffff
-1,0xff
-2,1
+1,0x00ff
+2,0x0001
 0,*

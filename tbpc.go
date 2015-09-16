@@ -54,7 +54,7 @@ func pc(pcCtrl,addrIn,addrOut flowgraph.Edge) flowgraph.Node {
 			if n.RdyState==incRail {
 				n.Aux = addrOut.Val.(uint16)+1
 			} else {
-				n.Aux = uint16((int32(addrOut.Val.(uint16))+int32(addrIn.Val.(int)))&0xffff)
+				n.Aux = uint16((int32(addrOut.Val.(uint16))+int32(addrIn.Val.(uint16)))&0xffff)
 			}
 		}
 		
@@ -70,7 +70,7 @@ func pc(pcCtrl,addrIn,addrOut flowgraph.Edge) flowgraph.Node {
 func main() {
 	
 	
-	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4})
+	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"V", "sec":4})
 
 	fi, err := os.Open(pathIn)
 	check(err)
