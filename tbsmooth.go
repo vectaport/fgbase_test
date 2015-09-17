@@ -2,9 +2,6 @@ package main
 
 import (
 	"flag"
-	"runtime"
-	"strconv"
-	"time" 
 
 	"github.com/vectaport/flowgraph"
 	"github.com/vectaport/flowgraph/imglab"
