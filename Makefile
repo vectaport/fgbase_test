@@ -1,5 +1,8 @@
-# all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbfft tbffti tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbdisplay tbcapture tbsmooth atbserver tbsrcdst2 tbmap tbreduce tbcollect tbpc
-all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbserver tbsrcdst2 tbmap tbreduce tbcollect tbpc
+all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbsrcdst2 tbmap tbreduce tbcollect tbpc
+
+imglab:: tbfft tbffti tbdisplay tbcapture
+
+weblab:: tbserver
 
 tbpromote:
 	go run tbpromote.go
