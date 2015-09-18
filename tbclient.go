@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -24,17 +25,18 @@ func main() {
 		req := fmt.Sprintf("http://localhost:%d/count/a", port)
 		resp, err := http.Get(req)
 		if err != nil {
-			if err.Error() == "Get "+req+": EOF" {
+			if err == io.EOF {
 				break
 			} else {
-				fmt.Printf("Err from server: %v,%v\n", resp,err)
+				fmt.Printf("Err from server: %v\n", err)
+				break
 			}
 		}
 		defer resp.Body.Close()
 		
-		body,err := ioutil.ReadAll(resp.Body)
+		_,err = ioutil.ReadAll(resp.Body)
 		if err != nil {
-			fmt.Printf("Err from server: %v,%v\n", body,err)
+			fmt.Printf("Err from server: %v\n", err)
 		}
                 i++
 	}
