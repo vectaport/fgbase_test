@@ -54,7 +54,7 @@ func tbc(x flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
-func mapper(n *flowgraph.Node, datum flowgraph.Datum) int {
+func mapper(n *flowgraph.Node, datum interface{}) int {
 	nreduce := len(n.Dsts)
 	i,ok := datum.(int)
 	if ok {return i%nreduce}
@@ -76,7 +76,7 @@ func testOrder(n *flowgraph.Node, dict []string) {
 	}
 }
 
-func reducer(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datum {
+func reducer(n *flowgraph.Node, datum,collection interface{}) interface{} {
 	c,ok := collection.([]string)
 	if !ok {
 		c = []string{}
@@ -117,7 +117,7 @@ const (
 	cllRdy 
 )
 
-func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,collection flowgraph.Datum) flowgraph.Datum) flowgraph.Node {
+func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,collection interface{}) interface{}) flowgraph.Node {
 
 	var rdyFunc = func(n *flowgraph.Node) bool {
 		lastRdy := n.RdyState

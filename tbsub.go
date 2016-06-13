@@ -46,39 +46,39 @@ func tbiRun(n *flowgraph.Node) {
 		n.RecvOne()
 	}
 	
-	n.Aux = []flowgraph.Datum{uint64(math.MaxUint64), -1}
+	n.Aux = []interface{}{uint64(math.MaxUint64), -1}
 	i = 0
 	for {
 		if (i > 0) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux.([]flowgraph.Datum)[0]
-			y.Val = n.Aux.([]flowgraph.Datum)[1]
+			x.Val = n.Aux.([]interface{})[0]
+			y.Val = n.Aux.([]interface{})[1]
 			n.SendAll()
 			i = i + 1
 		}
 		n.RecvOne()
 	}
 
-	n.Aux = []flowgraph.Datum{int8(-1), uint64(math.MaxUint64)}
+	n.Aux = []interface{}{int8(-1), uint64(math.MaxUint64)}
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux.([]flowgraph.Datum)[0]
-			y.Val = n.Aux.([]flowgraph.Datum)[1]
+			x.Val = n.Aux.([]interface{})[0]
+			y.Val = n.Aux.([]interface{})[1]
 			n.SendAll()
 			i = i + 1
 		}
 		n.RecvOne()
 	}
 
-	n.Aux = []flowgraph.Datum{int8(-1), uint32(math.MaxUint32)}
+	n.Aux = []interface{}{int8(-1), uint32(math.MaxUint32)}
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux.([]flowgraph.Datum)[0]
-			y.Val = n.Aux.([]flowgraph.Datum)[1]
+			x.Val = n.Aux.([]interface{})[0]
+			y.Val = n.Aux.([]interface{})[1]
 			n.SendAll()
 			i = i + 1
 		}

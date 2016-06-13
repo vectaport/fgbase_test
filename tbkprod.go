@@ -19,7 +19,7 @@ func main() {
 	flowgraph.ChannelSize = 1024
 
 	e,n := flowgraph.MakeGraph(1,2)
-	quitChan := make(chan flowgraph.Nada)
+	quitChan := make(chan struct{})
  
 	n[0] = flowgraph.FuncHTTP(e[0], ":8080", quitChan)
 	n[1] = flowgraph.FuncKprod(e[0])

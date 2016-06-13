@@ -31,9 +31,9 @@ func main() {
 
 	flowgraph.TraceSeconds = true
 
-	var quitChan chan flowgraph.Nada
+	var quitChan chan struct{}
 	if !test {
-		quitChan = make(chan flowgraph.Nada)
+		quitChan = make(chan struct{})
 		flowgraph.RunTime = 0
 	} else {
 		flowgraph.RunTime = 10*time.Second

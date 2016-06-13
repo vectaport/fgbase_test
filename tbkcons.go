@@ -27,7 +27,7 @@ func main() {
 	flowgraph.TraceSeconds = false
 
 	e,n := flowgraph.MakeGraph(1,2)
-	quitChan := make(chan flowgraph.Nada)
+	quitChan := make(chan struct{})
  
 	n[0] = flowgraph.FuncKcons(e[0], topic)
 	n[1] = tbo(e[0])

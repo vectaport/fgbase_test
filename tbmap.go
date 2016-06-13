@@ -21,7 +21,7 @@ var MaxChanLen = 0
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
 
-	x.Ack = make(chan flowgraph.Nada, flowgraph.ChannelSize)
+	x.Ack = make(chan struct{}, flowgraph.ChannelSize)
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) { 
 			l:=len((*x.Data)[0])
@@ -45,7 +45,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 	return node
 }
 
-func mapper(n *flowgraph.Node, datum flowgraph.Datum) int {
+func mapper(n *flowgraph.Node, datum interface{}) int {
 	nreduce := len(n.Dsts)
 	i,ok := datum.(int)
 	if ok {return i%nreduce}

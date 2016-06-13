@@ -28,17 +28,17 @@ func promoteTest(a, b, x flowgraph.Edge) {
 func main() {
 
 	a := flowgraph.MakeEdge("a",nil)
-	var ad = (make([]chan flowgraph.Datum,1))
+	var ad = (make([]chan interface{},1))
 	a.Data = &ad
-	(*a.Data)[0] = make(chan flowgraph.Datum)
+	(*a.Data)[0] = make(chan interface{})
 	b := flowgraph.MakeEdge("b",nil)
-	var bd = make([]chan flowgraph.Datum,1)
+	var bd = make([]chan interface{},1)
 	b.Data = &bd
-	(*b.Data)[0] = make(chan flowgraph.Datum)
+	(*b.Data)[0] = make(chan interface{})
 	x := flowgraph.MakeEdge("x",nil)
-	var xd = make([]chan flowgraph.Datum,1)
+	var xd = make([]chan interface{},1)
 	x.Data = &xd
-	(*x.Data)[0] = make(chan flowgraph.Datum)
+	(*x.Data)[0] = make(chan interface{})
 
 	go promoteTest(a, b, x)
 

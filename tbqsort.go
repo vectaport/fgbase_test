@@ -23,7 +23,7 @@ func (a bushel) Len() int           { return len(a.Slic) }
 func (a bushel) Swap(i, j int)      { a.Slic[i], a.Slic[j] = a.Slic[j], a.Slic[i] }
 func (a bushel) Less(i, j int) bool { return a.Slic[i] < a.Slic[j] }
 
-func (a bushel) SubSlice(n, m int) flowgraph.Datum {
+func (a bushel) SubSlice(n, m int) interface{} {
 	a.Slic = a.Slic[n:m]
 	a.depth += 1
 	return a
