@@ -4,6 +4,8 @@ imglab:: tbfft tbffti tbdisplay tbcapture
 
 weblab:: tbserver
 
+regexp:: tbmatch
+
 tbpromote:
 	go run tbpromote.go
 
@@ -99,4 +101,7 @@ tbcollect:
 
 tbcrypt:
 	go run tbcrypt.go
+
+tbmatch:
+	go run tbmatch.go
 
