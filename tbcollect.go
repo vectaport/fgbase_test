@@ -161,7 +161,6 @@ func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,c
 
 func main() {
 	
-	
 	nreducep := flag.Int("nreduce", 26, "number of reducers")
 	nmapp := flag.Int("nmap", 4, "number of mappers")
 	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4, "trsec":true})

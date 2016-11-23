@@ -13,7 +13,6 @@ func main() {
 	flowgraph.ConfigByFlag(map[string]interface{} {"sec": 100})
 	nsmooth := *nsmoothp
 
-
 	e,n := flowgraph.MakeGraph(nsmooth+1,nsmooth+2)
  
 	n[0] = imglab.FuncCapture(e[0])
