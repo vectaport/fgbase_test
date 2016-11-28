@@ -4,7 +4,7 @@ imglab:: tbfft tbffti tbdisplay tbcapture
 
 weblab:: tbserver
 
-regexp:: tbmatch tbbar tbstar tbregexp
+regexp:: tbmatch tbbar tbstar tbregexp tbdot
 
 tbpromote:
 	go run tbpromote.go
@@ -114,4 +114,5 @@ tbstar:
 tbregexp:
 	go run tbregexp.go
 
-
+tbdot:
+	go run tbdot.go

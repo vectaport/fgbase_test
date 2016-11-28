@@ -6,9 +6,9 @@ import(
 )
 
 var teststrings = []string{
-	"test string",
 	"test",
-	"wrong",
+	"text",
+	"terk",
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
@@ -44,7 +44,7 @@ func main() {
 	e,n := flowgraph.MakeGraph(2,3)
 	
 	n[0] = tbi(e[0])
-	n[1] = regexp.FuncMatch(e[0], e[1], "test")
+	n[1] = regexp.FuncMatch(e[0], e[1], "te.t")
         n[2] = tbo(e[1])
 	
 	flowgraph.RunAll(n)
