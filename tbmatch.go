@@ -15,13 +15,19 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 	
         i := 0
 	
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
+	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x},
+		func (n *flowgraph.Node) bool {
+			return i<=len(teststrings) && n.DefaultRdyFunc()
+		},
 		func (n *flowgraph.Node) { 
-                        j := i%len(teststrings)
-                        if j<len(teststrings) {
-				x.Val = teststrings[j]
+                        if i<len(teststrings) {
+				x.Val = teststrings[i]
                         } else {
-				x.Val = nil
+				if i==len(teststrings) {
+					x.Val = nil
+				} else {
+					x.NoOut = false
+				}
                         }
                         i++
 		})
@@ -41,10 +47,12 @@ func main() {
 	
 	flowgraph.ConfigByFlag(nil)
 	
-	e,n := flowgraph.MakeGraph(2,3)
+	e,n := flowgraph.MakeGraph(3,3)
+
+	e[2].Const("test")
 	
 	n[0] = tbi(e[0])
-	n[1] = regexp.FuncMatch(e[0], e[1], "test")
+	n[1] = regexp.FuncMatch(e[0], e[2], e[1])
         n[2] = tbo(e[1])
 	
 	flowgraph.RunAll(n)
