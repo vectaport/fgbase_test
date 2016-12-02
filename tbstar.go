@@ -56,7 +56,8 @@ func main() {
 
 	e[6].Const("apples")
 	e[7].Const("oranges")
-	
+
+	// (apples|oranges)*
 	n[0] = tbi(e[0])
         n[1] = regexp.FuncStar(e[0], e[4], e[1], e[5])
 	n[2] = regexp.FuncMatch(e[1], e[6], e[2])
