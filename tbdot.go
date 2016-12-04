@@ -29,7 +29,7 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 		},
 		func (n *flowgraph.Node) { 
                         if i<len(teststrings) {
-				x.Val = teststrings[i]
+				x.Val = regexp.Regexp{Orig:teststrings[i], Curr:teststrings[i]}
                         } else {
 				if i==len(teststrings) {
 					x.Val = nil
@@ -55,7 +55,7 @@ func main() {
 	
 	flowgraph.ConfigByFlag(nil)
 	
-	e,n := flowgraph.MakeGraph(7,6)
+	e,n := flowgraph.MakeGraph(7,5)
 
 	e[4].Const("te.t")
 	e[5].Const("apples")

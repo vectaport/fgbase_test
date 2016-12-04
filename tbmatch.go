@@ -9,6 +9,7 @@ var teststrings = []string{
 	"test string",
 	"test",
 	"wrong",
+	"testX",
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
@@ -21,7 +22,7 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 		},
 		func (n *flowgraph.Node) { 
                         if i<len(teststrings) {
-				x.Val = teststrings[i]
+				x.Val = regexp.Regexp{Orig:teststrings[i],Curr:teststrings[i]}
                         } else {
 				if i==len(teststrings) {
 					x.Val = nil
