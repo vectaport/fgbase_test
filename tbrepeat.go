@@ -45,7 +45,6 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 				}
                         }
                         i++
-			dnstreq.NoOut = true
 		})
 	return node
 
@@ -55,7 +54,7 @@ func tbo(oldmatch flowgraph.Edge, dnstreq flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&oldmatch}, []*flowgraph.Edge{&dnstreq}, nil,
 		func (n *flowgraph.Node) {
-			dnstreq.Val = regexp.Search{} // echo back
+			dnstreq.Val = regexp.Search{}
 		})
 	return node
          
@@ -95,7 +94,7 @@ func main() {
 	e[apples].Const("apples")
 	
 	n[0] = tbi(e[upstreq], e[newmatch])
-        n[1] = regexp.FuncRegexp(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq])
+        n[1] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 0, 0)
 	n[2] = regexp.FuncMatch(e[subdst], e[apples], e[subsrc])
         n[3] = tbo(e[oldmatch], e[dnstreq])
 	

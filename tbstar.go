@@ -74,7 +74,7 @@ const (
 	oranges
 	applesmatch
 	orangesmatch
-	edgenum
+	edgeNum
 )
 
 var edgeNames []string = []string {
@@ -95,14 +95,14 @@ func main() {
 
 	flowgraph.ConfigByFlag(nil)
 
-	e,n := flowgraph.MakeGraph(int(edgenum), 6)
+	e,n := flowgraph.MakeGraph(int(edgeNum), 6)
 	flowgraph.NameEdges(e,edgeNames)
 
 
 	e[apples].Const("apples")
 	e[oranges].Const("oranges")
 
-	// (apples|oranges)*
+	// (apples|oranges)*banana
 	n[0] = tbi(e[upstreq], e[newmatch])
         n[1] = regexp.FuncStar(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq])
 	n[2] = regexp.FuncMatch(e[subdst], e[apples], e[applesmatch])
