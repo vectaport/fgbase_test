@@ -22,8 +22,8 @@ func tbiRun (n *flowgraph.Node) {
 	for {
 		if (i>10) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux
-			y.Val = n.Aux
+			x.DstPut(n.Aux)
+			y.DstPut(n.Aux)
 			n.Aux = n.Aux.(int) + 1
 			n.SendAll()
 			i = i + 1
@@ -36,8 +36,8 @@ func tbiRun (n *flowgraph.Node) {
 	for {
 		if (i>9) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux
-			y.Val = n.Aux
+			x.DstPut(n.Aux)
+			y.DstPut(n.Aux)
 			n.Aux = n.Aux.(float32) + 1
 			n.SendAll()
 			i = i + 1
@@ -45,42 +45,39 @@ func tbiRun (n *flowgraph.Node) {
 		n.RecvOne()
 	}
 
-	n.Aux = uint64(math.MaxUint64)
-	n.Aux = -1
+	n.Aux = []interface{}{uint64(math.MaxUint64),-1}
 	i = 0
 	for {
 		if (i > 0) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux
-			y.Val = n.Aux
+			x.DstPut(n.Aux.([]interface{})[0])
+			y.DstPut(n.Aux.([]interface{})[1])
 			n.SendAll()
 			i = i + 1
 		}
 		n.RecvOne()
 	}
 
-	n.Aux = int8(0)
-	n.Aux = uint64(0)
+	n.Aux = []interface{}{int8(0),uint64(0)}
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll() {
-			x.Val = n.Aux
-			y.Val = n.Aux
+			x.DstPut(n.Aux.([]interface{})[0])
+			y.DstPut(n.Aux.([]interface{})[1])
 			n.SendAll()
 			i = i + 1
 		}
 		n.RecvOne()
 	}
 
-	n.Aux = int8(0)
-	n.Aux = int16(0)
+	n.Aux = []interface{}{int8(0),int16(0)}
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll() {
-			x.Val = n.Aux
-			y.Val = n.Aux
+			x.DstPut(n.Aux.([]interface{})[0])
+			y.DstPut(n.Aux.([]interface{})[1])
 			n.SendAll()
 			i = i + 1
 		}
@@ -88,28 +85,26 @@ func tbiRun (n *flowgraph.Node) {
 	}
 
 
-	n.Aux = "Can you add an int to a string?"
-	n.Aux = int8(77)
+	n.Aux = []interface{}{"Can you add an int to a string?", int8(77)}
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll() {
-			x.Val = n.Aux
-			y.Val = n.Aux
+			x.DstPut(n.Aux.([]interface{})[0])
+			y.DstPut(n.Aux.([]interface{})[1])
 			n.SendAll()
 			i = i + 1
 		}
 		n.RecvOne()
 	}
 
-	n.Aux = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
-	n.Aux = int8(77)
+	n.Aux = []interface{}{[4]complex128 {0+0i,0+0i,0+0i,0+0i}, int8(77)}
 	i = 0
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll() {
-			x.Val = n.Aux
-			y.Val = n.Aux
+			x.DstPut(n.Aux.([]interface{})[0])
+			y.DstPut(n.Aux.([]interface{})[1])
 			n.SendAll()
 			i = i + 1
 		}

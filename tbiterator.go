@@ -9,7 +9,7 @@ import (
 func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
-		func(n *flowgraph.Node) { n.Dsts[0].Val = rand.Intn(7)+1 })
+		func(n *flowgraph.Node) { n.Dsts[0].DstPut(rand.Intn(7)+1) })
 	return node
 }
 

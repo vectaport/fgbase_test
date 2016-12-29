@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"math/rand"
 	"sort"
 
@@ -55,13 +56,14 @@ func tbiRand(pow2 uint) flowgraph.RecursiveSort {
 		s.Orig = append(s.Orig, rand.Intn(l))
 	}
 	s.Slic = s.Orig
+	fmt.Printf("RAND\n")
 	return s
 }
 
 func tbi(x flowgraph.Edge, pow2 uint) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
-		func(n *flowgraph.Node) { x.Val = tbiRand(pow2) })
+		func(n *flowgraph.Node) { x.DstPut(tbiRand(pow2)) })
 	return node
 }
 
@@ -69,7 +71,8 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
 		func(n *flowgraph.Node) {
-			switch v := a.Val.(type) {
+			av := a.SrcGet()
+			switch v := av.(type) {
 			case flowgraph.RecursiveSort: {
 				if sort.IntsAreSorted(v.Original()) { n.Tracef("END for id=%d, depth=%d, len=%d\n", v.ID(), v.Depth(), v.Len()) }
 				n.Tracef("Original(%p) sorted %t, Slice sorted %t, depth=%d, id=%d, len=%d, poolsz=%d, ratio = %d\n", v.Original(), sort.IntsAreSorted(v.Original()), sort.IntsAreSorted(v.Slice()), v.Depth(), v.ID(), len(v.Original()), qsortPool.Size(), len(v.Original())/(1+int(v.Depth())))
@@ -95,8 +98,8 @@ func main() {
 	n[1] = tbo(e[1])
 
 	p := flowgraph.FuncQsort(e[0], e[1], poolSz)
-	p.Alloc(&n[2], 1) // reserve one for input
 	copy(n[2:poolSz+2], p.Nodes())
+	p.Alloc(&n[2], 1) // reserve one for input
 
 	flowgraph.RunAll(n)
 

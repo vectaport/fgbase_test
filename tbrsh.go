@@ -21,8 +21,8 @@ func tbiRun (n *flowgraph.Node) {
 	for {
 		if (i>10) { break }
 		if n.RdyAll(){
-			x.Val = i
-			y.Val = uint(2)
+			x.DstPut(i)
+			y.DstPut(uint(2))
 			n.SendAll()
 			i = i + 1
 		}
@@ -33,8 +33,8 @@ func tbiRun (n *flowgraph.Node) {
 	for {
 		if (i>9) { break }
 		if n.RdyAll(){
-			x.Val = uint(i)
-			y.Val = uint(3)
+			x.DstPut(uint(i))
+			y.DstPut(uint(3))
 			n.SendAll()
 			i = i + 1
 		}
@@ -47,8 +47,8 @@ func tbiRun (n *flowgraph.Node) {
 	for {
 		if (i > 0) { break }
 		if n.RdyAll(){
-			x.Val = xv
-			y.Val = yv
+			x.DstPut(xv)
+			y.DstPut(yv)
 			n.SendAll()
 			i = i + 1
 		}
@@ -61,8 +61,8 @@ func tbiRun (n *flowgraph.Node) {
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll() {
-			x.Val = xv
-			y.Val = yv
+			x.DstPut(xv)
+			y.DstPut(yv)
 			n.SendAll()
 			i = i + 1
 		}
@@ -75,8 +75,8 @@ func tbiRun (n *flowgraph.Node) {
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll() {
-			x.Val = xv
-			y.Val = yv
+			x.DstPut(xv)
+			y.DstPut(yv)
 			n.SendAll()
 			i = i + 1
 		}
@@ -90,8 +90,8 @@ func tbiRun (n *flowgraph.Node) {
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll() {
-			x.Val = xv
-			y.Val = yv
+			x.DstPut(xv)
+			y.DstPut(yv)
 			n.SendAll()
 			i = i + 1
 		}
@@ -104,8 +104,8 @@ func tbiRun (n *flowgraph.Node) {
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll() {
-			x.Val = xv
-			y.Val = yv
+			x.DstPut(xv)
+			y.DstPut(yv)
 			n.SendAll()
 			i = i + 1
 		}

@@ -22,8 +22,8 @@ func tbiRun(n *flowgraph.Node) {
 	for {
 		if (i>10) { break }
 		if n.RdyAll() {
-			x.Val = n.Aux.([]int)[0]
-			y.Val = n.Aux.([]int)[1]
+			x.DstPut(n.Aux.([]int)[0])
+			y.DstPut(n.Aux.([]int)[1])
 			n.Aux = []int{x.Val.(int)+1, y.Val.(int)+2}
 			n.SendAll()
 			i = i + 1
@@ -37,8 +37,8 @@ func tbiRun(n *flowgraph.Node) {
 	for {
 		if (i>9) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux.([]float32)[0]
-			y.Val = n.Aux.([]float32)[1]
+			x.DstPut(n.Aux.([]float32)[0])
+			y.DstPut(n.Aux.([]float32)[1])
 			n.Aux = []float32{x.Val.(float32) - 1., y.Val.(float32) + 1.}
 			n.SendAll()
 			i = i + 1
@@ -51,8 +51,8 @@ func tbiRun(n *flowgraph.Node) {
 	for {
 		if (i > 0) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux.([]interface{})[0]
-			y.Val = n.Aux.([]interface{})[1]
+			x.DstPut(n.Aux.([]interface{})[0])
+			y.DstPut(n.Aux.([]interface{})[1])
 			n.SendAll()
 			i = i + 1
 		}
@@ -64,8 +64,8 @@ func tbiRun(n *flowgraph.Node) {
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux.([]interface{})[0]
-			y.Val = n.Aux.([]interface{})[1]
+			x.DstPut(n.Aux.([]interface{})[0])
+			y.DstPut(n.Aux.([]interface{})[1])
 			n.SendAll()
 			i = i + 1
 		}
@@ -77,8 +77,8 @@ func tbiRun(n *flowgraph.Node) {
 	for  {
 		if (i > 0) { break }
 		if n.RdyAll(){
-			x.Val = n.Aux.([]interface{})[0]
-			y.Val = n.Aux.([]interface{})[1]
+			x.DstPut(n.Aux.([]interface{})[0])
+			y.DstPut(n.Aux.([]interface{})[1])
 			n.SendAll()
 			i = i + 1
 		}

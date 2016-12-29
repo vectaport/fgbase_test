@@ -5,10 +5,12 @@ import (
 )
 
 func tbiFire(n *flowgraph.Node) {
+	a := n.Srcs[0]
 	x := n.Dsts[0]
 	y := n.Dsts[1]
-	x.Val = n.Aux
-	y.Val = n.Aux
+	a.Flow = true
+	x.DstPut(n.Aux)
+	y.DstPut(n.Aux)
 	n.Aux = n.Aux.(int) + 1
 }
 
@@ -19,8 +21,10 @@ func tbi(a, x, y flowgraph.Edge) flowgraph.Node {
 }
 
 func tboFire(n *flowgraph.Node) {
+	a := n.Srcs[0]
 	x := n.Dsts[0]
-	x.Val = true
+	a.Flow = true
+	x.DstPut(true)
 }
 
 func tbo(a, x flowgraph.Edge) flowgraph.Node {

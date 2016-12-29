@@ -6,7 +6,7 @@ import (
 
 func tbiFire(n *flowgraph.Node) {
 	x := n.Dsts[0]
-	x.Val = n.Aux
+	x.DstPut(n.Aux)
 	if (n.Aux.(int)<=1) {
 		n.Aux = (n.Aux.(int) + 1)%2
 	} else {
