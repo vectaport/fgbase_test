@@ -13,11 +13,11 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 		func (n *flowgraph.Node) {
 			if n.Aux.(int)%3==0 {
 				s := []int{0,1,2,3,4,5,6,7}
-				x.Val = s
+				x.DstPut(s)
 			} else if n.Aux.(int)%3==1 {
-				x.Val = float32(n.Aux.(int))+.5
+				x.DstPut(float32(n.Aux.(int))+.5)
 			} else {
-				x.Val = n.Aux
+				x.DstPut(n.Aux)
 			}
 
 			n.Aux = n.Aux.(int) + 1

@@ -10,6 +10,7 @@ func tbo(a flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
 		func (n *flowgraph.Node) {
+			a.Flow = true
 			if n.Cnt%10000==0 {
 				flowgraph.StdoutLog.Printf("%2.f: %d (%.2f hz)\n", flowgraph.TimeSinceStart(), n.Cnt, float64(n.Cnt)/flowgraph.TimeSinceStart())
 			}

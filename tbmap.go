@@ -28,7 +28,7 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 			if MaxChanLen < l {
 				MaxChanLen = l
 			}
-			x.Val = n.NodeWrap(randSeq(16), x.Ack)})
+			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))})
 	return node
 }
 
@@ -38,7 +38,8 @@ var reduceBase int64
 func tbo(a flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
-		func (n *flowgraph.Node) { 
+		func (n *flowgraph.Node) {
+			a.Flow = true
 			if n.Cnt%1000==0 {
 				reduceHz[n.ID-reduceBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
 			}})

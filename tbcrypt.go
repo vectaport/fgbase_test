@@ -13,7 +13,7 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) {
-			x.Val = fmt.Sprintf("XXX %d", n.Aux)
+			x.DstPut(fmt.Sprintf("XXX %d", n.Aux))
 			n.Aux = n.Aux.(int) + 1
 		})
 

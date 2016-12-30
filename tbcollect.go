@@ -31,7 +31,7 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 			if MaxChanLen < l {
 				MaxChanLen = l
 			}
-			x.Val = n.NodeWrap(randSeq(16), x.Ack)
+			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
 			if n.Cnt%100==0 {
 				tbiHz[n.ID-tbiBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
 			}})
@@ -49,7 +49,7 @@ func tbc(x flowgraph.Edge) flowgraph.Node {
 	node := flowgraph.MakeNode("tbc", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) { 
 			time.Sleep(10000000)
-			x.Val = true
+			x.DstPut(true)
 		})
 	return node
 }
@@ -123,19 +123,14 @@ func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,c
 		lastRdy := n.RdyState
 		if lastRdy!=rdcRdy && rdc.SrcRdy(n) {
 			n.RdyState = rdcRdy
-			cll.NoOut = true
-			snd.NoOut = true
 			return true
 		}
 		if cll.SrcRdy(n) && snd.DstRdy(n) {
 			n.RdyState = cllRdy
-			rdc.NoOut = true
 			return true
 		}
 		if rdc.SrcRdy(n) {
 			n.RdyState = rdcRdy
-			cll.NoOut = true
-			snd.NoOut = true
 			return true
 		}
 		return false
@@ -145,13 +140,10 @@ func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,c
 		c := n.Aux
 		lastRdy := n.RdyState
 		if lastRdy == rdcRdy {
-			n.Aux = reducer(n, rdc.Val, c)
-			cll.NoOut = true
-			snd.NoOut = true
+			n.Aux = reducer(n, rdc.SrcGet(), c)
 			return
 		}
-		snd.Val = c
-		rdc.NoOut = true
+		snd.DstPut(c)
 		return
 	}
 
