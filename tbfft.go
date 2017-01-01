@@ -14,7 +14,7 @@ func tbiFire(n *flowgraph.Node) {
 	for i := 0; i<l; i++ {
 		buf[i] = complex(rand.Float64(), rand.Float64())
 	}
-	x.Val = buf
+	x.DstPut(buf)
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {

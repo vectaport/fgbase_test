@@ -17,7 +17,7 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 		func (n *flowgraph.Node) { 
 			filename := "../../lazywei/go-opencv/images/"+images[n.Cnt%int64(len(images))]
 			n.Tracef("Loading %s\n", filename)
-			x.Val = opencv.LoadImage(filename)
+			x.DstPut(opencv.LoadImage(filename))
 		})
 	return node
 }

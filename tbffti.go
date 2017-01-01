@@ -23,7 +23,7 @@ func tbiFire(n *flowgraph.Node) {
 		vec[i] = complex(math.Sin(domain), 0.0)
 		domain += delta
 	}
-	x.Val = vec
+	x.DstPut(vec)
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
@@ -34,8 +34,8 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 func tboFire(n *flowgraph.Node) {
 	a := n.Srcs[0]
 	b := n.Srcs[1]
-	av := a.Val.([]complex128)
-	bv := b.Val.([]complex128)
+	av := a.SrcGet().([]complex128)
+	bv := b.SrcGet().([]complex128)
 	if (len(av)==len(bv)) {
 		for i := range av {
 			if (real(av[i])-real(bv[i])) < -infitesimal || (real(av[i])-real(bv[i]))>infitesimal || 
