@@ -22,12 +22,10 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 		},
 		func (n *flowgraph.Node) { 
                         if i<len(teststrings) {
-				x.Val = regexp.Search{Orig:teststrings[i],Curr:teststrings[i]}
+				x.DstPut(regexp.Search{Orig:teststrings[i],Curr:teststrings[i]})
                         } else {
 				if i==len(teststrings) {
-					x.Val = regexp.Search{}
-				} else {
-					x.NoOut = false
+					x.DstPut(regexp.Search{})
 				}
                         }
                         i++
