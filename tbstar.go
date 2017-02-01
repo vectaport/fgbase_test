@@ -52,7 +52,7 @@ func tbo(oldmatch flowgraph.Edge, dnstreq flowgraph.Edge) flowgraph.Node {
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&oldmatch}, []*flowgraph.Edge{&dnstreq}, nil,
 		func (n *flowgraph.Node) {
 			oldmatch.Flow = true
-			dnstreq.DstPut(regexp.Search{}) // echo back
+			dnstreq.DstPut(regexp.Search{State:regexp.Done}) // echo back
 		})
 	return node
          

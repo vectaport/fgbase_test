@@ -7,12 +7,14 @@ import(
 
 var teststrings = []string{
 	"test string",
+/*
 	"apples",
 	"oranges",
 	"",
 	"T",
         "applesX",
         "orangesX",
+*/
 }
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
