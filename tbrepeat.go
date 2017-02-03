@@ -6,14 +6,18 @@ import(
 )
 
 var teststrings = []string{
+/*
 	"MMMapplesapplesapplesTAG",
+*/
 	"applesapplesapples",
+/*		
         "applesX",
         "orangesX",
 	"apples",
 	"oranges",
 	"T",
 	"",
+*/
 }
 
 func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
@@ -92,7 +96,7 @@ func main() {
 	e[apples].Const("apples")
 	
 	n[0] = tbi(e[upstreq], e[newmatch])
-        n[1] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 0, 0)
+        n[1] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 2, -1)
 	n[2] = regexp.FuncMatch(e[subdst], e[apples], e[subsrc])
         n[3] = tbo(e[oldmatch], e[dnstreq])
 	
