@@ -15,15 +15,15 @@ var teststrings = []string{
 
 /*
 var variants = []string{
-    "agggtaaa|tttaccct",
-    "[cgt]gggtaaa|tttaccc[acg]",
-    "a[act]ggtaaa|tttacc[agt]t",
-    "ag[act]gtaaa|tttac[agt]ct",
-    "agg[act]taaa|ttta[agt]cct",
-    "aggg[acg]aaa|ttt[cgt]ccct",
-    "agggt[cgt]aa|tt[acg]accct",
-    "agggta[cgt]a|t[acg]taccct",
-    "agggtaa[cgt]|[acg]ttaccct",
+    "AGGGTAAA|TTTACCCT",
+    "[CGT]GGGTAAA|TTTACCC[ACG]",
+    "A[ACT]GGTAAA|TTTACC[AGT]T",
+    "AG[ACT]GTAAA|TTTAC[AGT]CT",
+    "AGG[ACT]TAAA|TTTA[AGT]CCT",
+    "AGGG[ACG]AAA|TTT[CGT]CCCT",
+    "AGGGT[CGT]AA|TT[ACG]ACCCT",
+    "AGGGTA[CGT]A|T[ACG]TACCCT",
+    "AGGGTAA[CGT]|[ACG]TTACCCT",
 }
 */
 
@@ -51,16 +51,23 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 		func (n *flowgraph.Node) {
 			if dnstreq.SrcRdy(n) {
 				match := dnstreq.SrcGet().(regexp.Search)
+				n.Tracef("match.Orig is %v\n", match.Orig)
+				n.Tracef("prev map is %v\n", prev)
+				if match.State == regexp.Done {
+				        delete(prev, match.Orig)
+					i--
+				        return
+				}
 				match.Curr = prev[match.Orig][1:]
 				prev[match.Orig] = match.Curr
 				newmatch.DstPut(match)
-				i--
 				return
 			}
 			xv,err := r.ReadString('\n')
 			if err!=nil {
 				newmatch.DstPut(regexp.Search{})
 			} else {
+			        prev[xv] = xv
 				newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live})
 			}
                         i++
@@ -73,8 +80,8 @@ func tbo(oldmatch flowgraph.Edge, dnstreq flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&oldmatch}, []*flowgraph.Edge{&dnstreq}, nil,
 		func (n *flowgraph.Node) {
-			oldmatch.Flow = true
-			dnstreq.DstPut(regexp.Search{State:regexp.Done}) // echo back
+			o := oldmatch.SrcGet().(regexp.Search)
+			dnstreq.DstPut(regexp.Search{State:regexp.Done, Orig:o.Orig}) // echo back
 		})
 	return node
          
@@ -116,8 +123,10 @@ func main() {
 	e,n := flowgraph.MakeGraph(int(edgeNum),6)
 	flowgraph.NameEdges(e,edgeNames)
 
-	e[test0].Const("AGGGTAAA")
-	e[test1].Const("TTTACCCT")
+	// e[test0].Const("AGGGTAAA")
+	// e[test1].Const("TTTACCCT")
+	e[test0].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAA")
+	e[test1].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAA")
 	
 	n[0] = tbi(e[upstreq], e[newmatch])
 	n[1] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 1, -1)
