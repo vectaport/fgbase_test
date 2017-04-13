@@ -2,6 +2,7 @@ package main
 
 import(
 	"bufio"
+	"io"
 	"os"
 	
 	"github.com/vectaport/flowgraph"
@@ -37,6 +38,7 @@ func check(e error) {
 func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 
         i := 0
+	done := false
 
 	f, err := os.Open("fasta.txt")
 	check(err)
@@ -46,13 +48,11 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", []*flowgraph.Edge{&dnstreq}, []*flowgraph.Edge{&newmatch},
 		func (n *flowgraph.Node) bool {
-			return dnstreq.SrcRdy(n) || newmatch.DstRdy(n) && i <= flowgraph.ChannelSize
+			return !done && (dnstreq.SrcRdy(n) || newmatch.DstRdy(n) && i <= flowgraph.ChannelSize)
 		},
 		func (n *flowgraph.Node) {
 			if dnstreq.SrcRdy(n) {
 				match := dnstreq.SrcGet().(regexp.Search)
-				n.Tracef("match.Orig is %v\n", match.Orig)
-				n.Tracef("prev map is %v\n", prev)
 				if match.State == regexp.Done {
 				        delete(prev, match.Orig)
 					i--
@@ -64,12 +64,12 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 				return
 			}
 			xv,err := r.ReadString('\n')
-			if err!=nil {
-				newmatch.DstPut(regexp.Search{})
-			} else {
-			        prev[xv] = xv
-				newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live})
+			if err == io.EOF {
+				done = true
+			        return
 			}
+		        prev[xv] = xv
+			newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live})
                         i++
 		})
 	return node
