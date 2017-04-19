@@ -125,8 +125,10 @@ func main() {
 
 	// e[test0].Const("AGGGTAAA")
 	// e[test1].Const("TTTACCCT")
+	// *** why do these both have to be the same **
+	// *** why is FuncBar not acting like an OR ***
 	e[test0].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAA")
-	e[test1].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAA")
+	e[test1].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAX")
 	
 	n[0] = tbi(e[upstreq], e[newmatch])
 	n[1] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 1, -1)
