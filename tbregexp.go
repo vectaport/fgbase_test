@@ -34,6 +34,8 @@ func check(e error) {
 		os.Exit(1)
 	}
 }
+
+var prev map[string]string;
 		
 func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 
@@ -44,7 +46,7 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 	check(err)
 	r := bufio.NewReader(f)
 	
-	prev := make(map[string]string)
+	prev = make(map[string]string)
 
 	node := flowgraph.MakeNode("tbi", []*flowgraph.Edge{&dnstreq}, []*flowgraph.Edge{&newmatch},
 		func (n *flowgraph.Node) bool {
@@ -54,10 +56,12 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 			if dnstreq.SrcRdy(n) {
 				match := dnstreq.SrcGet().(regexp.Search)
 				if match.State == regexp.Done {
+				        n.Tracef("DONE REQUEST FROM DOWNSTREAM\n");
 				        delete(prev, match.Orig)
 					i--
 				        return
 				}
+				n.Tracef("LIVE REQUEST FROM DOWNSTREAM\n");
 				match.Curr = prev[match.Orig][1:]
 				prev[match.Orig] = match.Curr
 				newmatch.DstPut(match)
@@ -65,6 +69,7 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 			}
 			xv,err := r.ReadString('\n')
 			if err == io.EOF {
+			        n.Tracef("EOF\n")
 				done = true
 			        return
 			}
@@ -128,7 +133,7 @@ func main() {
 	// *** why do these both have to be the same **
 	// *** why is FuncBar not acting like an OR ***
 	e[test0].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAA")
-	e[test1].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAX")
+	e[test1].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAA")
 	
 	n[0] = tbi(e[upstreq], e[newmatch])
 	n[1] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 1, -1)
@@ -138,5 +143,5 @@ func main() {
 	n[5] = tbo(e[oldmatch], e[dnstreq])
 	
 	flowgraph.RunAll(n)
-	
+
 }
