@@ -35,7 +35,7 @@ func check(e error) {
 	}
 }
 
-var prev map[string]string;
+var prev map[int64]string;
 		
 func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 
@@ -46,7 +46,7 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 	check(err)
 	r := bufio.NewReader(f)
 	
-	prev = make(map[string]string)
+	prev = make(map[int64]string)
 
 	node := flowgraph.MakeNode("tbi", []*flowgraph.Edge{&dnstreq}, []*flowgraph.Edge{&newmatch},
 		func (n *flowgraph.Node) bool {
@@ -57,13 +57,13 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 				match := dnstreq.SrcGet().(regexp.Search)
 				if match.State == regexp.Done {
 				        n.Tracef("DONE REQUEST FROM DOWNSTREAM\n");
-				        delete(prev, match.Orig)
+				        delete(prev, match.ID)
 					i--
 				        return
 				}
 				n.Tracef("LIVE REQUEST FROM DOWNSTREAM\n");
-				match.Curr = prev[match.Orig][1:]
-				prev[match.Orig] = match.Curr
+				match.Curr = prev[match.ID][1:]
+				prev[match.ID] = match.Curr
 				newmatch.DstPut(match)
 				return
 			}
@@ -73,8 +73,9 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 				done = true
 			        return
 			}
-		        prev[xv] = xv
-			newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live})
+			i := regexp.NextID()
+		        prev[i] = xv
+			newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live, ID:i})
                         i++
 		})
 	return node
@@ -86,7 +87,8 @@ func tbo(oldmatch flowgraph.Edge, dnstreq flowgraph.Edge) flowgraph.Node {
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&oldmatch}, []*flowgraph.Edge{&dnstreq}, nil,
 		func (n *flowgraph.Node) {
 			o := oldmatch.SrcGet().(regexp.Search)
-			dnstreq.DstPut(regexp.Search{State:regexp.Done, Orig:o.Orig}) // echo back
+			o.State = regexp.Done
+			dnstreq.DstPut(o) // echo back
 		})
 	return node
          

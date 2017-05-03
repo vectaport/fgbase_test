@@ -30,10 +30,10 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 				return
 			}
                         if i<len(teststrings) {
-				newmatch.DstPut(regexp.Search{Orig:teststrings[i], Curr:teststrings[i], State:regexp.Live})
+				newmatch.DstPut(regexp.Search{Orig:teststrings[i], Curr:teststrings[i], State:regexp.Live, ID:regexp.NextID()})
                         } else {
 				if i==len(teststrings) {
-					newmatch.DstPut(regexp.Search{})
+					newmatch.DstPut(regexp.Search{ID:regexp.NextID()})
 				}
                         }
                         i++
@@ -46,8 +46,9 @@ func tbo(oldmatch flowgraph.Edge, dnstreq flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&oldmatch}, []*flowgraph.Edge{&dnstreq}, nil,
 		func (n *flowgraph.Node) {
-			oldmatch.Flow = true
-			dnstreq.DstPut(regexp.Search{State:regexp.Done}) // echo back
+			match := oldmatch.SrcGet.(regexp.Search)
+			match.State = Done
+			dnstreq.DstPut(match}) // echo back
 		})
 	return node
          
