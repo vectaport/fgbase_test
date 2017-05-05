@@ -26,6 +26,7 @@ var variants = []string{
     "AGGGTA[CGT]A|T[ACG]TACCCT",
     "AGGGTAA[CGT]|[ACG]TTACCCT",
 }
+
 */
 
 func check(e error) {
@@ -56,12 +57,12 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 			if dnstreq.SrcRdy(n) {
 				match := dnstreq.SrcGet().(regexp.Search)
 				if match.State == regexp.Done {
-				        n.Tracef("DONE REQUEST FROM DOWNSTREAM\n");
+				        n.Tracef("DONE REQUEST FROM DOWNSTREAM %d\n", i-1);
 				        delete(prev, match.ID)
 					i--
 				        return
 				}
-				n.Tracef("LIVE REQUEST FROM DOWNSTREAM\n");
+				n.Tracef("LIVE REQUEST FROM DOWNSTREAM %d\n", i);
 				match.Curr = prev[match.ID][1:]
 				prev[match.ID] = match.Curr
 				newmatch.DstPut(match)
@@ -73,9 +74,9 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 				done = true
 			        return
 			}
-			i := regexp.NextID()
-		        prev[i] = xv
-			newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live, ID:i})
+			id := regexp.NextID()
+		        prev[id] = xv
+			newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live, ID:id})
                         i++
 		})
 	return node
@@ -130,17 +131,13 @@ func main() {
 	e,n := flowgraph.MakeGraph(int(edgeNum),6)
 	flowgraph.NameEdges(e,edgeNames)
 
-	// e[test0].Const("AGGGTAAA")
-	// e[test1].Const("TTTACCCT")
-	// *** why do these both have to be the same **
-	// *** why is FuncBar not acting like an OR ***
-	e[test0].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAA")
-	e[test1].Const("GGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAA")
+	e[test0].Const("AGGGTAA[CGT]")
+	e[test1].Const("[ACG]TTACCCT")
 	
 	n[0] = tbi(e[upstreq], e[newmatch])
 	n[1] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 1, -1)
-	n[2] = regexp.FuncMatch(e[subdst], e[test0], e[subsrc0])
-	n[3] = regexp.FuncMatch(e[subdst], e[test1], e[subsrc1])
+	n[2] = regexp.FuncMatch(e[subdst], e[test0], e[subsrc0], /* ignoreCase = */ true)
+	n[3] = regexp.FuncMatch(e[subdst], e[test1], e[subsrc1], /* ignoreCase = */ true)
 	n[4] = regexp.FuncBar(e[subsrc0], e[subsrc1], e[subsrc], false)
 	n[5] = tbo(e[oldmatch], e[dnstreq])
 	
