@@ -21,7 +21,7 @@ var variants = []string{
     "A[ACT]GGTAAA|TTTACC[AGT]T",
     "AG[ACT]GTAAA|TTTAC[AGT]CT",
     "AGG[ACT]TAAA|TTTA[AGT]CCT",
-    "AGGG[ACG]AAA|TTT[CGT]CCCT",
+!    "AGGG[ACG]AAA|TTT[CGT]CCCT",
     "AGGGT[CGT]AA|TT[ACG]ACCCT",
     "AGGGTA[CGT]A|T[ACG]TACCCT",
     "AGGGTAA[CGT]|[ACG]TTACCCT",
@@ -131,6 +131,40 @@ func main() {
 	e,n := flowgraph.MakeGraph(int(edgeNum),6)
 	flowgraph.NameEdges(e,edgeNames)
 
+
+	// 1 match
+        // e[test0].Const("AGGGTAAA")
+        // e[test1].Const("TTTACCCT")
+	
+	// 0 match
+	// e[test0].Const("[CGT]GGGTAAA")
+        // e[test1].Const("TTTACCC[ACG]")
+	
+	// 0 match
+	// e[test0].Const("A[ACT]GGTAAA")
+        // e[test1].Const("TTTACC[AGT]T")
+	
+	// 0 match
+	// e[test0].Const("AG[ACT]GTAAA")
+        // e[test1].Const("TTTAC[AGT]CT")
+	
+	// 1 match
+	// e[test0].Const("AGG[ACT]TAAA")
+        // e[test1].Const("TTTA[AGT]CCT")
+	
+	// 0 match
+	// e[test0].Const("AGGG[ACG]AAA")
+        // e[test1].Const("TTT[CGT]CCCT")
+	
+	// 0 match
+	// e[test0].Const("AGGGT[CGT]AA")
+        // e[test1].Const("TT[ACG]ACCCT")
+	
+	// 0 match
+	// e[test0].Const("AGGGTA[CGT]A")
+        // e[test1].Const("T[ACG]TACCCT")
+	
+	// 2 match
 	e[test0].Const("AGGGTAA[CGT]")
 	e[test1].Const("[ACG]TTACCCT")
 	
