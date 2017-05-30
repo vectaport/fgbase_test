@@ -43,7 +43,7 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
         i := 0
 	done := false
 
-	f, err := os.Open("fasta.txt")
+	f, err := os.Open("fasta.huge.txt")
 	check(err)
 	r := bufio.NewReader(f)
 	
@@ -76,6 +76,7 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 			}
 			id := regexp.NextID()
 		        prev[id] = xv
+			n.Tracef("NEW MATCH FROM UPSTREAM %d\n", i+1);
 			newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live, ID:id})
                         i++
 		})

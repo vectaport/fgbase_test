@@ -57,8 +57,8 @@ func main() {
 	e[5].Const("oranges")
 	
 	n[0] = tbi(e[0])
-	n[1] = regexp.FuncMatch(e[0], e[4], e[1])
-	n[2] = regexp.FuncMatch(e[0], e[5], e[2])
+	n[1] = regexp.FuncMatch(e[0], e[4], e[1], false)
+	n[2] = regexp.FuncMatch(e[0], e[5], e[2], false)
         n[3] = regexp.FuncBar(e[1], e[2], e[3], true)
         n[4] = tbo(e[3])
 

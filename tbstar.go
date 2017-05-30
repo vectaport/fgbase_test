@@ -29,16 +29,20 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 		func (n *flowgraph.Node) {
 			if dnstreq.SrcRdy(n) {
 				match := dnstreq.SrcGet().(regexp.Search)
-				match.Curr = Prev[match.Orig][1:]
-				Prev[match.Orig] = match.Curr
-				newmatch.DstPut(match)
+				if len(Prev[match.Orig])>2 {
+  				         match.Curr = Prev[match.Orig][1:]
+				         Prev[match.Orig] = match.Curr
+				         newmatch.DstPut(match)
+   				         return
+			        }
+				delete(Prev, match.Orig)
 				return
 			}
                         if i<len(teststrings) {
-				newmatch.DstPut(regexp.Search{Orig:teststrings[i], Curr:teststrings[i], State:regexp.Live, ID:NextID()})
+				newmatch.DstPut(regexp.Search{Orig:teststrings[i], Curr:teststrings[i], State:regexp.Live, ID:regexp.NextID()})
                         } else {
 				if i==len(teststrings) {
-					newmatch.DstPut(regexp.Search{ID:NextID()})
+					newmatch.DstPut(regexp.Search{ID:regexp.NextID()})
 				}
                         }
                         i++
@@ -52,7 +56,7 @@ func tbo(oldmatch flowgraph.Edge, dnstreq flowgraph.Edge) flowgraph.Node {
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&oldmatch}, []*flowgraph.Edge{&dnstreq}, nil,
 		func (n *flowgraph.Node) {
 			match := oldmatch.SrcGet().(regexp.Search)
-			match.State = Done
+			match.State = regexp.Done
 			dnstreq.DstPut(match) // echo back
 		})
 	return node
@@ -103,8 +107,8 @@ func main() {
 	// (apples|oranges)*banana
 	n[0] = tbi(e[upstreq], e[newmatch])
         n[1] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 0, -1)
-	n[2] = regexp.FuncMatch(e[subdst], e[apples], e[applesmatch])
-	n[3] = regexp.FuncMatch(e[subdst], e[oranges], e[orangesmatch])
+	n[2] = regexp.FuncMatch(e[subdst], e[apples], e[applesmatch], false)
+	n[3] = regexp.FuncMatch(e[subdst], e[oranges], e[orangesmatch], false)
         n[4] = regexp.FuncBar(e[applesmatch], e[orangesmatch], e[subsrc], false)
         n[5] = tbo(e[oldmatch], e[dnstreq])
 
