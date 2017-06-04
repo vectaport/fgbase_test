@@ -156,6 +156,15 @@ const (
 	subsrcN
 	subsrcO
 	subsrcP
+	subsrcQ
+	subsrcBB
+	subsrcCC
+	subsrcDD
+	subsrcEE
+	subsrcFF
+	subsrcGG
+	subsrcHH
+	subsrcII
 	edgeNum
 )
 
@@ -218,6 +227,16 @@ var edgeNames []string = []string {
 	"subsrcN",
 	"subsrcO",
 	"subsrcP",
+	"subsrcQ",
+	"subsrcAA",
+	"subsrcBB",
+	"subsrcCC",
+	"subsrcDD",
+	"subsrcEE",
+	"subsrcFF",
+	"subsrcGG",
+	"subsrcHH",
+	"subsrcII",
 }
 
 func main() {
@@ -225,7 +244,7 @@ func main() {
 	
 	flowgraph.ConfigByFlag(nil)
 	
-	e,n := flowgraph.MakeGraph(int(edgeNum), 38)
+	e,n := flowgraph.MakeGraph(int(edgeNum), 47)
 	flowgraph.NameEdges(e,edgeNames)
 
 
@@ -297,14 +316,33 @@ func main() {
 	n[fi()] = regexp.FuncBar(e[subsrc12], e[subsrc13], e[subsrcG], false)
 	n[fi()] = regexp.FuncBar(e[subsrc14], e[subsrc15], e[subsrcH], false)
 	n[fi()] = regexp.FuncBar(e[subsrc16], e[subsrc17], e[subsrcI], false)
-	n[fi()] = regexp.FuncBar(e[subsrcA], e[subsrcB], e[subsrcJ], false)
-	n[fi()] = regexp.FuncBar(e[subsrcC], e[subsrcD], e[subsrcK], false)
-	n[fi()] = regexp.FuncBar(e[subsrcE], e[subsrcF], e[subsrcL], false)
-	n[fi()] = regexp.FuncBar(e[subsrcG], e[subsrcH], e[subsrcM], false)
-	n[fi()] = regexp.FuncBar(e[subsrcJ], e[subsrcK], e[subsrcN], false)
-	n[fi()] = regexp.FuncBar(e[subsrcL], e[subsrcM], e[subsrcO], false)
-	n[fi()] = regexp.FuncBar(e[subsrcN], e[subsrcO], e[subsrcP], false)
-	n[fi()] = regexp.FuncBar(e[subsrcI], e[subsrcP], e[subsrc], false)
+	
+	n[fi()] = flowgraph.FuncPrint(e[subsrcA], e[subsrcJ], "pattern 1: %v\n")
+	
+	n[fi()] = flowgraph.FuncRdy(e[subsrcJ], e[subsrcB], e[subsrcBB] )
+	n[fi()] = flowgraph.FuncPrint(e[subsrcBB], e[subsrcK], "pattern 2: %v\n")
+	
+	n[fi()] = flowgraph.FuncRdy(e[subsrcK], e[subsrcC], e[subsrcCC] )
+	n[fi()] = flowgraph.FuncPrint(e[subsrcCC], e[subsrcL], "pattern 3: %v\n")
+	
+	n[fi()] = flowgraph.FuncRdy(e[subsrcL], e[subsrcD], e[subsrcDD] )
+	n[fi()] = flowgraph.FuncPrint(e[subsrcDD], e[subsrcM], "pattern 4: %v\n")
+	
+	n[fi()] = flowgraph.FuncRdy(e[subsrcM], e[subsrcE], e[subsrcEE] )
+	n[fi()] = flowgraph.FuncPrint(e[subsrcEE], e[subsrcN], "pattern 5: %v\n")
+	
+	n[fi()] = flowgraph.FuncRdy(e[subsrcN], e[subsrcF], e[subsrcFF] )
+	n[fi()] = flowgraph.FuncPrint(e[subsrcFF], e[subsrcO], "pattern 6: %v\n")
+	
+	n[fi()] = flowgraph.FuncRdy(e[subsrcO], e[subsrcG], e[subsrcGG] )
+	n[fi()] = flowgraph.FuncPrint(e[subsrcGG], e[subsrcP], "pattern 7: %v\n")
+	
+	n[fi()] = flowgraph.FuncRdy(e[subsrcP], e[subsrcH], e[subsrcHH] )
+	n[fi()] = flowgraph.FuncPrint(e[subsrcHH], e[subsrcQ], "pattern 8: %v\n")
+	
+	n[fi()] = flowgraph.FuncRdy(e[subsrcQ], e[subsrcI], e[subsrcII] )
+	n[fi()] = flowgraph.FuncPrint(e[subsrcII], e[subsrc], "pattern 9: %v\n")
+	
 	n[fi()] = tbo(e[oldmatch], e[dnstreq])
 	
 	flowgraph.RunAll(n)
