@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"math/rand"
+	"time"
 
 	"github.com/vectaport/flowgraph"
 )
@@ -28,21 +29,23 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 			if MaxChanLen < l {
 				MaxChanLen = l
 			}
+                        if n.Cnt%100==0 {
+				tbiHz[n.ID-tbiBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
+			}
 			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))})
 	return node
 }
 
-var tboHz []float64
-var tboBase int64
+var tbiHz []float64
+var tbiBase int64
 
 func tbo(a flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
 		func (n *flowgraph.Node) {
 			a.Flow = true
-			if n.Cnt%100==0 {
-				tboHz[n.ID-tboBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
-			}})
+			time.Sleep(100000000)
+			})
 	return node
 }
 
@@ -121,14 +124,16 @@ func main() {
 		n[2*nmap+nreduce+i] = tbo(e[nmap+nreduce+i])
 	}
 
-	tboBase = int64(2*nmap+nreduce)
-	tboHz = make([]float64, nreduce)
+	// tboBase = int64(2*nmap+nreduce)
+	// tboHz = make([]float64, nreduce)
+	tbiBase = int64(0)
+	tbiHz = make([]float64, nmap)
 
 	flowgraph.RunAll(n)
 
 	sum := 0.0
-	for i:=0; i<len(tboHz); i++ {
-		sum += tboHz[i]
+	for i:=0; i<len(tbiHz); i++ {
+		sum += tbiHz[i]
 	}
 
 	speed := sum/1000

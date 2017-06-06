@@ -161,9 +161,9 @@ func main() {
 
 	e,n := flowgraph.MakeGraph(nmap+nreduce*3,nmap*2+nreduce*3)
 
-	tboBase := 2*nmap+nreduce
+	tboNodeBase := 2*nmap+nreduce
 	tboEdgeBase := nmap+nreduce
-	tbcBase := tboBase+nreduce
+	tbcNodeBase := tboNodeBase+nreduce
 	tbcEdgeBase := tboEdgeBase+nreduce
 
 	for i:= 0; i<nmap; i++ {
@@ -174,15 +174,15 @@ func main() {
 	copy(n[nmap:2*nmap], p.Nodes())
 	
 	for i:= 0; i<nreduce; i++ {
-		n[2*nmap+i] = reduce2(e[nmap+i],e[tbcEdgeBase+i], e[nmap+nreduce+i], reducer)
+		n[2*nmap+i] = reduce2(e[nmap+i],e[tbcEdgeBase+i], e[tboEdgeBase+i], reducer)
 	}
 
 	for i:= 0; i<nreduce; i++ {
-		n[tboBase+i] = tbo(e[tboEdgeBase+i])
+		n[tboNodeBase+i] = tbo(e[tboEdgeBase+i])
 	}
 
 	for i:= 0; i<nreduce; i++ {
-		n[tbcBase+i] = tbc(e[tbcEdgeBase+i])
+		n[tbcNodeBase+i] = tbc(e[tbcEdgeBase+i])
 	}
 
 	tbiHz = make([]float64, nreduce)

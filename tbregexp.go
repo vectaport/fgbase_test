@@ -9,26 +9,6 @@ import(
         "github.com/vectaport/flowgraph/regexp"
 )
 
-var teststrings = []string{
-	"axyz",
-	"dxyz",
-}
-
-/*
-var variants = []string{
-    "AGGGTAAA|TTTACCCT",
-    "[CGT]GGGTAAA|TTTACCC[ACG]",
-    "A[ACT]GGTAAA|TTTACC[AGT]T",
-    "AG[ACT]GTAAA|TTTAC[AGT]CT",
-    "AGG[ACT]TAAA|TTTA[AGT]CCT",
-!    "AGGG[ACG]AAA|TTT[CGT]CCCT",
-    "AGGGT[CGT]AA|TT[ACG]ACCCT",
-    "AGGGTA[CGT]A|T[ACG]TACCCT",
-    "AGGGTAA[CGT]|[ACG]TTACCCT",
-}
-
-*/
-
 func check(e error) {
 	if e != nil {
 		flowgraph.StderrLog.Printf("%v\n", e)
@@ -70,8 +50,8 @@ func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
 			}
 			xv,err := r.ReadString('\n')
 			if err == io.EOF {
-			        n.Tracef("EOF\n")
-				done = true
+     			        n.Tracef("EOF\n")
+				newmatch.DstPut(regexp.Search{State:regexp.Done})
 			        return
 			}
 			id := regexp.NextID()
