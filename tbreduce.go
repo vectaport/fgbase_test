@@ -22,7 +22,6 @@ var MaxChanLen = 0
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
 
-	x.Ack = make(chan struct{}, flowgraph.ChannelSize)
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) { 
 			l:=len((*x.Data)[0])
@@ -118,7 +117,7 @@ func main() {
 	copy(n[nmap:2*nmap], p.Nodes())
 	
 	for i:= 0; i<nreduce; i++ {
-		n[2*nmap+i] = flowgraph.FuncReduce(e[nmap+i], e[nmap+nreduce+i], reducer)
+		n[2*nmap+i] = flowgraph.FuncReduce(e[nmap+i], e[nmap+nreduce+i], reducer, true)
 	}
 	for i:= 0; i<nreduce; i++ {
 		n[2*nmap+nreduce+i] = tbo(e[nmap+nreduce+i])

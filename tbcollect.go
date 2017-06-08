@@ -48,7 +48,7 @@ func tbc(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbc", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) { 
-			time.Sleep(10000000)
+			time.Sleep(1000000000)
 			x.DstPut(true)
 		})
 	return node
