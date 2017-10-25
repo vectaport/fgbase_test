@@ -18,8 +18,6 @@ func randSeq(n int) string {
 	return string(b)
 }
 
-var MaxChanLen = 0
-
 var tbiHz []float64
 var tbiBase int64 = 0
 
@@ -27,10 +25,6 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) { 
-			l:=len((*x.Data)[0])
-			if MaxChanLen < l {
-				MaxChanLen = l
-			}
 			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
 			if n.Cnt%100==0 {
 				tbiHz[n.ID-tbiBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
