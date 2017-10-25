@@ -26,7 +26,8 @@ var tbbBase int64 = 0
 func tbb(a flowgraph.Edge, x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbb", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil, 
-		func (n *flowgraph.Node) { 
+		func (n *flowgraph.Node) {
+		        a.SrcGet()
 			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
 			if n.Cnt%100==0 {
 				tbbHz[n.ID-tbbBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
@@ -41,6 +42,7 @@ func main() {
 	flowgraph.ConfigByFlag(nil)
 	nrow := *nrowp
 	ncol := *ncolp
+	tbbBase = int64(nrow)*int64(ncol)
 	
         fieldNodes := flowgraph.MakeNodes(nrow*ncol)
 	topNodes := flowgraph.MakeNodes(ncol)
@@ -52,6 +54,8 @@ func main() {
         norEdges := flowgraph.MakeEdges((nrow+1)*ncol)
         easEdges := flowgraph.MakeEdges((ncol+1)*nrow)
         wesEdges := flowgraph.MakeEdges((ncol+1)*nrow)
+
+        norEdges[0].Val = 100
 
         for j:=0; j<nrow; j++ {
                 for i:=0; i<ncol; i++ {
@@ -73,12 +77,12 @@ func main() {
 
         for i:=0; i<ncol; i++ {
 	        topNodes[i] = tbb(norEdges[i*(nrow+1)], souEdges[i*(nrow+1)])
-	        botNodes[i] = tbb(norEdges[i*(nrow+1)+ncol], souEdges[i*(nrow+1)+ncol])
+	        botNodes[i] = tbb(souEdges[i*(nrow+1)+ncol], norEdges[i*(nrow+1)+ncol])
 	}
 
         for i:=0; i<nrow; i++ {
 	        lftNodes[i] = tbb(wesEdges[i*(ncol+1)], easEdges[i*(ncol+1)])
-	        rgtNodes[i] = tbb(wesEdges[i*(ncol+1)+nrow], easEdges[i*(ncol+1)+nrow])
+	        rgtNodes[i] = tbb(easEdges[i*(ncol+1)+nrow], wesEdges[i*(ncol+1)+nrow])
 	}
 
         
