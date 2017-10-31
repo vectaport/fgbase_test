@@ -124,4 +124,4 @@ tbregexp:
 	go run tbregexp.go
 
 tbgrid:
-	go run tbgrid.go
+	go run tbgrid.go -trace VVVV

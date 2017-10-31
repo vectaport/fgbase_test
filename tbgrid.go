@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"math/rand"
 
 	"github.com/vectaport/flowgraph"
@@ -38,8 +39,8 @@ func tbb(a flowgraph.Edge, x flowgraph.Edge) flowgraph.Node {
 
 func main() {
 	
-	nrowp := flag.Int("nrow", 1, "number of rows")
-	ncolp := flag.Int("ncol", 1, "number of columns")
+	nrowp := flag.Int("nrow", 4, "number of rows")
+	ncolp := flag.Int("ncol", 4, "number of columns")
 	flowgraph.ConfigByFlag(nil)
 	nrow := *nrowp
 	ncol := *ncolp
@@ -56,10 +57,10 @@ func main() {
         easEdges := flowgraph.MakeEdges((ncol+1)*nrow)
         wesEdges := flowgraph.MakeEdges((ncol+1)*nrow)
 
-	for i:= range souEdges { souEdges[i].Val = "sou" }
-	for i:= range norEdges { norEdges[i].Val = "nor" }
-	for i:= range easEdges { easEdges[i].Val = "eas" }
-	for i:= range wesEdges { wesEdges[i].Val = "wes" }
+	for i:= range souEdges { souEdges[i].Val = "sou"+fmt.Sprintf("%d", i) }
+	for i:= range norEdges { norEdges[i].Val = "nor"+fmt.Sprintf("%d", i) }
+	for i:= range easEdges { easEdges[i].Val = "eas"+fmt.Sprintf("%d", i) }
+	for i:= range wesEdges { wesEdges[i].Val = "wes"+fmt.Sprintf("%d", i) }
 
 
         for j:=0; j<nrow; j++ {
