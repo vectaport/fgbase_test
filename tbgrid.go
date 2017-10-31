@@ -27,8 +27,9 @@ func tbb(a flowgraph.Edge, x flowgraph.Edge) flowgraph.Node {
 
 	node := flowgraph.MakeNode("tbb", []*flowgraph.Edge{&a}, []*flowgraph.Edge{&x}, nil, 
 		func (n *flowgraph.Node) {
-		        a.SrcGet()
-			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
+		        // a.SrcGet()
+			// x.DstPut("tbb"+strconv.Itoa(int(n.ID)))
+			x.DstPut(a.SrcGet())
 			if n.Cnt%100==0 {
 				tbbHz[n.ID-tbbBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
 			}})
@@ -37,8 +38,8 @@ func tbb(a flowgraph.Edge, x flowgraph.Edge) flowgraph.Node {
 
 func main() {
 	
-	nrowp := flag.Int("nrow", 4, "number of rows")
-	ncolp := flag.Int("ncol", 4, "number of columns")
+	nrowp := flag.Int("nrow", 1, "number of rows")
+	ncolp := flag.Int("ncol", 1, "number of columns")
 	flowgraph.ConfigByFlag(nil)
 	nrow := *nrowp
 	ncol := *ncolp
@@ -55,7 +56,11 @@ func main() {
         easEdges := flowgraph.MakeEdges((ncol+1)*nrow)
         wesEdges := flowgraph.MakeEdges((ncol+1)*nrow)
 
-        norEdges[0].Val = 100
+	for i:= range souEdges { souEdges[i].Val = "sou" }
+	for i:= range norEdges { norEdges[i].Val = "nor" }
+	for i:= range easEdges { easEdges[i].Val = "eas" }
+	for i:= range wesEdges { wesEdges[i].Val = "wes" }
+
 
         for j:=0; j<nrow; j++ {
                 for i:=0; i<ncol; i++ {
