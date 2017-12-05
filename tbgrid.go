@@ -77,18 +77,18 @@ func main() {
 		        srce := wesEdges[j*(ncol+1)+i+1]
 		        dstw := wesEdges[j*(ncol+1)+i]
 			
-		        fieldNodes[i*ncol+j] = grid.FuncGrid(srcn, srce, srcs, srcw, dstn, dste, dsts, dstw)
+		        fieldNodes[i*nrow+j] = grid.FuncGrid(srcn, srce, srcs, srcw, dstn, dste, dsts, dstw)
 		}
 	}
 
         for i:=0; i<ncol; i++ {
 	        topNodes[i] = tbb(norEdges[i*(nrow+1)], souEdges[i*(nrow+1)])
-	        botNodes[i] = tbb(souEdges[i*(nrow+1)+ncol], norEdges[i*(nrow+1)+ncol])
+	        botNodes[i] = tbb(souEdges[i*(nrow+1)+nrow], norEdges[i*(nrow+1)+nrow])
 	}
 
         for i:=0; i<nrow; i++ {
 	        lftNodes[i] = tbb(wesEdges[i*(ncol+1)], easEdges[i*(ncol+1)])
-	        rgtNodes[i] = tbb(easEdges[i*(ncol+1)+nrow], wesEdges[i*(ncol+1)+nrow])
+	        rgtNodes[i] = tbb(easEdges[   i*(ncol+1)+ncol], wesEdges[i*(ncol+1)+ncol])
 	}
 
         
