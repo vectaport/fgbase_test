@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraphbase"
 )
 
 var letters = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")

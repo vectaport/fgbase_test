@@ -7,7 +7,7 @@ import (
 	"strconv"
 //	"time"
 
-	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraphbase"
 )
 
 func main() {

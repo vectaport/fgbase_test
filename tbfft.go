@@ -3,8 +3,8 @@ package main
 import (
 	"math/rand"
 
-	"github.com/vectaport/flowgraph"
-	"github.com/vectaport/flowgraph/imglab"
+	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/flowgraphbase/imglab"
 )
 
 func tbiFire(n *flowgraph.Node) {

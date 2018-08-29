@@ -5,8 +5,8 @@ import(
 	"io"
 	"os"
 	
-	"github.com/vectaport/flowgraph"
-        "github.com/vectaport/flowgraph/regexp"
+	"github.com/vectaport/flowgraphbase"
+        "github.com/vectaport/flowgraphbase/regexp"
 )
 
 func check(e error) {

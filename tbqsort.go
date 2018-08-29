@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"sort"
 
-	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraphbase"
 )
 
 var bushelCnt int64

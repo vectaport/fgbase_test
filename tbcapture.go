@@ -4,8 +4,8 @@ import (
 	"flag"
 	"time"
 
-	"github.com/vectaport/flowgraph"
-	"github.com/vectaport/flowgraph/imglab"
+	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/flowgraphbase/imglab"
 )
 
 func main() {

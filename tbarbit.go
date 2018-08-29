@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraphbase"
 )
 
 func tbi(x flowgraph.Edge) flowgraph.Node {

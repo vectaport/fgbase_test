@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/vectaport/flowgraph"
-	"github.com/vectaport/flowgraph/grid"
+	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/flowgraphbase/grid"
 )
 
 var letters = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")

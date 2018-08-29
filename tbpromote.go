@@ -6,7 +6,7 @@ import (
 	"time"
 	"reflect"
 
-	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraphbase"
 )
 
 func promoteTest(a, b, x flowgraph.Edge) {

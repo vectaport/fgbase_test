@@ -1,8 +1,8 @@
 package main
 
 import(
-	"github.com/vectaport/flowgraph"
-        "github.com/vectaport/flowgraph/regexp"
+	"github.com/vectaport/flowgraphbase"
+        "github.com/vectaport/flowgraphbase/regexp"
 )
 
 var teststrings = []string{

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vectaport/flowgraph"
-	"github.com/vectaport/flowgraph/weblab"
+	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/flowgraphbase/weblab"
 )
 
 func tbo(a flowgraph.Edge) flowgraph.Node {

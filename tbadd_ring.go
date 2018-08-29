@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/vectaport/flowgraph"
+	"github.com/vectaport/flowgraphbase"
 )
 
 func tbiFire(n *flowgraph.Node) {
