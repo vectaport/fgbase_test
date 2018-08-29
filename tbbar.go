@@ -1,67 +1,66 @@
 package main
 
-import(
+import (
 	"github.com/vectaport/fgbase"
-        "github.com/vectaport/fgbase/regexp"
+	"github.com/vectaport/fgbase/regexp"
 )
 
 var teststrings = []string{
 	"test string",
-/*
-	"apples",
-	"oranges",
-	"",
-	"T",
-        "applesX",
-        "orangesX",
-*/
+	/*
+	   	"apples",
+	   	"oranges",
+	   	"",
+	   	"T",
+	           "applesX",
+	           "orangesX",
+	*/
 }
 
-func tbi(x flowgraph.Edge) flowgraph.Node {
+func tbi(x fgbase.Edge) fgbase.Node {
 
-        i := 0
+	i := 0
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x},
-		func (n *flowgraph.Node) bool {
-			return i<=len(teststrings) && n.DefaultRdyFunc()
+	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x},
+		func(n *fgbase.Node) bool {
+			return i <= len(teststrings) && n.DefaultRdyFunc()
 		},
-		func (n *flowgraph.Node) { 
-                        if i<len(teststrings) {
-				x.DstPut(regexp.Search{Curr:teststrings[i],Orig:teststrings[i]})
-                        } else {
-				if i==len(teststrings) {
+		func(n *fgbase.Node) {
+			if i < len(teststrings) {
+				x.DstPut(regexp.Search{Curr: teststrings[i], Orig: teststrings[i]})
+			} else {
+				if i == len(teststrings) {
 					x.DstPut(regexp.Search{})
 				}
-                        }
-                        i++
+			}
+			i++
 		})
 	return node
 
 }
 
-func tbo(a flowgraph.Edge) flowgraph.Node {
+func tbo(a fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
+	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil, nil)
 	return node
-         
+
 }
 
 func main() {
 
-	
-	flowgraph.ConfigByFlag(nil)
+	fgbase.ConfigByFlag(nil)
 
-	e,n := flowgraph.MakeGraph(6,5)
+	e, n := fgbase.MakeGraph(6, 5)
 
 	e[4].Const("apples")
 	e[5].Const("oranges")
-	
+
 	n[0] = tbi(e[0])
 	n[1] = regexp.FuncMatch(e[0], e[4], e[1], false)
 	n[2] = regexp.FuncMatch(e[0], e[5], e[2], false)
-        n[3] = regexp.FuncBar(e[1], e[2], e[3], true)
-        n[4] = tbo(e[3])
+	n[3] = regexp.FuncBar(e[1], e[2], e[3], true)
+	n[4] = tbo(e[3])
 
-	flowgraph.RunAll(n)
+	fgbase.RunAll(n)
 
 }

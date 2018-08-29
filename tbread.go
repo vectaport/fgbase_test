@@ -7,23 +7,23 @@ import (
 	"github.com/vectaport/fgbase"
 )
 
-func tbo(a flowgraph.Edge) flowgraph.Node {
+func tbo(a fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
+	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil, nil)
 	return node
 }
 
 func check(e error) {
 	if e != nil {
-		flowgraph.StderrLog.Printf("%v\n", e)
+		fgbase.StderrLog.Printf("%v\n", e)
 		os.Exit(1)
 	}
 }
-		
+
 func main() {
 
-	flowgraph.ConfigByFlag(map[string]interface{} {"sec": 2})
-	if len(flag.Args()) == 0  { 
+	fgbase.ConfigByFlag(map[string]interface{}{"sec": 2})
+	if len(flag.Args()) == 0 {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -32,12 +32,11 @@ func main() {
 	f, err := os.Open(fileName)
 	check(err)
 
-	e,n := flowgraph.MakeGraph(1,2)
+	e, n := fgbase.MakeGraph(1, 2)
 
-	n[0] = flowgraph.FuncRead(e[0], f)
+	n[0] = fgbase.FuncRead(e[0], f)
 	n[1] = tbo(e[0])
 
-	flowgraph.RunAll(n)
+	fgbase.RunAll(n)
 
 }
-

@@ -2,31 +2,30 @@ package main
 
 import (
 	"flag"
-//	"math/rand"
+	//	"math/rand"
 	"runtime"
 	"strconv"
-//	"time"
+	//	"time"
 
 	"github.com/vectaport/fgbase"
 )
 
 func main() {
 
-	flowgraph.ConfigByFlag(map[string]interface{} {"trace": "Q", "chansz": 1024, "sec": 0, "ncore": 1} )
+	fgbase.ConfigByFlag(map[string]interface{}{"trace": "Q", "chansz": 1024, "sec": 0, "ncore": 1})
 
-	flowgraph.TraceLevel = flowgraph.Q
-	flowgraph.TraceSeconds = false
-	flowgraph.ChannelSize = 1024
+	fgbase.TraceLevel = fgbase.Q
+	fgbase.TraceSeconds = false
+	fgbase.ChannelSize = 1024
 
-	e,n := flowgraph.MakeGraph(1,2)
+	e, n := fgbase.MakeGraph(1, 2)
 	quitChan := make(chan struct{})
- 
-	n[0] = flowgraph.FuncHTTP(e[0], ":8080", quitChan)
-	n[1] = flowgraph.FuncKprod(e[0])
 
-	flowgraph.RunAll(n)
+	n[0] = fgbase.FuncHTTP(e[0], ":8080", quitChan)
+	n[1] = fgbase.FuncKprod(e[0])
 
-	<- quitChan
+	fgbase.RunAll(n)
+
+	<-quitChan
 
 }
-

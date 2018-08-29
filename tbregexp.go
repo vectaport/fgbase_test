@@ -1,82 +1,83 @@
 package main
 
-import(
+import (
 	"bufio"
 	"io"
 	"os"
-	
+
 	"github.com/vectaport/fgbase"
-        "github.com/vectaport/fgbase/regexp"
+	"github.com/vectaport/fgbase/regexp"
 )
 
 func check(e error) {
 	if e != nil {
-		flowgraph.StderrLog.Printf("%v\n", e)
+		fgbase.StderrLog.Printf("%v\n", e)
 		os.Exit(1)
 	}
 }
 
-var prev map[int64]string;
-		
-func tbi(dnstreq flowgraph.Edge, newmatch flowgraph.Edge) flowgraph.Node {
+var prev map[int64]string
 
-        i := 0
+func tbi(dnstreq fgbase.Edge, newmatch fgbase.Edge) fgbase.Node {
+
+	i := 0
 	done := false
 
 	f, err := os.Open("fasta.huge.txt")
 	check(err)
 	r := bufio.NewReader(f)
-	
+
 	prev = make(map[int64]string)
 
-	node := flowgraph.MakeNode("tbi", []*flowgraph.Edge{&dnstreq}, []*flowgraph.Edge{&newmatch},
-		func (n *flowgraph.Node) bool {
-			return !done && (dnstreq.SrcRdy(n) || newmatch.DstRdy(n) && i <= flowgraph.ChannelSize)
+	node := fgbase.MakeNode("tbi", []*fgbase.Edge{&dnstreq}, []*fgbase.Edge{&newmatch},
+		func(n *fgbase.Node) bool {
+			return !done && (dnstreq.SrcRdy(n) || newmatch.DstRdy(n) && i <= fgbase.ChannelSize)
 		},
-		func (n *flowgraph.Node) {
+		func(n *fgbase.Node) {
 			if dnstreq.SrcRdy(n) {
 				match := dnstreq.SrcGet().(regexp.Search)
 				if match.State == regexp.Done {
-				        n.Tracef("DONE REQUEST FROM DOWNSTREAM %d\n", i-1);
-				        delete(prev, match.ID)
+					n.Tracef("DONE REQUEST FROM DOWNSTREAM %d\n", i-1)
+					delete(prev, match.ID)
 					i--
-				        return
+					return
 				}
-				n.Tracef("LIVE REQUEST FROM DOWNSTREAM %d\n", i);
+				n.Tracef("LIVE REQUEST FROM DOWNSTREAM %d\n", i)
 				match.Curr = prev[match.ID][1:]
 				prev[match.ID] = match.Curr
 				newmatch.DstPut(match)
 				return
 			}
-			xv,err := r.ReadString('\n')
+			xv, err := r.ReadString('\n')
 			if err == io.EOF {
-     			        n.Tracef("EOF\n")
-				newmatch.DstPut(regexp.Search{State:regexp.Done})
-			        return
+				n.Tracef("EOF\n")
+				newmatch.DstPut(regexp.Search{State: regexp.Done})
+				return
 			}
 			id := regexp.NextID()
-		        prev[id] = xv
-			n.Tracef("NEW MATCH FROM UPSTREAM %d\n", i+1);
-			newmatch.DstPut(regexp.Search{Orig:xv, Curr:xv, State:regexp.Live, ID:id})
-                        i++
+			prev[id] = xv
+			n.Tracef("NEW MATCH FROM UPSTREAM %d\n", i+1)
+			newmatch.DstPut(regexp.Search{Orig: xv, Curr: xv, State: regexp.Live, ID: id})
+			i++
 		})
 	return node
-	
+
 }
 
-func tbo(oldmatch flowgraph.Edge, dnstreq flowgraph.Edge) flowgraph.Node {
+func tbo(oldmatch fgbase.Edge, dnstreq fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&oldmatch}, []*flowgraph.Edge{&dnstreq}, nil,
-		func (n *flowgraph.Node) {
+	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&oldmatch}, []*fgbase.Edge{&dnstreq}, nil,
+		func(n *fgbase.Node) {
 			o := oldmatch.SrcGet().(regexp.Search)
 			o.State = regexp.Done
 			dnstreq.DstPut(o) // echo back
 		})
 	return node
-         
+
 }
 
 type edgeCnt int
+
 const (
 	newmatch edgeCnt = iota
 	subsrc
@@ -148,7 +149,7 @@ const (
 	edgeNum
 )
 
-var edgeNames []string = []string {
+var edgeNames []string = []string{
 	"newmatch",
 	"subsrc",
 	"dnstreq",
@@ -220,73 +221,71 @@ var edgeNames []string = []string {
 }
 
 func main() {
-	
-	
-	flowgraph.ConfigByFlag(nil)
-	
-	e,n := flowgraph.MakeGraph(int(edgeNum), 47)
-	flowgraph.NameEdges(e,edgeNames)
 
+	fgbase.ConfigByFlag(nil)
+
+	e, n := fgbase.MakeGraph(int(edgeNum), 47)
+	fgbase.NameEdges(e, edgeNames)
 
 	// 1 match
-        e[test0].Const("AGGGTAAA")
-        e[test1].Const("TTTACCCT")
-	
+	e[test0].Const("AGGGTAAA")
+	e[test1].Const("TTTACCCT")
+
 	// 0 match
 	e[test2].Const("[CGT]GGGTAAA")
-        e[test3].Const("TTTACCC[ACG]")
-	
+	e[test3].Const("TTTACCC[ACG]")
+
 	// 0 match
 	e[test4].Const("A[ACT]GGTAAA")
-        e[test5].Const("TTTACC[AGT]T")
-	
+	e[test5].Const("TTTACC[AGT]T")
+
 	// 0 match
 	e[test6].Const("AG[ACT]GTAAA")
-        e[test7].Const("TTTAC[AGT]CT")
-	
+	e[test7].Const("TTTAC[AGT]CT")
+
 	// 1 match
 	e[test8].Const("AGG[ACT]TAAA")
-        e[test9].Const("TTTA[AGT]CCT")
-	
+	e[test9].Const("TTTA[AGT]CCT")
+
 	// 0 match
 	e[test10].Const("AGGG[ACG]AAA")
-        e[test11].Const("TTT[CGT]CCCT")
-	
+	e[test11].Const("TTT[CGT]CCCT")
+
 	// 0 match
 	e[test12].Const("AGGGT[CGT]AA")
-        e[test13].Const("TT[ACG]ACCCT")
-	
+	e[test13].Const("TT[ACG]ACCCT")
+
 	// 0 match
 	e[test14].Const("AGGGTA[CGT]A")
-        e[test15].Const("T[ACG]TACCCT")
-	
+	e[test15].Const("T[ACG]TACCCT")
+
 	// 2 match
 	e[test16].Const("AGGGTAA[CGT]")
 	e[test17].Const("[ACG]TTACCCT")
 
-        i := 0
-	fi := func() int {j := i; i++; return j}
-	
+	i := 0
+	fi := func() int { j := i; i++; return j }
+
 	n[fi()] = tbi(e[upstreq], e[newmatch])
 	n[fi()] = regexp.FuncRepeat(e[newmatch], e[subsrc], e[dnstreq], e[oldmatch], e[subdst], e[upstreq], 1, -1)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test0], e[subsrc0], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test1], e[subsrc1], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test2], e[subsrc2], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test3], e[subsrc3], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test4], e[subsrc4], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test5], e[subsrc5], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test6], e[subsrc6], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test7], e[subsrc7], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test8], e[subsrc8], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test9], e[subsrc9], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test10], e[subsrc10], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test11], e[subsrc11], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test12], e[subsrc12], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test13], e[subsrc13], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test14], e[subsrc14], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test15], e[subsrc15], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test16], e[subsrc16], /* ignoreCase = */ true)
-	n[fi()] = regexp.FuncMatch(e[subdst], e[test17], e[subsrc17], /* ignoreCase = */ true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test0], e[subsrc0] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test1], e[subsrc1] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test2], e[subsrc2] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test3], e[subsrc3] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test4], e[subsrc4] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test5], e[subsrc5] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test6], e[subsrc6] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test7], e[subsrc7] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test8], e[subsrc8] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test9], e[subsrc9] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test10], e[subsrc10] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test11], e[subsrc11] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test12], e[subsrc12] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test13], e[subsrc13] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test14], e[subsrc14] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test15], e[subsrc15] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test16], e[subsrc16] /* ignoreCase = */, true)
+	n[fi()] = regexp.FuncMatch(e[subdst], e[test17], e[subsrc17] /* ignoreCase = */, true)
 	n[fi()] = regexp.FuncBar(e[subsrc0], e[subsrc1], e[subsrcA], false)
 	n[fi()] = regexp.FuncBar(e[subsrc2], e[subsrc3], e[subsrcB], false)
 	n[fi()] = regexp.FuncBar(e[subsrc4], e[subsrc5], e[subsrcC], false)
@@ -296,35 +295,35 @@ func main() {
 	n[fi()] = regexp.FuncBar(e[subsrc12], e[subsrc13], e[subsrcG], false)
 	n[fi()] = regexp.FuncBar(e[subsrc14], e[subsrc15], e[subsrcH], false)
 	n[fi()] = regexp.FuncBar(e[subsrc16], e[subsrc17], e[subsrcI], false)
-	
-	n[fi()] = flowgraph.FuncPrint(e[subsrcA], e[subsrcJ], "pattern 1: %v\n")
-	
-	n[fi()] = flowgraph.FuncRdy(e[subsrcJ], e[subsrcB], e[subsrcBB] )
-	n[fi()] = flowgraph.FuncPrint(e[subsrcBB], e[subsrcK], "pattern 2: %v\n")
-	
-	n[fi()] = flowgraph.FuncRdy(e[subsrcK], e[subsrcC], e[subsrcCC] )
-	n[fi()] = flowgraph.FuncPrint(e[subsrcCC], e[subsrcL], "pattern 3: %v\n")
-	
-	n[fi()] = flowgraph.FuncRdy(e[subsrcL], e[subsrcD], e[subsrcDD] )
-	n[fi()] = flowgraph.FuncPrint(e[subsrcDD], e[subsrcM], "pattern 4: %v\n")
-	
-	n[fi()] = flowgraph.FuncRdy(e[subsrcM], e[subsrcE], e[subsrcEE] )
-	n[fi()] = flowgraph.FuncPrint(e[subsrcEE], e[subsrcN], "pattern 5: %v\n")
-	
-	n[fi()] = flowgraph.FuncRdy(e[subsrcN], e[subsrcF], e[subsrcFF] )
-	n[fi()] = flowgraph.FuncPrint(e[subsrcFF], e[subsrcO], "pattern 6: %v\n")
-	
-	n[fi()] = flowgraph.FuncRdy(e[subsrcO], e[subsrcG], e[subsrcGG] )
-	n[fi()] = flowgraph.FuncPrint(e[subsrcGG], e[subsrcP], "pattern 7: %v\n")
-	
-	n[fi()] = flowgraph.FuncRdy(e[subsrcP], e[subsrcH], e[subsrcHH] )
-	n[fi()] = flowgraph.FuncPrint(e[subsrcHH], e[subsrcQ], "pattern 8: %v\n")
-	
-	n[fi()] = flowgraph.FuncRdy(e[subsrcQ], e[subsrcI], e[subsrcII] )
-	n[fi()] = flowgraph.FuncPrint(e[subsrcII], e[subsrc], "pattern 9: %v\n")
-	
+
+	n[fi()] = fgbase.FuncPrint(e[subsrcA], e[subsrcJ], "pattern 1: %v\n")
+
+	n[fi()] = fgbase.FuncRdy(e[subsrcJ], e[subsrcB], e[subsrcBB])
+	n[fi()] = fgbase.FuncPrint(e[subsrcBB], e[subsrcK], "pattern 2: %v\n")
+
+	n[fi()] = fgbase.FuncRdy(e[subsrcK], e[subsrcC], e[subsrcCC])
+	n[fi()] = fgbase.FuncPrint(e[subsrcCC], e[subsrcL], "pattern 3: %v\n")
+
+	n[fi()] = fgbase.FuncRdy(e[subsrcL], e[subsrcD], e[subsrcDD])
+	n[fi()] = fgbase.FuncPrint(e[subsrcDD], e[subsrcM], "pattern 4: %v\n")
+
+	n[fi()] = fgbase.FuncRdy(e[subsrcM], e[subsrcE], e[subsrcEE])
+	n[fi()] = fgbase.FuncPrint(e[subsrcEE], e[subsrcN], "pattern 5: %v\n")
+
+	n[fi()] = fgbase.FuncRdy(e[subsrcN], e[subsrcF], e[subsrcFF])
+	n[fi()] = fgbase.FuncPrint(e[subsrcFF], e[subsrcO], "pattern 6: %v\n")
+
+	n[fi()] = fgbase.FuncRdy(e[subsrcO], e[subsrcG], e[subsrcGG])
+	n[fi()] = fgbase.FuncPrint(e[subsrcGG], e[subsrcP], "pattern 7: %v\n")
+
+	n[fi()] = fgbase.FuncRdy(e[subsrcP], e[subsrcH], e[subsrcHH])
+	n[fi()] = fgbase.FuncPrint(e[subsrcHH], e[subsrcQ], "pattern 8: %v\n")
+
+	n[fi()] = fgbase.FuncRdy(e[subsrcQ], e[subsrcI], e[subsrcII])
+	n[fi()] = fgbase.FuncPrint(e[subsrcII], e[subsrc], "pattern 9: %v\n")
+
 	n[fi()] = tbo(e[oldmatch], e[dnstreq])
-	
-	flowgraph.RunAll(n)
+
+	fgbase.RunAll(n)
 
 }

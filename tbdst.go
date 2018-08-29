@@ -8,10 +8,10 @@ import (
 	"github.com/vectaport/fgbase"
 )
 
-func tbi(x flowgraph.Edge) flowgraph.Node {
+func tbi(x fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
-		func (n *flowgraph.Node) {
+	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
+		func(n *fgbase.Node) {
 			x.DstPut(n.Aux)
 			n.Aux = n.Aux.(int) + 1
 		})
@@ -24,22 +24,21 @@ func tbi(x flowgraph.Edge) flowgraph.Node {
 func main() {
 
 	nodeid := flag.Int("nodeid", 0, "base for node ids")
-	flowgraph.ConfigByFlag(map[string]interface{} {"sec": 2})
-	flowgraph.NodeID = int64(*nodeid)
+	fgbase.ConfigByFlag(map[string]interface{}{"sec": 2})
+	fgbase.NodeID = int64(*nodeid)
 
-	time.Sleep(1*time.Second)
+	time.Sleep(1 * time.Second)
 	conn, err := net.Dial("tcp", "localhost:37777")
 	if err != nil {
-		flowgraph.StderrLog.Printf("%v\n", err)
+		fgbase.StderrLog.Printf("%v\n", err)
 		return
 	}
 
-	e,n := flowgraph.MakeGraph(1,2)
+	e, n := fgbase.MakeGraph(1, 2)
 
 	n[0] = tbi(e[0])
-	n[1] = flowgraph.FuncDst(e[0], conn)
+	n[1] = fgbase.FuncDst(e[0], conn)
 
-	flowgraph.RunAll(n)
+	fgbase.RunAll(n)
 
 }
-

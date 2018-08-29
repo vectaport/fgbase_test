@@ -17,7 +17,7 @@ func main() {
 	test := *testp
 
 	if test {
-		time.Sleep(4*time.Second) 
+		time.Sleep(4 * time.Second)
 	}
 
 	var i int
@@ -33,11 +33,11 @@ func main() {
 			}
 		}
 		defer resp.Body.Close()
-		
-		_,err = ioutil.ReadAll(resp.Body)
+
+		_, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
 			fmt.Printf("Err from server: %v\n", err)
 		}
-                i++
+		i++
 	}
 }

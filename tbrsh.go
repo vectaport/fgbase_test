@@ -6,21 +6,23 @@ import (
 	"github.com/vectaport/fgbase"
 )
 
-func tbi(x, y flowgraph.Edge) flowgraph.Node {
+func tbi(x, y fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x, &y}, nil, nil)
+	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x, &y}, nil, nil)
 	node.RunFunc = tbiRun
 	return node
 }
 
-func tbiRun (n *flowgraph.Node) {
+func tbiRun(n *fgbase.Node) {
 	x := n.Dsts[0]
 	y := n.Dsts[1]
 
 	var i uint = 0
 	for {
-		if (i>10) { break }
-		if n.RdyAll(){
+		if i > 10 {
+			break
+		}
+		if n.RdyAll() {
 			x.DstPut(i)
 			y.DstPut(uint(2))
 			n.SendAll()
@@ -31,8 +33,10 @@ func tbiRun (n *flowgraph.Node) {
 
 	i = 0
 	for {
-		if (i>9) { break }
-		if n.RdyAll(){
+		if i > 9 {
+			break
+		}
+		if n.RdyAll() {
 			x.DstPut(uint(i))
 			y.DstPut(uint(3))
 			n.SendAll()
@@ -45,21 +49,9 @@ func tbiRun (n *flowgraph.Node) {
 	var yv interface{} = uint64(1)
 	i = 0
 	for {
-		if (i > 0) { break }
-		if n.RdyAll(){
-			x.DstPut(xv)
-			y.DstPut(yv)
-			n.SendAll()
-			i = i + 1
+		if i > 0 {
+			break
 		}
-		n.RecvOne()
-	}
-
-	xv = uint8(0)
-	yv = uint(0)
-	i = 0
-	for  {
-		if (i > 0) { break }
 		if n.RdyAll() {
 			x.DstPut(xv)
 			y.DstPut(yv)
@@ -72,8 +64,10 @@ func tbiRun (n *flowgraph.Node) {
 	xv = uint8(0)
 	yv = uint(0)
 	i = 0
-	for  {
-		if (i > 0) { break }
+	for {
+		if i > 0 {
+			break
+		}
 		if n.RdyAll() {
 			x.DstPut(xv)
 			y.DstPut(yv)
@@ -83,12 +77,29 @@ func tbiRun (n *flowgraph.Node) {
 		n.RecvOne()
 	}
 
+	xv = uint8(0)
+	yv = uint(0)
+	i = 0
+	for {
+		if i > 0 {
+			break
+		}
+		if n.RdyAll() {
+			x.DstPut(xv)
+			y.DstPut(yv)
+			n.SendAll()
+			i = i + 1
+		}
+		n.RecvOne()
+	}
 
 	xv = "Can you right shift a string by an int?"
 	yv = uint8(77)
 	i = 0
-	for  {
-		if (i > 0) { break }
+	for {
+		if i > 0 {
+			break
+		}
 		if n.RdyAll() {
 			x.DstPut(xv)
 			y.DstPut(yv)
@@ -98,11 +109,13 @@ func tbiRun (n *flowgraph.Node) {
 		n.RecvOne()
 	}
 
-	xv = [4]complex128 {0+0i,0+0i,0+0i,0+0i}
+	xv = [4]complex128{0 + 0i, 0 + 0i, 0 + 0i, 0 + 0i}
 	yv = uint8(77)
 	i = 0
-	for  {
-		if (i > 0) { break }
+	for {
+		if i > 0 {
+			break
+		}
 		if n.RdyAll() {
 			x.DstPut(xv)
 			y.DstPut(yv)
@@ -111,34 +124,31 @@ func tbiRun (n *flowgraph.Node) {
 		}
 		n.RecvOne()
 	}
-	
 
 	// read all the acks to clean up
-	for  {
+	for {
 		n.RecvOne()
 	}
-	
 
 }
 
-func tbo(a flowgraph.Edge) flowgraph.Node {
+func tbo(a fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
+	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil, nil)
 	return node
 
 }
 
 func main() {
 
-	flowgraph.ConfigByFlag(nil)
+	fgbase.ConfigByFlag(nil)
 
-	e,n := flowgraph.MakeGraph(3,3)
+	e, n := fgbase.MakeGraph(3, 3)
 
 	n[0] = tbi(e[0], e[1])
-	n[1] = flowgraph.FuncRsh(e[0], e[1], e[2])
+	n[1] = fgbase.FuncRsh(e[0], e[1], e[2])
 	n[2] = tbo(e[2])
 
-	flowgraph.RunAll(n)
+	fgbase.RunAll(n)
 
 }
-

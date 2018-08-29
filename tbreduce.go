@@ -20,106 +20,107 @@ func randSeq(n int) string {
 
 var MaxChanLen = 0
 
-func tbi(x flowgraph.Edge) flowgraph.Node {
+func tbi(x fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
-		func (n *flowgraph.Node) { 
-			l:=len((*x.Data)[0])
+	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
+		func(n *fgbase.Node) {
+			l := len((*x.Data)[0])
 			if MaxChanLen < l {
 				MaxChanLen = l
 			}
-                        if n.Cnt%100==0 {
-				tbiHz[n.ID-tbiBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
+			if n.Cnt%100 == 0 {
+				tbiHz[n.ID-tbiBase] = float64(n.Cnt) / fgbase.TimeSinceStart()
 			}
-			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))})
+			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
+		})
 	return node
 }
 
 var tbiHz []float64
 var tbiBase int64
 
-func tbo(a flowgraph.Edge) flowgraph.Node {
+func tbo(a fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, 
-		func (n *flowgraph.Node) {
+	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil,
+		func(n *fgbase.Node) {
 			a.Flow = true
 			time.Sleep(100000000)
-			})
+		})
 	return node
 }
 
-func mapper(n *flowgraph.Node, datum interface{}) int {
+func mapper(n *fgbase.Node, datum interface{}) int {
 	nreduce := len(n.Dsts)
-	i,ok := datum.(int)
-	if ok {return i%nreduce}
-	s,ok := datum.(string)
-	if ok { 
-		return int(s[0]-'A')*nreduce/26
+	i, ok := datum.(int)
+	if ok {
+		return i % nreduce
+	}
+	s, ok := datum.(string)
+	if ok {
+		return int(s[0]-'A') * nreduce / 26
 	}
 	return -1
 }
 
-func testOrder(n *flowgraph.Node, dict []string) {
-	for i := 0; i<len(dict)-1; i++ {
-		if dict[i]>=dict[i+1] {
+func testOrder(n *fgbase.Node, dict []string) {
+	for i := 0; i < len(dict)-1; i++ {
+		if dict[i] >= dict[i+1] {
 			n.LogError("out of order %v\n", dict)
 		}
 	}
 }
 
-func reducer(n *flowgraph.Node, datum,collection interface{}) interface{} {
+func reducer(n *fgbase.Node, datum, collection interface{}) interface{} {
 	s := datum.(string)
 	c := collection.([]string)
 	lo := 0
-	hi := len(c)-1
-	for lo<=hi {
-		mid := (lo+hi)/2
+	hi := len(c) - 1
+	for lo <= hi {
+		mid := (lo + hi) / 2
 		if s < c[mid] {
-			hi = mid-1
+			hi = mid - 1
 		} else if s > c[mid] {
-			lo = mid+1
+			lo = mid + 1
 		} else {
 			lo = mid
-			break	
+			break
 		}
 	}
 	i := lo
 
 	c = append(c, s)
-	if i<len(c)-1 {
+	if i < len(c)-1 {
 		copy(c[i+1:], c[i:])
 		c[i] = s
 	}
-	
+
 	testOrder(n, c)
 
 	return c
-	
+
 }
 
-
 func main() {
-	
+
 	nreducep := flag.Int("nreduce", 26, "number of reducers")
 	nmapp := flag.Int("nmap", 4, "number of mappers")
-	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace": "Q", "sec":4})
+	fgbase.ConfigByFlag(map[string]interface{}{"ncore": 4, "trace": "Q", "sec": 4})
 	nreduce := *nreducep
 	nmap := *nmapp
 
-	e,n := flowgraph.MakeGraph(nmap+nreduce*2,nmap*2+nreduce*2)
+	e, n := fgbase.MakeGraph(nmap+nreduce*2, nmap*2+nreduce*2)
 
-
-	for i:= 0; i<nmap; i++ {
+	for i := 0; i < nmap; i++ {
 		n[i] = tbi(e[i])
 	}
 
-	p := flowgraph.FuncMap(e[0:nmap], e[nmap:nmap+nreduce], mapper)
+	p := fgbase.FuncMap(e[0:nmap], e[nmap:nmap+nreduce], mapper)
 	copy(n[nmap:2*nmap], p.Nodes())
-	
-	for i:= 0; i<nreduce; i++ {
-		n[2*nmap+i] = flowgraph.FuncReduce(e[nmap+i], e[nmap+nreduce+i], reducer, true)
+
+	for i := 0; i < nreduce; i++ {
+		n[2*nmap+i] = fgbase.FuncReduce(e[nmap+i], e[nmap+nreduce+i], reducer, true)
 	}
-	for i:= 0; i<nreduce; i++ {
+	for i := 0; i < nreduce; i++ {
 		n[2*nmap+nreduce+i] = tbo(e[nmap+nreduce+i])
 	}
 
@@ -128,23 +129,22 @@ func main() {
 	tbiBase = int64(0)
 	tbiHz = make([]float64, nmap)
 
-	flowgraph.RunAll(n)
+	fgbase.RunAll(n)
 
 	sum := 0.0
-	for i:=0; i<len(tbiHz); i++ {
+	for i := 0; i < len(tbiHz); i++ {
 		sum += tbiHz[i]
 	}
 
-	speed := sum/1000
+	speed := sum / 1000
 	hzstr := "Khz\n"
-	if sum>1000*1000 {
-		speed = speed/1000
+	if sum > 1000*1000 {
+		speed = speed / 1000
 		hzstr = "Mhz\n"
 	}
-	if flowgraph.TraceLevel==flowgraph.QQ {
+	if fgbase.TraceLevel == fgbase.QQ {
 		hzstr = ""
 	}
-	flowgraph.StdoutLog.Printf("%.2f%s", speed, hzstr)
-	// flowgraph.StdoutLog.Printf("(maxchansz=%d)\n", MaxChanLen)
+	fgbase.StdoutLog.Printf("%.2f%s", speed, hzstr)
+	// fgbase.StdoutLog.Printf("(maxchansz=%d)\n", MaxChanLen)
 }
-

@@ -6,50 +6,50 @@ import (
 	"github.com/vectaport/fgbase"
 )
 
-func tbm(x flowgraph.Edge) flowgraph.Node {
+func tbm(x fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
-		func(n *flowgraph.Node) { n.Dsts[0].DstPut(rand.Intn(15)+1) })
+	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
+		func(n *fgbase.Node) { n.Dsts[0].DstPut(rand.Intn(15) + 1) })
 	return node
 }
 
-func tbn(x flowgraph.Edge) flowgraph.Node {
+func tbn(x fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil,
-		func(n *flowgraph.Node) { n.Dsts[0].DstPut(rand.Intn(15)+1) })
+	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
+		func(n *fgbase.Node) { n.Dsts[0].DstPut(rand.Intn(15) + 1) })
 	return node
 }
 
-func tbo(a flowgraph.Edge) flowgraph.Node {
+func tbo(a fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
+	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil, nil)
 	return node
 }
 
 func main() {
 
-	flowgraph.ConfigByFlag(nil)
+	fgbase.ConfigByFlag(nil)
 
-	e,n := flowgraph.MakeGraph(11, 10)
+	e, n := fgbase.MakeGraph(11, 10)
 
 	e[7].Val = 0
 
 	n[0] = tbm(e[0])
 	n[1] = tbn(e[1])
 
-	n[2] = flowgraph.FuncRdy(e[0], e[7], e[2])
-	n[3] = flowgraph.FuncRdy(e[1], e[7], e[3])
+	n[2] = fgbase.FuncRdy(e[0], e[7], e[2])
+	n[3] = fgbase.FuncRdy(e[1], e[7], e[3])
 
-	n[4] = flowgraph.FuncEither(e[2], e[10], e[4])
-	n[5] = flowgraph.FuncEither(e[3], e[8], e[5])
+	n[4] = fgbase.FuncEither(e[2], e[10], e[4])
+	n[5] = fgbase.FuncEither(e[3], e[8], e[5])
 
-	n[6] = flowgraph.FuncMod(e[4], e[5], e[6])
+	n[6] = fgbase.FuncMod(e[4], e[5], e[6])
 
-	n[7] = flowgraph.FuncSteerc(e[6], e[7], e[8])
-	n[8] = flowgraph.FuncSteerv(e[6], e[5], e[9], e[10])
+	n[7] = fgbase.FuncSteerc(e[6], e[7], e[8])
+	n[8] = fgbase.FuncSteerv(e[6], e[5], e[9], e[10])
 
 	n[9] = tbo(e[9])
 
-	flowgraph.RunAll(n)
+	fgbase.RunAll(n)
 
 }

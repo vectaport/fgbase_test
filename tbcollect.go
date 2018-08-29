@@ -21,101 +21,104 @@ func randSeq(n int) string {
 var tbiHz []float64
 var tbiBase int64 = 0
 
-func tbi(x flowgraph.Edge) flowgraph.Node {
+func tbi(x fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbi", nil, []*flowgraph.Edge{&x}, nil, 
-		func (n *flowgraph.Node) { 
+	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
+		func(n *fgbase.Node) {
 			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
-			if n.Cnt%100==0 {
-				tbiHz[n.ID-tbiBase] = float64(n.Cnt)/flowgraph.TimeSinceStart()
-			}})
+			if n.Cnt%100 == 0 {
+				tbiHz[n.ID-tbiBase] = float64(n.Cnt) / fgbase.TimeSinceStart()
+			}
+		})
 	return node
 }
 
-func tbo(a flowgraph.Edge) flowgraph.Node {
+func tbo(a fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbo", []*flowgraph.Edge{&a}, nil, nil, nil)
+	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil, nil)
 	return node
 }
 
-func tbc(x flowgraph.Edge) flowgraph.Node {
+func tbc(x fgbase.Edge) fgbase.Node {
 
-	node := flowgraph.MakeNode("tbc", nil, []*flowgraph.Edge{&x}, nil, 
-		func (n *flowgraph.Node) { 
+	node := fgbase.MakeNode("tbc", nil, []*fgbase.Edge{&x}, nil,
+		func(n *fgbase.Node) {
 			time.Sleep(1000000000)
 			x.DstPut(true)
 		})
 	return node
 }
 
-func mapper(n *flowgraph.Node, datum interface{}) int {
+func mapper(n *fgbase.Node, datum interface{}) int {
 	nreduce := len(n.Dsts)
-	i,ok := datum.(int)
-	if ok {return i%nreduce}
-	s,ok := datum.(string)
-	if ok { 
-		return int(s[0]-'A')*nreduce/26
+	i, ok := datum.(int)
+	if ok {
+		return i % nreduce
+	}
+	s, ok := datum.(string)
+	if ok {
+		return int(s[0]-'A') * nreduce / 26
 	}
 	return -1
 }
 
-func testOrder(n *flowgraph.Node, dict []string) {
-	for i := 0; i<len(dict)-1; i++ {
-		if dict[i]>dict[i+1] {
+func testOrder(n *fgbase.Node, dict []string) {
+	for i := 0; i < len(dict)-1; i++ {
+		if dict[i] > dict[i+1] {
 			n.LogError("out of order %v\n", dict)
 		}
-		if dict[i]==dict[i+1] {
+		if dict[i] == dict[i+1] {
 			n.Tracef("WARNING:  duplicate string found %v\n", dict[i])
 		}
 	}
 }
 
-func reducer(n *flowgraph.Node, datum,collection interface{}) interface{} {
-	c,ok := collection.([]string)
+func reducer(n *fgbase.Node, datum, collection interface{}) interface{} {
+	c, ok := collection.([]string)
 	if !ok {
 		c = []string{}
 	}
-	s,ok := datum.(string)
+	s, ok := datum.(string)
 	if !ok {
 		return c
 	}
 	lo := 0
-	hi := len(c)-1
-	for lo<=hi {
-		mid := (lo+hi)/2
+	hi := len(c) - 1
+	for lo <= hi {
+		mid := (lo + hi) / 2
 		if s < c[mid] {
-			hi = mid-1
+			hi = mid - 1
 		} else if s > c[mid] {
-			lo = mid+1
+			lo = mid + 1
 		} else {
 			lo = mid
-			break	
+			break
 		}
 	}
 	i := lo
 
 	c = append(c, s)
-	if i<len(c)-1 {
+	if i < len(c)-1 {
 		copy(c[i+1:], c[i:])
 		c[i] = s
 	}
-	
+
 	testOrder(n, c)
 
 	return c
-	
+
 }
 
 const (
 	rdcRdy = iota
-	cllRdy 
+	cllRdy
 )
 
-func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,collection interface{}) interface{}) flowgraph.Node {
+func reduce2(rdc, cll, snd fgbase.Edge, reducer func(n *fgbase.Node, datum, collection interface{}) interface{}) fgbase.Node {
 
-	var rdyFunc = func(n *flowgraph.Node) bool {
+	var rdyFunc = func(n *fgbase.Node) bool {
 		lastRdy := n.RdyState
-		if lastRdy!=rdcRdy && rdc.SrcRdy(n) {
+		if lastRdy != rdcRdy && rdc.SrcRdy(n) {
 			n.RdyState = rdcRdy
 			return true
 		}
@@ -130,7 +133,7 @@ func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,c
 		return false
 	}
 
-	var fireFunc = func(n *flowgraph.Node) {
+	var fireFunc = func(n *fgbase.Node) {
 		c := n.Aux
 		lastRdy := n.RdyState
 		if lastRdy == rdcRdy {
@@ -141,63 +144,62 @@ func reduce2(rdc,cll,snd flowgraph.Edge, reducer func(n *flowgraph.Node, datum,c
 		return
 	}
 
-	node := flowgraph.MakeNode("reduce2", []*flowgraph.Edge{&rdc,&cll}, []*flowgraph.Edge{&snd}, rdyFunc, fireFunc)
+	node := fgbase.MakeNode("reduce2", []*fgbase.Edge{&rdc, &cll}, []*fgbase.Edge{&snd}, rdyFunc, fireFunc)
 	return node
 }
 
 func main() {
-	
+
 	nreducep := flag.Int("nreduce", 26, "number of reducers")
 	nmapp := flag.Int("nmap", 4, "number of mappers")
-	flowgraph.ConfigByFlag(map[string]interface{}{ "ncore":4, "trace":"Q", "sec":4, "trsec":true})
+	fgbase.ConfigByFlag(map[string]interface{}{"ncore": 4, "trace": "Q", "sec": 4, "trsec": true})
 	nreduce := *nreducep
 	nmap := *nmapp
 
-	e,n := flowgraph.MakeGraph(nmap+nreduce*3,nmap*2+nreduce*3)
+	e, n := fgbase.MakeGraph(nmap+nreduce*3, nmap*2+nreduce*3)
 
-	tboNodeBase := 2*nmap+nreduce
-	tboEdgeBase := nmap+nreduce
-	tbcNodeBase := tboNodeBase+nreduce
-	tbcEdgeBase := tboEdgeBase+nreduce
+	tboNodeBase := 2*nmap + nreduce
+	tboEdgeBase := nmap + nreduce
+	tbcNodeBase := tboNodeBase + nreduce
+	tbcEdgeBase := tboEdgeBase + nreduce
 
-	for i:= 0; i<nmap; i++ {
+	for i := 0; i < nmap; i++ {
 		n[i] = tbi(e[i])
 	}
 
-	p := flowgraph.FuncMap(e[0:nmap], e[nmap:nmap+nreduce], mapper)
+	p := fgbase.FuncMap(e[0:nmap], e[nmap:nmap+nreduce], mapper)
 	copy(n[nmap:2*nmap], p.Nodes())
-	
-	for i:= 0; i<nreduce; i++ {
-		n[2*nmap+i] = reduce2(e[nmap+i],e[tbcEdgeBase+i], e[tboEdgeBase+i], reducer)
+
+	for i := 0; i < nreduce; i++ {
+		n[2*nmap+i] = reduce2(e[nmap+i], e[tbcEdgeBase+i], e[tboEdgeBase+i], reducer)
 	}
 
-	for i:= 0; i<nreduce; i++ {
+	for i := 0; i < nreduce; i++ {
 		n[tboNodeBase+i] = tbo(e[tboEdgeBase+i])
 	}
 
-	for i:= 0; i<nreduce; i++ {
+	for i := 0; i < nreduce; i++ {
 		n[tbcNodeBase+i] = tbc(e[tbcEdgeBase+i])
 	}
 
 	tbiHz = make([]float64, nreduce)
 
-	flowgraph.RunAll(n)
+	fgbase.RunAll(n)
 
 	// generate total frequency for tbi
 	sum := 0.0
-	for i:=0; i<len(tbiHz); i++ {
+	for i := 0; i < len(tbiHz); i++ {
 		sum += tbiHz[i]
 	}
 
-	speed := sum/1000
+	speed := sum / 1000
 	hzstr := "Khz\n"
-	if sum>1000*1000 {
-		speed = speed/1000
+	if sum > 1000*1000 {
+		speed = speed / 1000
 		hzstr = "Mhz\n"
 	}
-	if flowgraph.TraceLevel==flowgraph.QQ {
+	if fgbase.TraceLevel == fgbase.QQ {
 		hzstr = ""
 	}
-	flowgraph.StdoutLog.Printf("%.2f%s", speed, hzstr)
+	fgbase.StdoutLog.Printf("%.2f%s", speed, hzstr)
 }
-
