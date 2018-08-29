@@ -4,7 +4,7 @@ import (
 	"flag"
 	"math/rand"
 
-	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/fgbase"
 )
 
 var letters = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")

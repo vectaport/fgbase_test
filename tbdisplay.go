@@ -4,8 +4,8 @@ import (
 	"flag"
 
 	"github.com/lazywei/go-opencv/opencv"
-	"github.com/vectaport/flowgraphbase"
-	"github.com/vectaport/flowgraphbase/imglab"
+	"github.com/vectaport/fgbase"
+	"github.com/vectaport/fgbase/imglab"
 )
 
 var images = []string{"airplane.jpg", "fruits.jpg", "pic1.png", "pic3.png", "pic5.png", "stuff.jpg",

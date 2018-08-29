@@ -4,8 +4,8 @@ import (
 	"math"
 	"math/rand"
 
-	"github.com/vectaport/flowgraphbase"
-	"github.com/vectaport/flowgraphbase/imglab"
+	"github.com/vectaport/fgbase"
+	"github.com/vectaport/fgbase/imglab"
 )
 
 const infitesimal=1.e-15

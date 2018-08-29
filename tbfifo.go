@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/fgbase"
 )
 
 var maxTbi = 0

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"net"
 
-	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/fgbase"
 )
 
 func tbo(a flowgraph.Edge) flowgraph.Node {

@@ -3,7 +3,7 @@ package main
 import (
 	"math"
 
-	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/fgbase"
 )
 
 func tbi(x, y flowgraph.Edge) flowgraph.Node {

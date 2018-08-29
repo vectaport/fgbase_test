@@ -3,7 +3,7 @@ package main
 import (
 	"math/rand"
 
-	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/fgbase"
 )
 
 func tbm(x flowgraph.Edge) flowgraph.Node {

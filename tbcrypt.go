@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/crypto/nacl/box"
 
-	"github.com/vectaport/flowgraphbase"
+	"github.com/vectaport/fgbase"
 )
 
 func tbi(x flowgraph.Edge) flowgraph.Node {
