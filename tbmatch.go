@@ -20,7 +20,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 		func(n *fgbase.Node) bool {
 			return i <= len(teststrings) && n.DefaultRdyFunc()
 		},
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			if i < len(teststrings) {
 				x.DstPut(regexp.Search{Orig: teststrings[i], Curr: teststrings[i], ID: regexp.NextID()})
 			} else {
@@ -29,6 +29,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 				}
 			}
 			i++
+			return nil
 		})
 	return node
 

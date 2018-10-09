@@ -27,13 +27,14 @@ var tbbBase int64 = 0
 func tbb(a fgbase.Edge, x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbb", []*fgbase.Edge{&a}, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			// a.SrcGet()
 			// x.DstPut("tbb"+strconv.Itoa(int(n.ID)))
 			x.DstPut(a.SrcGet())
 			if n.Cnt%100 == 0 {
 				tbbHz[n.ID-tbbBase] = float64(n.Cnt) / fgbase.TimeSinceStart()
 			}
+			return nil
 		})
 	return node
 }

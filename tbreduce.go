@@ -23,7 +23,7 @@ var MaxChanLen = 0
 func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			l := len((*x.Data)[0])
 			if MaxChanLen < l {
 				MaxChanLen = l
@@ -32,6 +32,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 				tbiHz[n.ID-tbiBase] = float64(n.Cnt) / fgbase.TimeSinceStart()
 			}
 			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
+			return nil
 		})
 	return node
 }
@@ -42,9 +43,10 @@ var tbiBase int64
 func tbo(a fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			a.Flow = true
 			time.Sleep(100000000)
+			return nil
 		})
 	return node
 }

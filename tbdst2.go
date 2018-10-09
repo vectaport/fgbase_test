@@ -10,7 +10,7 @@ import (
 func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			if n.Aux.(int)%3 == 0 {
 				s := []int{0, 1, 2, 3, 4, 5, 6, 7}
 				x.DstPut(s)
@@ -25,6 +25,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 				fgbase.StdoutLog.Printf("%2.f: %d (%.2f hz)\n", fgbase.TimeSinceStart(), n.Cnt, float64(n.Cnt)/fgbase.TimeSinceStart())
 
 			}
+			return nil
 		})
 	node.Aux = 0
 	return node

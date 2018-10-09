@@ -4,10 +4,11 @@ import (
 	"github.com/vectaport/fgbase"
 )
 
-func tbiFire(n *fgbase.Node) {
+func tbiFire(n *fgbase.Node) error {
 	x := n.Dsts[0]
 	x.DstPut(n.Aux)
 	n.Aux = (n.Aux.(int) + 1) % 2
+	return nil
 }
 
 func tbi(x fgbase.Edge) fgbase.Node {

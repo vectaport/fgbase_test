@@ -10,7 +10,7 @@ import (
 
 const infitesimal = 1.e-15
 
-func tbiFire(n *fgbase.Node) {
+func tbiFire(n *fgbase.Node) error {
 	x := n.Dsts[0]
 	const sz = 128
 	var vec = make([]complex128, sz, sz)
@@ -24,6 +24,7 @@ func tbiFire(n *fgbase.Node) {
 		domain += delta
 	}
 	x.DstPut(vec)
+	return nil
 }
 
 func tbi(x fgbase.Edge) fgbase.Node {
@@ -31,7 +32,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 	return node
 }
 
-func tboFire(n *fgbase.Node) {
+func tboFire(n *fgbase.Node) error {
 	a := n.Srcs[0]
 	b := n.Srcs[1]
 	av := a.SrcGet().([]complex128)
@@ -42,13 +43,14 @@ func tboFire(n *fgbase.Node) {
 				(imag(av[i])-imag(bv[i])) < -infitesimal || (imag(av[i])-imag(bv[i])) > infitesimal {
 				n.Tracef("!SAME:  for %d delta is %v\n", i, av[i]-bv[i])
 				n.Tracef("!SAME:  a = %v,  b = %v\n", av[i], bv[i])
-				return
+				return nil
 			}
 		}
 		n.Tracef("SAME all differences smaller than %v\n", infitesimal)
-		return
+		return nil
 	}
 	n.Tracef("!SAME:  different sizes\n")
+	return nil
 }
 
 func tbo(a, b fgbase.Edge) fgbase.Node {

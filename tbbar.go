@@ -25,7 +25,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 		func(n *fgbase.Node) bool {
 			return i <= len(teststrings) && n.DefaultRdyFunc()
 		},
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			if i < len(teststrings) {
 				x.DstPut(regexp.Search{Curr: teststrings[i], Orig: teststrings[i]})
 			} else {
@@ -34,6 +34,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 				}
 			}
 			i++
+			return nil
 		})
 	return node
 

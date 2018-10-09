@@ -23,12 +23,13 @@ func tbi(x fgbase.Edge) fgbase.Node {
 
 	x.Ack = make(chan struct{}, fgbase.ChannelSize)
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			l := len((*x.Data)[0])
 			if MaxChanLen < l {
 				MaxChanLen = l
 			}
 			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
+			return nil
 		})
 	return node
 }
@@ -39,11 +40,12 @@ var reduceBase int64
 func tbo(a fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			a.Flow = true
 			if n.Cnt%1000 == 0 {
 				reduceHz[n.ID-reduceBase] = float64(n.Cnt) / fgbase.TimeSinceStart()
 			}
+			return nil
 		})
 	return node
 }

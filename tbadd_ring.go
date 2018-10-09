@@ -4,7 +4,7 @@ import (
 	"github.com/vectaport/fgbase"
 )
 
-func tbiFire(n *fgbase.Node) {
+func tbiFire(n *fgbase.Node) error {
 	a := n.Srcs[0]
 	x := n.Dsts[0]
 	y := n.Dsts[1]
@@ -12,6 +12,7 @@ func tbiFire(n *fgbase.Node) {
 	x.DstPut(n.Aux)
 	y.DstPut(n.Aux)
 	n.Aux = n.Aux.(int) + 1
+	return nil
 }
 
 func tbi(a, x, y fgbase.Edge) fgbase.Node {
@@ -20,11 +21,12 @@ func tbi(a, x, y fgbase.Edge) fgbase.Node {
 	return node
 }
 
-func tboFire(n *fgbase.Node) {
+func tboFire(n *fgbase.Node) error {
 	a := n.Srcs[0]
 	x := n.Dsts[0]
 	a.Flow = true
 	x.DstPut(true)
+	return nil
 }
 
 func tbo(a, x fgbase.Edge) fgbase.Node {

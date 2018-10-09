@@ -9,7 +9,7 @@ import (
 func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) { n.Dsts[0].DstPut(rand.Intn(7) + 1) })
+		func(n *fgbase.Node) error { n.Dsts[0].DstPut(rand.Intn(7) + 1); return nil })
 	return node
 }
 

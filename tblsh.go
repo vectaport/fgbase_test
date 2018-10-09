@@ -13,7 +13,7 @@ func tbi(x, y fgbase.Edge) fgbase.Node {
 	return node
 }
 
-func tbiRun(node *fgbase.Node) {
+func tbiRun(node *fgbase.Node) error {
 	x := node.Dsts[0]
 	y := node.Dsts[1]
 
@@ -130,6 +130,7 @@ func tbiRun(node *fgbase.Node) {
 	for {
 		node.RecvOne()
 	}
+	return nil
 
 }
 

@@ -33,32 +33,33 @@ func tbi(dnstreq fgbase.Edge, newmatch fgbase.Edge) fgbase.Node {
 		func(n *fgbase.Node) bool {
 			return !done && (dnstreq.SrcRdy(n) || newmatch.DstRdy(n) && i <= fgbase.ChannelSize)
 		},
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			if dnstreq.SrcRdy(n) {
 				match := dnstreq.SrcGet().(regexp.Search)
 				if match.State == regexp.Done {
 					n.Tracef("DONE REQUEST FROM DOWNSTREAM %d\n", i-1)
 					delete(prev, match.ID)
 					i--
-					return
+					return nil
 				}
 				n.Tracef("LIVE REQUEST FROM DOWNSTREAM %d\n", i)
 				match.Curr = prev[match.ID][1:]
 				prev[match.ID] = match.Curr
 				newmatch.DstPut(match)
-				return
+				return nil
 			}
 			xv, err := r.ReadString('\n')
 			if err == io.EOF {
 				n.Tracef("EOF\n")
 				newmatch.DstPut(regexp.Search{State: regexp.Done})
-				return
+				return nil
 			}
 			id := regexp.NextID()
 			prev[id] = xv
 			n.Tracef("NEW MATCH FROM UPSTREAM %d\n", i+1)
 			newmatch.DstPut(regexp.Search{Orig: xv, Curr: xv, State: regexp.Live, ID: id})
 			i++
+			return nil
 		})
 	return node
 
@@ -67,10 +68,11 @@ func tbi(dnstreq fgbase.Edge, newmatch fgbase.Edge) fgbase.Node {
 func tbo(oldmatch fgbase.Edge, dnstreq fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&oldmatch}, []*fgbase.Edge{&dnstreq}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			o := oldmatch.SrcGet().(regexp.Search)
 			o.State = regexp.Done
 			dnstreq.DstPut(o) // echo back
+			return nil
 		})
 	return node
 

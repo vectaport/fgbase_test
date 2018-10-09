@@ -7,7 +7,7 @@ import (
 	"github.com/vectaport/fgbase/imglab"
 )
 
-func tbiFire(n *fgbase.Node) {
+func tbiFire(n *fgbase.Node) error {
 	x := n.Dsts[0]
 	l := 1024
 	buf := make([]complex128, l, l)
@@ -15,6 +15,7 @@ func tbiFire(n *fgbase.Node) {
 		buf[i] = complex(rand.Float64(), rand.Float64())
 	}
 	x.DstPut(buf)
+	return nil
 }
 
 func tbi(x fgbase.Edge) fgbase.Node {

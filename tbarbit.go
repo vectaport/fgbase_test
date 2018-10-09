@@ -10,10 +10,11 @@ import (
 func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			x.DstPut(n.Aux)
 			n.Aux = (n.Aux.(int) + 1)
 			time.Sleep(time.Duration(rand.Intn(10000)) * time.Microsecond)
+			return nil
 		})
 
 	return node
@@ -23,9 +24,10 @@ func tbi(x fgbase.Edge) fgbase.Node {
 func tbo(a fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			a.Flow = true
 			time.Sleep(time.Duration(rand.Intn(10000)) * time.Microsecond)
+			return nil
 		})
 	return node
 

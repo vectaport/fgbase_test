@@ -63,14 +63,14 @@ func tbiRand(pow2 uint) fgbase.RecursiveSort {
 func tbi(x fgbase.Edge, pow2 uint) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) { x.DstPut(tbiRand(pow2)) })
+		func(n *fgbase.Node) error { x.DstPut(tbiRand(pow2)); return nil })
 	return node
 }
 
 func tbo(a fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			av := a.SrcGet()
 			switch v := av.(type) {
 			case fgbase.RecursiveSort:
@@ -85,6 +85,7 @@ func tbo(a fgbase.Edge) fgbase.Node {
 					n.Tracef("not of type fgbase.RecursiveSort\n")
 				}
 			}
+			return nil
 		})
 	return node
 }

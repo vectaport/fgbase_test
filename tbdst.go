@@ -11,9 +11,10 @@ import (
 func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			x.DstPut(n.Aux)
 			n.Aux = n.Aux.(int) + 1
+			return nil
 		})
 
 	node.Aux = 0

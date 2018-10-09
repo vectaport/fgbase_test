@@ -9,14 +9,14 @@ import (
 func tbm(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) { n.Dsts[0].DstPut(rand.Intn(15) + 1) })
+		func(n *fgbase.Node) error { n.Dsts[0].DstPut(rand.Intn(15) + 1); return nil })
 	return node
 }
 
 func tbn(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) { n.Dsts[0].DstPut(rand.Intn(15) + 1) })
+		func(n *fgbase.Node) error { n.Dsts[0].DstPut(rand.Intn(15) + 1); return nil })
 	return node
 }
 

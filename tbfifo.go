@@ -21,7 +21,7 @@ var oneDelay = true
 func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			capTbi = cap((*x.Data)[0])
 			lenTbi = len((*x.Data)[0])
 			if len((*x.Data)[0]) > maxTbi {
@@ -33,6 +33,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 			}
 			x.Val = n.Aux
 			n.Aux = x.Aux.(int) + 1
+			return nil
 		})
 	return node
 }
@@ -40,7 +41,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 func tbo(a fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			capTbo = cap(a.Ack)
 			lenTbo = len(a.Ack)
 			if len(a.Ack) > maxTbo {
@@ -56,6 +57,7 @@ func tbo(a fgbase.Edge) fgbase.Node {
 				maxTbi = 0
 				maxTbo = 0
 			}
+			return nil
 		})
 	return node
 }

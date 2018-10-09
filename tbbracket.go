@@ -20,17 +20,17 @@ func tbi(dnstreq fgbase.Edge, newmatch fgbase.Edge) fgbase.Node {
 		func(n *fgbase.Node) bool {
 			return dnstreq.SrcRdy(n) || newmatch.DstRdy(n) && i < len(teststrings)
 		},
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			if dnstreq.SrcRdy(n) {
 				match := dnstreq.SrcGet().(regexp.Search)
 				if len(Prev[match.Orig]) > 1 {
 					match.Curr = Prev[match.Orig][1:]
 					Prev[match.Orig] = match.Curr
 					newmatch.DstPut(match)
-					return
+					return nil
 				}
 				delete(Prev, match.Orig)
-				return
+				return nil
 			}
 			if i < len(teststrings) {
 				newmatch.DstPut(regexp.Search{Orig: teststrings[i], Curr: teststrings[i], State: regexp.Live, ID: regexp.NextID()})
@@ -40,6 +40,7 @@ func tbi(dnstreq fgbase.Edge, newmatch fgbase.Edge) fgbase.Node {
 				}
 			}
 			i++
+			return nil
 		})
 	return node
 
@@ -48,10 +49,11 @@ func tbi(dnstreq fgbase.Edge, newmatch fgbase.Edge) fgbase.Node {
 func tbo(oldmatch fgbase.Edge, dnstreq fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&oldmatch}, []*fgbase.Edge{&dnstreq}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			match := oldmatch.SrcGet().(regexp.Search)
 			match.State = regexp.Done
 			dnstreq.DstPut(match) // echo back
+			return nil
 		})
 	return node
 

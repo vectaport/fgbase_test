@@ -14,10 +14,11 @@ var images = []string{"airplane.jpg", "fruits.jpg", "pic1.png", "pic3.png", "pic
 func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			filename := "../../lazywei/go-opencv/images/" + images[n.Cnt%int64(len(images))]
 			n.Tracef("Loading %s\n", filename)
 			x.DstPut(opencv.LoadImage(filename))
+			return nil
 		})
 	return node
 }

@@ -9,11 +9,12 @@ import (
 func tbo(a fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbo", []*fgbase.Edge{&a}, nil, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			a.Flow = true
 			if n.Cnt%10000 == 0 {
 				fgbase.StdoutLog.Printf("%2.f: %d (%.2f hz)\n", fgbase.TimeSinceStart(), n.Cnt, float64(n.Cnt)/fgbase.TimeSinceStart())
 			}
+			return nil
 		})
 
 	return node

@@ -24,11 +24,12 @@ var tbiBase int64 = 0
 func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
 			if n.Cnt%100 == 0 {
 				tbiHz[n.ID-tbiBase] = float64(n.Cnt) / fgbase.TimeSinceStart()
 			}
+			return nil
 		})
 	return node
 }
@@ -42,9 +43,10 @@ func tbo(a fgbase.Edge) fgbase.Node {
 func tbc(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbc", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) {
+		func(n *fgbase.Node) error {
 			time.Sleep(1000000000)
 			x.DstPut(true)
+			return nil
 		})
 	return node
 }
@@ -133,15 +135,15 @@ func reduce2(rdc, cll, snd fgbase.Edge, reducer func(n *fgbase.Node, datum, coll
 		return false
 	}
 
-	var fireFunc = func(n *fgbase.Node) {
+	var fireFunc = func(n *fgbase.Node) error {
 		c := n.Aux
 		lastRdy := n.RdyState
 		if lastRdy == rdcRdy {
 			n.Aux = reducer(n, rdc.SrcGet(), c)
-			return
+			return nil
 		}
 		snd.DstPut(c)
-		return
+		return nil
 	}
 
 	node := fgbase.MakeNode("reduce2", []*fgbase.Edge{&rdc, &cll}, []*fgbase.Edge{&snd}, rdyFunc, fireFunc)
