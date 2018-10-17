@@ -1,4 +1,4 @@
-all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbsrcdst2 tbmap tbreduce tbcollect tbcrypt
+all:: tbpromote tbadd tbadd_ring tbsub tbsteerc tbsteerv tbarbit tbrdy tbconst tbconst_local tbiterator tbsrcdst tbfanout tbgcd tbmul tbdiv tblsh tbrsh tbqsort tbread tbwrite tbsrcdst2 tbmap tbreduce tbcollect tbcrypt tbprint
 
 imglab:: tbfft tbffti tbdisplay tbcapture
 
@@ -125,3 +125,6 @@ tbregexp:
 
 tbgrid:
 	go run tbgrid.go -trace VVVV
+
+tbprint:
+	go run tbprint.go
