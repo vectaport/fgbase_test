@@ -25,7 +25,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
 		func(n *fgbase.Node) error {
-			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
+			x.DstPut(n.AckWrap(randSeq(16), x.Ack))
 			if n.Cnt%100 == 0 {
 				tbiHz[n.ID-tbiBase] = float64(n.Cnt) / fgbase.TimeSinceStart()
 			}

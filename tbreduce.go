@@ -31,7 +31,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 			if n.Cnt%100 == 0 {
 				tbiHz[n.ID-tbiBase] = float64(n.Cnt) / fgbase.TimeSinceStart()
 			}
-			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
+			x.DstPut(n.AckWrap(randSeq(16), x.Ack))
 			return nil
 		})
 	return node

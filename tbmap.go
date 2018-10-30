@@ -28,7 +28,7 @@ func tbi(x fgbase.Edge) fgbase.Node {
 			if MaxChanLen < l {
 				MaxChanLen = l
 			}
-			x.DstPut(n.NodeWrap(randSeq(16), x.Ack))
+			x.DstPut(n.AckWrap(randSeq(16), x.Ack))
 			return nil
 		})
 	return node

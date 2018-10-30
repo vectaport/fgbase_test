@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"math/rand"
 	"sort"
 
@@ -56,14 +55,17 @@ func tbiRand(pow2 uint) fgbase.RecursiveSort {
 		s.Orig = append(s.Orig, rand.Intn(l))
 	}
 	s.Slic = s.Orig
-	fmt.Printf("RAND\n")
 	return s
 }
 
 func tbi(x fgbase.Edge, pow2 uint) fgbase.Node {
 
 	node := fgbase.MakeNode("tbi", nil, []*fgbase.Edge{&x}, nil,
-		func(n *fgbase.Node) error { x.DstPut(tbiRand(pow2)); return nil })
+		func(n *fgbase.Node) error {
+			t := tbiRand(pow2)
+			x.DstPut(t)
+			return nil
+		})
 	return node
 }
 
