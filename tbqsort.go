@@ -12,10 +12,10 @@ var bushelCnt int64
 var qsortPool fgbase.Pool
 
 type bushel struct {
+	BushelID int64
 	Slic     []int
 	Orig     []int
 	depth    int64
-	bushelID int64
 }
 
 // borrowed from Golang 1.4.2 sort example, copyright notice in fgbase/GO-LICENSE
@@ -42,12 +42,12 @@ func (a bushel) Depth() int64 {
 }
 
 func (a bushel) ID() int64 {
-	return a.bushelID
+	return a.BushelID
 }
 
 func tbiRand(pow2 uint) fgbase.RecursiveSort {
 	var s bushel
-	s.bushelID = bushelCnt
+	s.BushelID = bushelCnt
 	bushelCnt += 1
 	n := rand.Intn(1<<pow2) + 1
 	l := rand.Intn(n)
