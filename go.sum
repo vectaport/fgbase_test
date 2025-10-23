@@ -1,0 +1,6 @@
+github.com/vectaport/fgbase v0.0.0-20200618171749-65072ea6a76e h1:n4JiydP0Hjg9XmEySYLENy1x2HLHPaanrCcBByZI70w=
+github.com/vectaport/fgbase v0.0.0-20200618171749-65072ea6a76e/go.mod h1:PyCoFUIaixAA1ViMtum2UND39rGeJGmeeW9jCNDMTkg=
+golang.org/x/crypto v0.43.0 h1:dduJYIi3A3KOfdGOHX8AVZ/jGiyPa3IbBozJ5kNuE04=
+golang.org/x/crypto v0.43.0/go.mod h1:BFbav4mRNlXJL4wNeejLpWxB7wMbc79PdRGhWKncxR0=
+golang.org/x/sys v0.37.0 h1:fdNQudmxPjkdUTPnLn5mdQv7Zwvbvpaxqs831goi9kQ=
+golang.org/x/sys v0.37.0/go.mod h1:OgkHotnGiDImocRcuBABYBEXf8A9a87e/uXjp9XT3ks=
