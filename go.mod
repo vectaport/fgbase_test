@@ -1,9 +1,9 @@
 module github.com/vectaport/fgbase_test
 
-go 1.20
+go 1.26
 
 require (
-	github.com/vectaport/fgbase v0.0.0-20200618171749-65072ea6a76e // indirect
-	golang.org/x/crypto v0.43.0 // indirect
-	golang.org/x/sys v0.37.0 // indirect
+	github.com/vectaport/fgbase v0.0.0-20260718190341-bc200363d0b2 // indirect
+	golang.org/x/crypto v0.54.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
 )
